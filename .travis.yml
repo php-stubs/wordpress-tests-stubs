@@ -40,4 +40,5 @@ script:
   - "git diff --exit-code"
   # Execute stubs
   - "composer require --dev phpunit/phpunit:^7"
-  - "php -f wordpress-tests-stubs.php"
+  - |
+    php -r 'require "vendor/autoload.php"; require "wordpress-tests-stubs.php";'
