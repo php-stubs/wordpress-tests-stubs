@@ -6,10 +6,536 @@
  */
 
 /**
- * A child class of the PHP test runner.
+ * Defines a basic fixture to run multiple tests.
  *
- * Used to access the protected longOptions property, to parse the arguments
- * passed to the script.
+ * Resets the state of the WordPress installation before and after every test.
+ *
+ * Includes utility functions and assertions useful for testing WordPress.
+ *
+ * All WordPress unit tests should inherit from this class.
+ */
+abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
+{
+    protected static $forced_tickets = array();
+    protected $expected_deprecated = array();
+    protected $caught_deprecated = array();
+    protected $expected_doing_it_wrong = array();
+    protected $caught_doing_it_wrong = array();
+    protected static $hooks_saved = array();
+    protected static $ignore_files;
+    function __isset($name)
+    {
+    }
+    function __get($name)
+    {
+    }
+    /**
+     * Fetches the factory object for generating WordPress fixtures.
+     *
+     * @return WP_UnitTest_Factory The fixture factory.
+     */
+    protected static function factory()
+    {
+    }
+    public static function get_called_class()
+    {
+    }
+    public static function setUpBeforeClass()
+    {
+    }
+    public static function tearDownAfterClass()
+    {
+    }
+    function setUp()
+    {
+    }
+    /**
+     * After a test method runs, reset any state in WordPress the test method might have changed.
+     */
+    function tearDown()
+    {
+    }
+    function clean_up_global_scope()
+    {
+    }
+    /**
+     * Allow tests to be skipped on some automated runs
+     *
+     * For test runs on Travis for something other than trunk/master
+     * we want to skip tests that only need to run for master.
+     */
+    public function skipOnAutomatedBranches()
+    {
+    }
+    /**
+     * Allow tests to be skipped when Multisite is not in use.
+     *
+     * Use in conjunction with the ms-required group.
+     */
+    public function skipWithoutMultisite()
+    {
+    }
+    /**
+     * Allow tests to be skipped when Multisite is in use.
+     *
+     * Use in conjunction with the ms-excluded group.
+     */
+    public function skipWithMultisite()
+    {
+    }
+    /**
+     * Unregister existing post types and register defaults.
+     *
+     * Run before each test in order to clean up the global scope, in case
+     * a test forgets to unregister a post type on its own, or fails before
+     * it has a chance to do so.
+     */
+    protected function reset_post_types()
+    {
+    }
+    /**
+     * Unregister existing taxonomies and register defaults.
+     *
+     * Run before each test in order to clean up the global scope, in case
+     * a test forgets to unregister a taxonomy on its own, or fails before
+     * it has a chance to do so.
+     */
+    protected function reset_taxonomies()
+    {
+    }
+    /**
+     * Unregister non-built-in post statuses.
+     */
+    protected function reset_post_statuses()
+    {
+    }
+    /**
+     * Reset `$_SERVER` variables
+     */
+    protected function reset__SERVER()
+    {
+    }
+    /**
+     * Saves the action and filter-related globals so they can be restored later.
+     *
+     * Stores $wp_actions, $wp_current_filter, and $wp_filter on a class variable
+     * so they can be restored on tearDown() using _restore_hooks().
+     *
+     * @global array $wp_actions
+     * @global array $wp_current_filter
+     * @global array $wp_filter
+     * @return void
+     */
+    protected function _backup_hooks()
+    {
+    }
+    /**
+     * Restores the hook-related globals to their state at setUp()
+     * so that future tests aren't affected by hooks set during this last test.
+     *
+     * @global array $wp_actions
+     * @global array $wp_current_filter
+     * @global array $wp_filter
+     * @return void
+     */
+    protected function _restore_hooks()
+    {
+    }
+    static function flush_cache()
+    {
+    }
+    /**
+     * Clean up any registered meta keys.
+     *
+     * @since 5.1.0
+     *
+     * @global array $wp_meta_keys
+     */
+    function unregister_all_meta_keys()
+    {
+    }
+    function start_transaction()
+    {
+    }
+    /**
+     * Commit the queries in a transaction.
+     *
+     * @since 4.1.0
+     */
+    public static function commit_transaction()
+    {
+    }
+    function _create_temporary_tables($query)
+    {
+    }
+    function _drop_temporary_tables($query)
+    {
+    }
+    function get_wp_die_handler($handler)
+    {
+    }
+    function wp_die_handler($message)
+    {
+    }
+    function expectDeprecated()
+    {
+    }
+    function expectedDeprecated()
+    {
+    }
+    /**
+     * Detect post-test failure conditions.
+     *
+     * We use this method to detect expectedDeprecated and expectedIncorrectUsage annotations.
+     *
+     * @since 4.2.0
+     */
+    protected function assertPostConditions()
+    {
+    }
+    /**
+     * Declare an expected `_deprecated_function()` or `_deprecated_argument()` call from within a test.
+     *
+     * @since 4.2.0
+     *
+     * @param string $deprecated Name of the function, method, class, or argument that is deprecated. Must match
+     *                           first parameter of the `_deprecated_function()` or `_deprecated_argument()` call.
+     */
+    public function setExpectedDeprecated($deprecated)
+    {
+    }
+    /**
+     * Declare an expected `_doing_it_wrong()` call from within a test.
+     *
+     * @since 4.2.0
+     *
+     * @param string $deprecated Name of the function, method, or class that appears in the first argument of the
+     *                           source `_doing_it_wrong()` call.
+     */
+    public function setExpectedIncorrectUsage($doing_it_wrong)
+    {
+    }
+    /**
+     * PHPUnit 6+ compatibility shim.
+     *
+     * @param mixed      $exception
+     * @param string     $message
+     * @param int|string $code
+     */
+    public function setExpectedException($exception, $message = '', $code = \null)
+    {
+    }
+    function deprecated_function_run($function)
+    {
+    }
+    function doing_it_wrong_run($function)
+    {
+    }
+    function assertWPError($actual, $message = '')
+    {
+    }
+    function assertNotWPError($actual, $message = '')
+    {
+    }
+    function assertIXRError($actual, $message = '')
+    {
+    }
+    function assertNotIXRError($actual, $message = '')
+    {
+    }
+    function assertEqualFields($object, $fields)
+    {
+    }
+    function assertDiscardWhitespace($expected, $actual)
+    {
+    }
+    /**
+     * Asserts that the contents of two un-keyed, single arrays are equal, without accounting for the order of elements.
+     *
+     * @since 3.5.0
+     *
+     * @param array $expected Expected array.
+     * @param array $actual   Array to check.
+     */
+    function assertEqualSets($expected, $actual)
+    {
+    }
+    /**
+     * Asserts that the contents of two keyed, single arrays are equal, without accounting for the order of elements.
+     *
+     * @since 4.1.0
+     *
+     * @param array $expected Expected array.
+     * @param array $actual   Array to check.
+     */
+    function assertEqualSetsWithIndex($expected, $actual)
+    {
+    }
+    /**
+     * Asserts that the given variable is a multidimensional array, and that all arrays are non-empty.
+     *
+     * @since 4.8.0
+     *
+     * @param array $array Array to check.
+     */
+    function assertNonEmptyMultidimensionalArray($array)
+    {
+    }
+    /**
+     * Sets the global state to as if a given URL has been requested.
+     *
+     * This sets:
+     * - The super globals.
+     * - The globals.
+     * - The query variables.
+     * - The main query.
+     *
+     * @since 3.5.0
+     *
+     * @param string $url The URL for the request.
+     */
+    function go_to($url)
+    {
+    }
+    /**
+     * Allows tests to be skipped on single or multisite installs by using @group annotations.
+     *
+     * This is a custom extension of the PHPUnit requirements handling.
+     *
+     * Contains legacy code for skipping tests that are associated with an open Trac ticket. Core tests no longer
+     * support this behaviour.
+     *
+     * @since 3.5.0
+     */
+    protected function checkRequirements()
+    {
+    }
+    /**
+     * Skips the current test if there is an open Trac ticket associated with it.
+     *
+     * @since 3.5.0
+     *
+     * @param int $ticket_id Ticket number.
+     */
+    function knownWPBug($ticket_id)
+    {
+    }
+    /**
+     * Skips the current test if there is an open Unit Test Trac ticket associated with it.
+     *
+     * @since 3.5.0
+     *
+     * @deprecated No longer used since the Unit Test Trac was merged into the Core Trac.
+     *
+     * @param int $ticket_id Ticket number.
+     */
+    function knownUTBug($ticket_id)
+    {
+    }
+    /**
+     * Skips the current test if there is an open Plugin Trac ticket associated with it.
+     *
+     * @since 3.5.0
+     *
+     * @param int $ticket_id Ticket number.
+     */
+    function knownPluginBug($ticket_id)
+    {
+    }
+    /**
+     * Adds a Trac ticket number to the `$forced_tickets` property.
+     *
+     * @since 3.5.0
+     *
+     * @param int $ticket Ticket number.
+     */
+    public static function forceTicket($ticket)
+    {
+    }
+    /**
+     * Custom preparations for the PHPUnit process isolation template.
+     *
+     * When restoring global state between tests, PHPUnit defines all the constants that were already defined, and then
+     * includes included files. This does not work with WordPress, as the included files define the constants.
+     *
+     * This method defines the constants after including files.
+     *
+     * @param Text_Template $template
+     */
+    function prepareTemplate(\Text_Template $template)
+    {
+    }
+    /**
+     * Creates a unique temporary file name.
+     *
+     * The directory in which the file is created depends on the environment configuration.
+     *
+     * @since 3.5.0
+     *
+     * @return string|bool Path on success, else false.
+     */
+    function temp_filename()
+    {
+    }
+    /**
+     * Checks each of the WP_Query is_* functions/properties against expected boolean value.
+     *
+     * Any properties that are listed by name as parameters will be expected to be true; all others are
+     * expected to be false. For example, assertQueryTrue('is_single', 'is_feed') means is_single()
+     * and is_feed() must be true and everything else must be false to pass.
+     *
+     * @since 2.5.0
+     * @since 3.8.0 Moved from `Tests_Query_Conditionals` to `WP_UnitTestCase`.
+     *
+     * @param string $prop,... Any number of WP_Query properties that are expected to be true for the current request.
+     */
+    function assertQueryTrue()
+    {
+    }
+    /**
+     * Selectively deletes a file.
+     *
+     * Does not delete a file if its path is set in the `$ignore_files` property.
+     *
+     * @param string $file File path.
+     */
+    function unlink($file)
+    {
+    }
+    /**
+     * Selectively deletes files from a directory.
+     *
+     * Does not delete files if their paths are set in the `$ignore_files` property.
+     *
+     * @param string $path Directory path.
+     */
+    function rmdir($path)
+    {
+    }
+    /**
+     * Deletes files added to the `uploads` directory during tests.
+     *
+     * This method works in tandem with the `setUp()` and `rmdir()` methods:
+     * - `setUp()` scans the `uploads` directory before every test, and stores its contents inside of the
+     *   `$ignore_files` property.
+     * - `rmdir()` and its helper methods only delete files that are not listed in the `$ignore_files` property. If
+     *   called during `tearDown()` in tests, this will only delete files added during the previously run test.
+     */
+    function remove_added_uploads()
+    {
+    }
+    /**
+     * Returns a list of all files contained inside a directory.
+     *
+     * @since 4.0.0
+     *
+     * @param string $dir Path to the directory to scan.
+     *
+     * @return array List of file paths.
+     */
+    function files_in_dir($dir)
+    {
+    }
+    /**
+     * Returns a list of all files contained inside the `uploads` directory.
+     *
+     * @since 4.0.0
+     *
+     * @return array List of file paths.
+     */
+    function scan_user_uploads()
+    {
+    }
+    /**
+     * Deletes all directories contained inside a directory.
+     *
+     * @since 4.1.0
+     *
+     * @param string $path Path to the directory to scan.
+     */
+    function delete_folders($path)
+    {
+    }
+    /**
+     * Retrieves all directories contained inside a directory and stores them in the `$matched_dirs` property. Hidden
+     * directories are ignored.
+     *
+     * This is a helper for the `delete_folders()` method.
+     *
+     * @since 4.1.0
+     *
+     * @param string $dir Path to the directory to scan.
+     */
+    function scandir($dir)
+    {
+    }
+    /**
+     * Converts a microtime string into a float.
+     *
+     * @since 4.1.0
+     *
+     * @param string $microtime Time string generated by `microtime()`.
+     *
+     * @return float `microtime()` output as a float.
+     */
+    protected function _microtime_to_float($microtime)
+    {
+    }
+    /**
+     * Deletes a user from the database in a Multisite-agnostic way.
+     *
+     * @since 4.3.0
+     *
+     * @param int $user_id User ID.
+     *
+     * @return bool True if the user was deleted.
+     */
+    public static function delete_user($user_id)
+    {
+    }
+    /**
+     * Resets permalinks and flushes rewrites.
+     *
+     * @since 4.4.0
+     *
+     * @global WP_Rewrite $wp_rewrite
+     *
+     * @param string $structure Optional. Permalink structure to set. Default empty.
+     */
+    public function set_permalink_structure($structure = '')
+    {
+    }
+    /**
+     * Creates an attachment post from an uploaded file.
+     *
+     * @since 4.4.0
+     *
+     * @param array $upload         Array of information about the uploaded file, provided by wp_upload_bits().
+     * @param int   $parent_post_id Optional. Parent post ID.
+     *
+     * @return int|WP_Error The attachment ID on success. The value 0 or WP_Error on failure.
+     */
+    function _make_attachment($upload, $parent_post_id = 0)
+    {
+    }
+    /**
+     * Updates the modified and modified GMT date of a post in the database.
+     *
+     * @since 4.8.0
+     *
+     * @global wpdb $wpdb WordPress database abstraction object.
+     *
+     * @param int    $post_id Post ID.
+     * @param string $date    Post date, in the format YYYY-MM-DD HH:MM:SS.
+     *
+     * @return int|false 1 on success, or false on error.
+     */
+    protected function update_post_modified($post_id, $date)
+    {
+    }
+}
+/**
+ * A class to handle additional command line arguments passed to the script.
  *
  * If it is determined that phpunit was called with a --group that corresponds
  * to an @ticket annotation (such as `phpunit --group 12345` for bugs marked
@@ -18,20 +544,12 @@
  * If WP_TESTS_FORCE_KNOWN_BUGS is already set in wp-tests-config.php, then
  * how you call phpunit has no effect.
  */
-class WP_PHPUnit_Util_Getopt extends \PHPUnit_Util_Getopt
+class WP_PHPUnit_Util_Getopt
 {
-    protected $longOptions = array('exclude-group=', 'group=');
     function __construct($argv)
     {
     }
 }
-/**
- * Unit Tests: Basic_Object cloass
- *
- * @package WordPress
- * @subpackage UnitTests
- * @since 4.7.0
- */
 /**
  * Class used to test accessing methods and properties
  *
@@ -59,13 +577,6 @@ class Basic_Object
     {
     }
 }
-/**
- * Unit Tests: Basic_Subclass class
- *
- * @package WordPress
- * @subpackage UnitTests
- * @since 4.7.0
- */
 /**
  * Class used to test accessing methods and properties.
  *
@@ -160,10 +671,25 @@ class WPAjaxDieContinueException extends \WPDieException
 }
 class WP_UnitTest_Factory_Callback_After_Create
 {
+    /**
+     * @var callable
+     */
     var $callback;
+    /**
+     * WP_UnitTest_Factory_Callback_After_Create constructor.
+     *
+     * @param callable $callback A callback function.
+     */
     function __construct($callback)
     {
     }
+    /**
+     * Calls the set callback on given object.
+     *
+     * @param mixed $object The object to apply the callback on.
+     *
+     * @return mixed The possibly altered object.
+     */
     function call($object)
     {
     }
@@ -186,27 +712,106 @@ abstract class WP_UnitTest_Factory_For_Thing
     function __construct($factory, $default_generation_definitions = array())
     {
     }
+    /**
+     * Creates an object.
+     *
+     * @param array $args The arguments.
+     *
+     * @return mixed The result. Can be anything.
+     */
     abstract function create_object($args);
+    /**
+     * Updates an existing object.
+     *
+     * @param int   $object The object id.
+     * @param array $fields The values to update.
+     *
+     * @return mixed The result. Can be anything.
+     */
     abstract function update_object($object, $fields);
+    /**
+     * Creates an object.
+     *
+     * @param array $args                   Optional. The arguments for the object to create. Default is empty array.
+     * @param null  $generation_definitions Optional. The default values for the object. Default is null.
+     *
+     * @return mixed The result. Can be anything.
+     */
     function create($args = array(), $generation_definitions = \null)
     {
     }
+    /**
+     * Creates an object and returns its object.
+     *
+     * @param array $args                   Optional. The arguments for the object to create. Default is empty array.
+     * @param null  $generation_definitions Optional. The default values for the object. Default is null.
+     *
+     * @return mixed The created object. Can be anything.
+     */
     function create_and_get($args = array(), $generation_definitions = \null)
     {
     }
+    /**
+     * Retrieves an object by ID.
+     *
+     * @param int $object_id The object id.
+     *
+     * @return mixed The object. Can be anything.
+     */
     abstract function get_object_by_id($object_id);
+    /**
+     * Creates multiple objects.
+     *
+     * @param int   $count                  Amount of objects to create.
+     * @param array $args                   Optional. The arguments for the object to create. Default is empty array.
+     * @param null  $generation_definitions Optional. The default values for the object. Default is null.
+     *
+     * @return array
+     */
     function create_many($count, $args = array(), $generation_definitions = \null)
     {
     }
+    /**
+     * Combines the given argument with the generation_definitions (defaults) and applies
+     * possibly set callbacks on it.
+     *
+     * @param array       $args                   Optional. The arguments to combine with defaults. Default is empty array.
+     * @param array|null  $generation_definitions Optional. The defaults. Default is null.
+     * @param array|null  $callbacks              Optional. Array with callbacks to apply on the fields. Default is null.
+     *
+     * @return array|WP_Error Combined array on success. WP_Error when default value is incorrent.
+     */
     function generate_args($args = array(), $generation_definitions = \null, &$callbacks = \null)
     {
     }
+    /**
+     * Applies the callbacks on the created object.
+     *
+     * @param WP_UnitTest_Factory_Callback_After_Create[] $callbacks Array with callback functions.
+     * @param mixed                                       $created   The object to apply callbacks for.
+     *
+     * @return array The altered fields.
+     */
     function apply_callbacks($callbacks, $created)
     {
     }
+    /**
+     * Instantiates a callback objects for the given function name.
+     *
+     * @param string $function The callback function.
+     *
+     * @return WP_UnitTest_Factory_Callback_After_Create
+     */
     function callback($function)
     {
     }
+    /**
+     * Adds slashes to the given value.
+     *
+     * @param array|object|string|mixed $value The value to add slashes to.
+     *
+     * @return array|string The value with the possibly applied slashes.
+     */
     function addslashes_deep($value)
     {
     }
@@ -226,12 +831,34 @@ class WP_UnitTest_Factory_For_Post extends \WP_UnitTest_Factory_For_Thing
     function __construct($factory = \null)
     {
     }
+    /**
+     * Creates a post object.
+     *
+     * @param array $args Array with elements for the post.
+     *
+     * @return int|WP_Error The post ID on success. The value 0 or WP_Error on failure.
+     */
     function create_object($args)
     {
     }
+    /**
+     * Updates an existing post object.
+     *
+     * @param int   $post_id The post id to update.
+     * @param array $fields  Post data.
+     *
+     * @return int|WP_Error The value 0 or WP_Error on failure. The post ID on success.
+     */
     function update_object($post_id, $fields)
     {
     }
+    /**
+     * Retrieves a object by an id.
+     *
+     * @param int   $post_id The post id to update.
+     *
+     * @return null|WP_Post WP_Post on success or null on failure.
+     */
     function get_object_by_id($post_id)
     {
     }
@@ -248,11 +875,21 @@ class WP_UnitTest_Factory_For_Attachment extends \WP_UnitTest_Factory_For_Post
      *     @type string $file        Path of the attached file.
      * }
      * @param int   $legacy_parent Deprecated.
-     * @param array $legacy_args   Deprecated
+     * @param array $legacy_args   Deprecated.
+     *
+     * @return  int|WP_Error The attachment ID on success. The value 0 or WP_Error on failure.
      */
     function create_object($args, $legacy_parent = 0, $legacy_args = array())
     {
     }
+    /**
+     * Saves an attachment.
+     *
+     * @param string $file   The file name to create attachment object for.
+     * @param int    $parent The post id to attach the file to.
+     *
+     * @return int|WP_Error The attachment ID on success. The value 0 or WP_Error on failure.
+     */
     function create_upload_object($file, $parent = 0)
     {
     }
@@ -272,12 +909,34 @@ class WP_UnitTest_Factory_For_Blog extends \WP_UnitTest_Factory_For_Thing
     function __construct($factory = \null)
     {
     }
+    /**
+     * Creates a blog object.
+     *
+     * @param array $args Arguments for the site object.
+     *
+     * @return int|WP_Error Returns WP_Error object on failure, the site ID on success.
+     */
     function create_object($args)
     {
     }
+    /**
+     * Updates a blog object. Not implemented.
+     *
+     * @param int   $blog_id The blog id to update.
+     * @param array $fields  The fields to update.
+     *
+     * @return void
+     */
     function update_object($blog_id, $fields)
     {
     }
+    /**
+     * Retrieves a site by given blog id.
+     *
+     * @param int $blog_id The blog id to retrieve.
+     *
+     * @return null|WP_Site The site object or null if not found.
+     */
     function get_object_by_id($blog_id)
     {
     }
@@ -324,15 +983,47 @@ class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
     function __construct($factory = \null)
     {
     }
+    /**
+     * Inserts a comment.
+     *
+     * @param array $args The comment details.
+     *
+     * @return false|int The comment's ID on success, false on failure.
+     */
     function create_object($args)
     {
     }
+    /**
+     * Updates a comment.
+     *
+     * @param int   $comment_id The comment id.
+     * @param array $fields     The comment details.
+     *
+     * @return int When updated 1, not update 0.
+     */
     function update_object($comment_id, $fields)
     {
     }
+    /**
+     * Creates multiple comments on given post.
+     *
+     * @param int   $post_id                The post id to create comments for.
+     * @param int   $count                  Total amount of comments to create.
+     * @param array $args                   The comment details.
+     * @param null  $generation_definitions Default values.
+     *
+     * @return int[] Array with the comment ids.
+     */
     function create_post_comments($post_id, $count = 1, $args = array(), $generation_definitions = \null)
     {
     }
+    /**
+     * Returns a comment.
+     *
+     * @param int $comment_id The comment id.
+     *
+     * @return null|WP_Comment WP_Comment when found, null when not found.
+     */
     function get_object_by_id($comment_id)
     {
     }
@@ -378,21 +1069,62 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
     function __construct($factory = \null, $taxonomy = \null)
     {
     }
+    /**
+     * Creates a term object.
+     *
+     * @param array $args Array or string of arguments for inserting a term.
+     *
+     * @return array|WP_Error
+     */
     function create_object($args)
     {
     }
+    /**
+     * Updates the term.
+     *
+     * @param int|object   $term   The term to update.
+     * @param array|string $fields The context in which to relate the term to the object.
+     *
+     * @return int The term id.
+     */
     function update_object($term, $fields)
     {
     }
+    /**
+     * Attach terms on the given post.
+     *
+     * @param int          $post_id  The Post ID.
+     * @param string|array $terms    An array of terms to set for the post, or a string of terms
+     *                               separated by commas. Hierarchical taxonomies must always pass IDs rather
+     *                               than names so that children with the same names but different parents
+     *                               aren't confused.
+     * @param string       $taxonomy Taxonomy name.
+     * @param bool         $append   Optional. If true, don't delete existing terms, just add on. If false,
+     *                               replace the terms with the new terms. Default true.
+     *
+     * @return array|false|WP_Error Array of term taxonomy IDs of affected terms. WP_Error or false on failure.
+     */
     function add_post_terms($post_id, $terms, $taxonomy, $append = \true)
     {
     }
     /**
-     * @return array|null|WP_Error|WP_Term
+     * Create a term and returns it as a object.
+     *
+     * @param array $args                   Array or string of arguments for inserting a term.
+     * @param null  $generation_definitions The default values.
+     *
+     * @return null|WP_Error|WP_Term WP_Term on success. WP_error if taxonomy does not exist. Null for miscellaneous failure.
      */
     function create_and_get($args = array(), $generation_definitions = \null)
     {
     }
+    /**
+     * Retrieves the term by given term id.
+     *
+     * @param int $term_id The term id to retrieve.
+     *
+     * @return null|WP_Error|WP_Term WP_Term on success. WP_error if taxonomy does not exist. Null for miscellaneous failure.
+     */
     function get_object_by_id($term_id)
     {
     }
@@ -412,12 +1144,34 @@ class WP_UnitTest_Factory_For_User extends \WP_UnitTest_Factory_For_Thing
     function __construct($factory = \null)
     {
     }
+    /**
+     * Inserts an user.
+     *
+     * @param array $args The user data to insert.
+     *
+     * @return int|WP_Error
+     */
     function create_object($args)
     {
     }
+    /**
+     * Updates the user data.
+     *
+     * @param int   $user_id The user id to update.
+     * @param array $fields  The user data to update.
+     *
+     * @return int|WP_Error User id on success. WP_Error on failure.
+     */
     function update_object($user_id, $fields)
     {
     }
+    /**
+     * Retrieves the user for given user id.
+     *
+     * @param int $user_id The user id to get.
+     *
+     * @return WP_User The user.
+     */
     function get_object_by_id($user_id)
     {
     }
@@ -746,7 +1500,7 @@ class WP_Object_Cache
      *
      * @param   null    $persistent_id      To create an instance that persists between requests, use persistent_id to specify a unique ID for the instance.
      */
-    public function __construct($persistent_id = \NULL)
+    public function __construct($persistent_id = \null)
     {
     }
     /**
@@ -1018,7 +1772,7 @@ class WP_Object_Cache
      * @param   null|float      $cas_token  The variable to store the CAS token in.
      * @return  bool|mixed                  Cached object value.
      */
-    public function get($key, $group = 'default', $force = \false, &$found = \null, $server_key = '', $byKey = \false, $cache_cb = \NULL, &$cas_token = \NULL)
+    public function get($key, $group = 'default', $force = \false, &$found = \null, $server_key = '', $byKey = \false, $cache_cb = \null, &$cas_token = \null)
     {
     }
     /**
@@ -1044,7 +1798,7 @@ class WP_Object_Cache
      * @param   null|float      $cas_token  The variable to store the CAS token in.
      * @return  bool|mixed                  Cached object value.
      */
-    public function getByKey($server_key, $key, $group = 'default', $force = \false, &$found = \null, $cache_cb = \NULL, &$cas_token = \NULL)
+    public function getByKey($server_key, $key, $group = 'default', $force = \false, &$found = \null, $cache_cb = \null, &$cas_token = \null)
     {
     }
     /**
@@ -1058,7 +1812,7 @@ class WP_Object_Cache
      * @param   null            $value_cb   The result callback or NULL.
      * @return  bool                        Returns TRUE on success or FALSE on failure.
      */
-    public function getDelayed($keys, $groups = 'default', $with_cas = \false, $value_cb = \NULL)
+    public function getDelayed($keys, $groups = 'default', $with_cas = \false, $value_cb = \null)
     {
     }
     /**
@@ -1073,7 +1827,7 @@ class WP_Object_Cache
      * @param   null            $value_cb   The result callback or NULL.
      * @return  bool                        Returns TRUE on success or FALSE on failure.
      */
-    public function getDelayedByKey($server_key, $keys, $groups = 'default', $with_cas = \false, $value_cb = \NULL)
+    public function getDelayedByKey($server_key, $keys, $groups = 'default', $with_cas = \false, $value_cb = \null)
     {
     }
     /**
@@ -1090,7 +1844,7 @@ class WP_Object_Cache
      * @param   int             $flags      The flags for the get operation.
      * @return  bool|array                  Returns the array of found items or FALSE on failure.
      */
-    public function getMulti($keys, $groups = 'default', $server_key = '', &$cas_tokens = \NULL, $flags = \NULL)
+    public function getMulti($keys, $groups = 'default', $server_key = '', &$cas_tokens = \null, $flags = \null)
     {
     }
     /**
@@ -1107,7 +1861,7 @@ class WP_Object_Cache
      * @param   int             $flags      The flags for the get operation.
      * @return  bool|array                  Returns the array of found items or FALSE on failure.
      */
-    public function getMultiByKey($server_key, $keys, $groups = 'default', &$cas_tokens = \NULL, $flags = \NULL)
+    public function getMultiByKey($server_key, $keys, $groups = 'default', &$cas_tokens = \null, $flags = \null)
     {
     }
     /**
@@ -1502,12 +2256,6 @@ class WP_Object_Cache
     {
     }
 }
-class PHPUnit_Util_Test extends \PHPUnit\Util\Test
-{
-    public static function getTickets($className, $methodName)
-    {
-    }
-}
 /**
  * A PHPUnit TestListener that exposes your slowest running tests by outputting
  * results directly to the console.
@@ -1557,7 +2305,7 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      * @param Exception              $e
      * @param float                   $time
      */
-    public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time)
+    public function addError(\PHPUnit\Framework\Test $test, \Throwable $t, float $time) : void
     {
     }
     /**
@@ -1568,7 +2316,7 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      * @param float                     $time
      * @since Method available since Release 5.1.0
      */
-    public function addWarning(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_Warning $e, $time)
+    public function addWarning(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\Warning $e, float $time) : void
     {
     }
     /**
@@ -1578,7 +2326,7 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      * @param PHPUnit_Framework_AssertionFailedError $e
      * @param float                                   $time
      */
-    public function addFailure(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time)
+    public function addFailure(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\AssertionFailedError $e, float $time) : void
     {
     }
     /**
@@ -1588,7 +2336,7 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      * @param Exception              $e
      * @param float                   $time
      */
-    public function addIncompleteTest(\PHPUnit_Framework_Test $test, \Exception $e, $time)
+    public function addIncompleteTest(\PHPUnit\Framework\Test $test, \Throwable $t, float $time) : void
     {
     }
     /**
@@ -1599,7 +2347,7 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      * @param float                   $time
      * @since  Method available since Release 4.0.0
      */
-    public function addRiskyTest(\PHPUnit_Framework_Test $test, \Exception $e, $time)
+    public function addRiskyTest(\PHPUnit\Framework\Test $test, \Throwable $t, float $time) : void
     {
     }
     /**
@@ -1609,7 +2357,7 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      * @param Exception              $e
      * @param float                   $time
      */
-    public function addSkippedTest(\PHPUnit_Framework_Test $test, \Exception $e, $time)
+    public function addSkippedTest(\PHPUnit\Framework\Test $test, \Throwable $t, float $time) : void
     {
     }
     /**
@@ -1617,7 +2365,7 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      *
      * @param PHPUnit_Framework_Test $test
      */
-    public function startTest(\PHPUnit_Framework_Test $test)
+    public function startTest(\PHPUnit\Framework\Test $test) : void
     {
     }
     /**
@@ -1626,7 +2374,7 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      * @param PHPUnit_Framework_Test $test
      * @param float                   $time
      */
-    public function endTest(\PHPUnit_Framework_Test $test, $time)
+    public function endTest(\PHPUnit\Framework\Test $test, float $time) : void
     {
     }
     /**
@@ -1634,7 +2382,7 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      *
      * @param PHPUnit_Framework_TestSuite $suite
      */
-    public function startTestSuite(\PHPUnit_Framework_TestSuite $suite)
+    public function startTestSuite(\PHPUnit\Framework\TestSuite $suite) : void
     {
     }
     /**
@@ -1642,7 +2390,7 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      *
      * @param PHPUnit_Framework_TestSuite $suite
      */
-    public function endTestSuite(\PHPUnit_Framework_TestSuite $suite)
+    public function endTestSuite(\PHPUnit\Framework\TestSuite $suite) : void
     {
     }
     /**
@@ -1741,6 +2489,7 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      * reaches 5000ms (5 seconds):
      *
      * <code>
+     *
      * @slowThreshold 5000
      * public function testLongRunningProcess() {}
      * </code>
@@ -1749,6 +2498,34 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      * @return int
      */
     protected function getSlowThreshold(\PHPUnit_Framework_TestCase $test)
+    {
+    }
+}
+/**
+ * Defines a basic fixture to run multiple tests.
+ *
+ * Resets the state of the WordPress installation before and after every test.
+ *
+ * Includes utility functions and assertions useful for testing WordPress.
+ *
+ * All WordPress unit tests should inherit from this class.
+ */
+class WP_UnitTestCase extends \WP_UnitTestCase_Base
+{
+    /**
+     * Asserts that a condition is not false.
+     *
+     * This method has been backported from a more recent PHPUnit version, as tests running on PHP 5.2 use
+     * PHPUnit 3.6.x.
+     *
+     * @since 4.7.4
+     *
+     * @param bool   $condition Condition to check.
+     * @param string $message   Optional. Message to display when the assertion fails.
+     *
+     * @throws PHPUnit_Framework_AssertionFailedError
+     */
+    public static function assertNotFalse($condition, string $message = '') : void
     {
     }
 }
@@ -1809,388 +2586,6 @@ class Spy_REST_Server extends \WP_REST_Server
     }
 }
 /**
- * Defines a basic fixture to run multiple tests.
- *
- * Resets the state of the WordPress installation before and after every test.
- *
- * Includes utility functions and assertions useful for testing WordPress.
- *
- * All WordPress unit tests should inherit from this class.
- */
-class WP_UnitTestCase extends \PHPUnit_Framework_TestCase
-{
-    protected static $forced_tickets = array();
-    protected $expected_deprecated = array();
-    protected $caught_deprecated = array();
-    protected $expected_doing_it_wrong = array();
-    protected $caught_doing_it_wrong = array();
-    protected static $hooks_saved = array();
-    protected static $ignore_files;
-    function __isset($name)
-    {
-    }
-    function __get($name)
-    {
-    }
-    /**
-     * Fetches the factory object for generating WordPress fixtures.
-     *
-     * @return WP_UnitTest_Factory The fixture factory.
-     */
-    protected static function factory()
-    {
-    }
-    public static function get_called_class()
-    {
-    }
-    public static function setUpBeforeClass()
-    {
-    }
-    public static function tearDownAfterClass()
-    {
-    }
-    function setUp()
-    {
-    }
-    /**
-     * Detect post-test failure conditions.
-     *
-     * We use this method to detect expectedDeprecated and expectedIncorrectUsage annotations.
-     *
-     * @since 4.2.0
-     */
-    protected function assertPostConditions()
-    {
-    }
-    /**
-     * After a test method runs, reset any state in WordPress the test method might have changed.
-     */
-    function tearDown()
-    {
-    }
-    function clean_up_global_scope()
-    {
-    }
-    /**
-     * Allow tests to be skipped on some automated runs.
-     *
-     * For test runs on Travis for something other than trunk/master 
-     * we want to skip tests that only need to run for master.
-     */
-    public function skipOnAutomatedBranches()
-    {
-    }
-    /**
-     * Allow tests to be skipped when Multisite is not in use.
-     *
-     * Use in conjunction with the ms-required group.
-     */
-    public function skipWithoutMultisite()
-    {
-    }
-    /**
-     * Allow tests to be skipped when Multisite is in use.
-     *
-     * Use in conjunction with the ms-excluded group.
-     */
-    public function skipWithMultisite()
-    {
-    }
-    /**
-     * Allow tests to be skipped if the HTTP request times out.
-     *
-     * @param array|WP_Error $response HTTP response.
-     */
-    public function skipTestOnTimeout($response)
-    {
-    }
-    /**
-     * Unregister existing post types and register defaults.
-     *
-     * Run before each test in order to clean up the global scope, in case
-     * a test forgets to unregister a post type on its own, or fails before
-     * it has a chance to do so.
-     */
-    protected function reset_post_types()
-    {
-    }
-    /**
-     * Unregister existing taxonomies and register defaults.
-     *
-     * Run before each test in order to clean up the global scope, in case
-     * a test forgets to unregister a taxonomy on its own, or fails before
-     * it has a chance to do so.
-     */
-    protected function reset_taxonomies()
-    {
-    }
-    /**
-     * Unregister non-built-in post statuses.
-     */
-    protected function reset_post_statuses()
-    {
-    }
-    /**
-     * Reset `$_SERVER` variables
-     */
-    protected function reset__SERVER()
-    {
-    }
-    /**
-     * Saves the action and filter-related globals so they can be restored later.
-     *
-     * Stores $merged_filters, $wp_actions, $wp_current_filter, and $wp_filter
-     * on a class variable so they can be restored on tearDown() using _restore_hooks().
-     *
-     * @global array $merged_filters
-     * @global array $wp_actions
-     * @global array $wp_current_filter
-     * @global array $wp_filter
-     * @return void
-     */
-    protected function _backup_hooks()
-    {
-    }
-    /**
-     * Restores the hook-related globals to their state at setUp()
-     * so that future tests aren't affected by hooks set during this last test.
-     *
-     * @global array $merged_filters
-     * @global array $wp_actions
-     * @global array $wp_current_filter
-     * @global array $wp_filter
-     * @return void
-     */
-    protected function _restore_hooks()
-    {
-    }
-    static function flush_cache()
-    {
-    }
-    function start_transaction()
-    {
-    }
-    /**
-     * Commit the queries in a transaction.
-     *
-     * @since 4.1.0
-     */
-    public static function commit_transaction()
-    {
-    }
-    function _create_temporary_tables($query)
-    {
-    }
-    function _drop_temporary_tables($query)
-    {
-    }
-    function get_wp_die_handler($handler)
-    {
-    }
-    function wp_die_handler($message)
-    {
-    }
-    function expectDeprecated()
-    {
-    }
-    function expectedDeprecated()
-    {
-    }
-    /**
-     * Declare an expected `_deprecated_function()` or `_deprecated_argument()` call from within a test.
-     *
-     * @since 4.2.0
-     *
-     * @param string $deprecated Name of the function, method, class, or argument that is deprecated. Must match
-     *                           first parameter of the `_deprecated_function()` or `_deprecated_argument()` call.
-     */
-    public function setExpectedDeprecated($deprecated)
-    {
-    }
-    /**
-     * Declare an expected `_doing_it_wrong()` call from within a test.
-     *
-     * @since 4.2.0
-     *
-     * @param string $deprecated Name of the function, method, or class that appears in the first argument of the
-     *                           source `_doing_it_wrong()` call.
-     */
-    public function setExpectedIncorrectUsage($doing_it_wrong)
-    {
-    }
-    /**
-     * PHPUnit 6+ compatibility shim.
-     *
-     * @param mixed      $exception
-     * @param string     $message
-     * @param int|string $code
-     */
-    public function setExpectedException($exception, $message = '', $code = \null)
-    {
-    }
-    function deprecated_function_run($function)
-    {
-    }
-    function doing_it_wrong_run($function)
-    {
-    }
-    function assertWPError($actual, $message = '')
-    {
-    }
-    function assertNotWPError($actual, $message = '')
-    {
-    }
-    function assertIXRError($actual, $message = '')
-    {
-    }
-    function assertNotIXRError($actual, $message = '')
-    {
-    }
-    function assertEqualFields($object, $fields)
-    {
-    }
-    function assertDiscardWhitespace($expected, $actual)
-    {
-    }
-    function assertEqualSets($expected, $actual)
-    {
-    }
-    function assertEqualSetsWithIndex($expected, $actual)
-    {
-    }
-    /**
-     * Asserts that the given variable is a multidimensional array, and that all arrays are non-empty.
-     *
-     * @param array $array
-     */
-    function assertNonEmptyMultidimensionalArray($array)
-    {
-    }
-    /**
-     * Asserts that a condition is not false.
-     *
-     * @param bool   $condition
-     * @param string $message
-     *
-     * @throws PHPUnit_Framework_AssertionFailedError
-     */
-    public static function assertNotFalse($condition, $message = '')
-    {
-    }
-    /**
-     * Modify WordPress's query internals as if a given URL has been requested.
-     *
-     * @param string $url The URL for the request.
-     */
-    function go_to($url)
-    {
-    }
-    protected function checkRequirements()
-    {
-    }
-    /**
-     * Skips the current test if there is an open WordPress ticket with id $ticket_id
-     */
-    function knownWPBug($ticket_id)
-    {
-    }
-    /**
-     * @deprecated No longer used since the unit test Trac was merged into Core's.
-     */
-    function knownUTBug($ticket_id)
-    {
-    }
-    /**
-     * Skips the current test if there is an open plugin ticket with id $ticket_id
-     */
-    function knownPluginBug($ticket_id)
-    {
-    }
-    public static function forceTicket($ticket)
-    {
-    }
-    /**
-     * Define constants after including files.
-     */
-    function prepareTemplate(\Text_Template $template)
-    {
-    }
-    /**
-     * Returns the name of a temporary file
-     */
-    function temp_filename()
-    {
-    }
-    /**
-     * Check each of the WP_Query is_* functions/properties against expected boolean value.
-     *
-     * Any properties that are listed by name as parameters will be expected to be true; all others are
-     * expected to be false. For example, assertQueryTrue('is_single', 'is_feed') means is_single()
-     * and is_feed() must be true and everything else must be false to pass.
-     *
-     * @param string $prop,... Any number of WP_Query properties that are expected to be true for the current request.
-     */
-    function assertQueryTrue()
-    {
-    }
-    function unlink($file)
-    {
-    }
-    function rmdir($path)
-    {
-    }
-    function remove_added_uploads()
-    {
-    }
-    function files_in_dir($dir)
-    {
-    }
-    function scan_user_uploads()
-    {
-    }
-    function delete_folders($path)
-    {
-    }
-    function scandir($dir)
-    {
-    }
-    /**
-     * Helper to Convert a microtime string into a float
-     */
-    protected function _microtime_to_float($microtime)
-    {
-    }
-    /**
-     * Multisite-agnostic way to delete a user from the database.
-     *
-     * @since 4.3.0
-     */
-    public static function delete_user($user_id)
-    {
-    }
-    /**
-     * Utility method that resets permalinks and flushes rewrites.
-     *
-     * @since 4.4.0
-     *
-     * @global WP_Rewrite $wp_rewrite
-     *
-     * @param string $structure Optional. Permalink structure to set. Default empty.
-     */
-    public function set_permalink_structure($structure = '')
-    {
-    }
-    function _make_attachment($upload, $parent_post_id = 0)
-    {
-    }
-    /**
-     * There's no way to change post_modified through WP functions.
-     */
-    protected function update_post_modified($post_id, $date)
-    {
-    }
-}
-/**
  * Ajax test cases
  *
  * @package    WordPress
@@ -2208,21 +2603,25 @@ abstract class WP_Ajax_UnitTestCase extends \WP_UnitTestCase
 {
     /**
      * Last AJAX response.  This is set via echo -or- wp_die.
+     *
      * @var string
      */
     protected $_last_response = '';
     /**
      * List of ajax actions called via GET
+     *
      * @var array
      */
     protected static $_core_actions_get = array('fetch-list', 'ajax-tag-search', 'wp-compression-test', 'imgedit-preview', 'oembed-cache', 'autocomplete-user', 'dashboard-widgets', 'logged-in');
     /**
      * Saved error reporting level
+     *
      * @var int
      */
     protected $_error_level = 0;
     /**
      * List of ajax actions called via POST
+     *
      * @var array
      */
     protected static $_core_actions_post = array('oembed_cache', 'image-editor', 'delete-comment', 'delete-tag', 'delete-link', 'delete-meta', 'delete-post', 'trash-post', 'untrash-post', 'delete-page', 'dim-comment', 'add-link-category', 'add-tag', 'get-tagcloud', 'get-comments', 'replyto-comment', 'edit-comment', 'add-menu-item', 'add-meta', 'add-user', 'closed-postboxes', 'hidden-columns', 'update-welcome-panel', 'menu-get-metabox', 'wp-link-ajax', 'menu-locations-save', 'menu-quick-search', 'meta-box-order', 'get-permalink', 'sample-permalink', 'inline-save', 'inline-save-tax', 'find_posts', 'widgets-order', 'save-widget', 'set-post-thumbnail', 'date_format', 'time_format', 'wp-fullscreen-save-post', 'wp-remove-post-lock', 'dismiss-wp-pointer', 'send-attachment-to-editor', 'heartbeat', 'nopriv_heartbeat', 'get-revision-diffs', 'save-user-color-scheme', 'update-widget', 'query-themes', 'parse-embed', 'set-attachment-thumbnail', 'parse-media-shortcode', 'destroy-sessions', 'install-plugin', 'update-plugin', 'press-this-save-post', 'press-this-add-category', 'crop-image', 'generate-password', 'save-wporg-username', 'delete-plugin', 'search-plugins', 'search-install-plugins', 'activate-plugin', 'update-theme', 'delete-theme', 'install-theme', 'get-post-thumbnail-html');
@@ -2251,6 +2650,7 @@ abstract class WP_Ajax_UnitTestCase extends \WP_UnitTestCase
     }
     /**
      * Return our callback handler
+     *
      * @return callback
      */
     public function getDieHandler()
@@ -2269,6 +2669,7 @@ abstract class WP_Ajax_UnitTestCase extends \WP_UnitTestCase
      * <code>
      * $this->setExpectedException( 'WPAjaxDieContinueException', 'something contained in $message' );
      * </code>
+     *
      * @param string $message
      */
     public function dieHandler($message)
@@ -2277,6 +2678,7 @@ abstract class WP_Ajax_UnitTestCase extends \WP_UnitTestCase
     /**
      * Switch between user roles
      * E.g. administrator, editor, author, contributor, subscriber
+     *
      * @param string $role
      */
     protected function _setRole($role)
@@ -2286,6 +2688,7 @@ abstract class WP_Ajax_UnitTestCase extends \WP_UnitTestCase
      * Mimic the ajax handling of admin-ajax.php
      * Capture the output via output buffering, and if there is any, store
      * it in $this->_last_response.
+     *
      * @param string $action
      */
     protected function _handleAjax($action)
@@ -2493,7 +2896,7 @@ class MockAction
     function filter_append($arg)
     {
     }
-    function filterall($tag, $arg = \NULL)
+    function filterall($tag, $arg = \null)
     {
     }
     // return a list of all the actions, tags and args
@@ -2621,21 +3024,49 @@ function wp_tests_options($value)
 {
 }
 /**
+ * Retrieves PHPUnit runner version.
+ */
+function tests_get_phpunit_version()
+{
+}
+/**
  * Resets various `$_SERVER` variables that can get altered during tests.
  */
 function tests_reset__SERVER()
 {
 }
-// For adding hooks before loading WP
+/**
+ * Adds hooks before loading WP.
+ *
+ * @param string       $tag             The name for the filter to add.
+ * @param object|array $function_to_add The function/callback to execute on call.
+ * @param int          $priority        The priority.
+ * @param int          $accepted_args   The amount of accepted arguments.
+ * @return bool Always true.
+ */
 function tests_add_filter($tag, $function_to_add, $priority = 10, $accepted_args = 1)
 {
 }
+/**
+ * Generates a unique function ID based on the given arguments.
+ *
+ * @param string       $tag      Unused. The name of the filter to build ID for.
+ * @param object|array $function The function to generate ID for.
+ * @param int          $priority Unused. The priority.
+ * @return string Unique function ID.
+ */
 function _test_filter_build_unique_id($tag, $function, $priority)
 {
 }
+/**
+ * Deletes all data from the database.
+ */
 function _delete_all_data()
 {
 }
+/**
+ * Deletes all posts from the database.
+ */
 function _delete_all_posts()
 {
 }
@@ -2681,6 +3112,12 @@ function _upload_dir_no_subdir($uploads)
  * Helper used with the `upload_dir` filter to set https upload URL.
  */
 function _upload_dir_https($uploads)
+{
+}
+/**
+ * Use the Spy_REST_Server class for the REST server.
+ */
+function _wp_rest_server_class_filter()
 {
 }
 /**
@@ -3008,7 +3445,7 @@ function wp_cache_get($key, $group = '', $force = \false, &$found = \null, $cach
  * @param null|float    $cas_token  The variable to store the CAS token in.
  * @return bool|mixed               Cached object value.
  */
-function wp_cache_get_by_key($server_key, $key, $group = '', $force = \false, &$found = \null, $cache_cb = \NULL, &$cas_token = \NULL)
+function wp_cache_get_by_key($server_key, $key, $group = '', $force = \false, &$found = \null, $cache_cb = \null, &$cas_token = \null)
 {
 }
 /**
@@ -3022,7 +3459,7 @@ function wp_cache_get_by_key($server_key, $key, $group = '', $force = \false, &$
  * @param null          $value_cb   The result callback or NULL.
  * @return bool                     Returns TRUE on success or FALSE on failure.
  */
-function wp_cache_get_delayed($keys, $groups = '', $with_cas = \false, $value_cb = \NULL)
+function wp_cache_get_delayed($keys, $groups = '', $with_cas = \false, $value_cb = \null)
 {
 }
 /**
@@ -3037,7 +3474,7 @@ function wp_cache_get_delayed($keys, $groups = '', $with_cas = \false, $value_cb
  * @param null          $value_cb   The result callback or NULL.
  * @return bool                     Returns TRUE on success or FALSE on failure.
  */
-function wp_cache_get_delayed_by_key($server_key, $keys, $groups = '', $with_cas = \false, $value_cb = \NULL)
+function wp_cache_get_delayed_by_key($server_key, $keys, $groups = '', $with_cas = \false, $value_cb = \null)
 {
 }
 /**
@@ -3053,7 +3490,7 @@ function wp_cache_get_delayed_by_key($server_key, $keys, $groups = '', $with_cas
  * @param int           $flags      The flags for the get operation.
  * @return bool|array               Returns the array of found items or FALSE on failure.
  */
-function wp_cache_get_multi($keys, $groups = '', &$cas_tokens = \NULL, $flags = \NULL)
+function wp_cache_get_multi($keys, $groups = '', &$cas_tokens = \null, $flags = \null)
 {
 }
 /**
@@ -3070,7 +3507,7 @@ function wp_cache_get_multi($keys, $groups = '', &$cas_tokens = \NULL, $flags = 
  * @param int           $flags      The flags for the get operation.
  * @return bool|array               Returns the array of found items or FALSE on failure.
  */
-function wp_cache_get_multi_by_key($server_key, $keys, $groups = '', &$cas_tokens = \NULL, $flags = \NULL)
+function wp_cache_get_multi_by_key($server_key, $keys, $groups = '', &$cas_tokens = \null, $flags = \null)
 {
 }
 /**
