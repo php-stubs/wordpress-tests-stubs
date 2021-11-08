@@ -1057,6 +1057,16 @@ class WP_UnitTestCase extends \PHPUnit_Framework_TestCase
     public function setExpectedIncorrectUsage($doing_it_wrong)
     {
     }
+    /**
+     * PHPUnit 6+ compatibility shim.
+     *
+     * @param mixed      $exception
+     * @param string     $message
+     * @param int|string $code
+     */
+    public function setExpectedException($exception, $message = '', $code = \null)
+    {
+    }
     function deprecated_function_run($function)
     {
     }
@@ -1110,7 +1120,7 @@ class WP_UnitTestCase extends \PHPUnit_Framework_TestCase
     {
     }
     /**
-     * Skips the current test if there is an open unit tests ticket with id $ticket_id
+     * @deprecated No longer used since the unit test Trac was merged into Core's.
      */
     function knownUTBug($ticket_id)
     {
@@ -1298,16 +1308,6 @@ abstract class WP_Ajax_UnitTestCase extends \WP_UnitTestCase
      * @param string $action
      */
     protected function _handleAjax($action)
-    {
-    }
-    /**
-     * PHPUnit 6+ compatibility shim.
-     *
-     * @param mixed      $exception
-     * @param string     $message
-     * @param int|string $code
-     */
-    public function setExpectedException($exception, $message = '', $code = \null)
     {
     }
 }
