@@ -40,6 +40,8 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
     /**
      * Retrieves the name of the class the static method is called in.
      *
+     * @deprecated 5.3.0 Use the PHP native get_called_class() function instead.
+     *
      * @return string The class name.
      */
     public static function get_called_class()
@@ -76,7 +78,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
     {
     }
     /**
-     * Allow tests to be skipped on some automated runs.
+     * Allow tests to be skipped on some automated runs
      *
      * For test runs on Travis for something other than trunk/master
      * we want to skip tests that only need to run for master.
@@ -98,14 +100,6 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      * Use in conjunction with the ms-excluded group.
      */
     public function skipWithMultisite()
-    {
-    }
-    /**
-     * Allow tests to be skipped if the HTTP request times out.
-     *
-     * @param array|WP_Error $response HTTP response.
-     */
-    public function skipTestOnTimeout($response)
     {
     }
     /**
@@ -489,15 +483,17 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      * Checks each of the WP_Query is_* functions/properties against expected boolean value.
      *
      * Any properties that are listed by name as parameters will be expected to be true; all others are
-     * expected to be false. For example, assertQueryTrue('is_single', 'is_feed') means is_single()
+     * expected to be false. For example, assertQueryTrue( 'is_single', 'is_feed' ) means is_single()
      * and is_feed() must be true and everything else must be false to pass.
      *
      * @since 2.5.0
      * @since 3.8.0 Moved from `Tests_Query_Conditionals` to `WP_UnitTestCase`.
+     * @since 5.3.0 Formalized the existing `...$prop` parameter by adding it
+     *              to the function signature.
      *
-     * @param string $prop,... Any number of WP_Query properties that are expected to be true for the current request.
+     * @param string ...$prop Any number of WP_Query properties that are expected to be true for the current request.
      */
-    public function assertQueryTrue()
+    public function assertQueryTrue(...$prop)
     {
     }
     /**
@@ -636,17 +632,6 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
     protected function update_post_modified($post_id, $date)
     {
     }
-    /**
-     * Touches the given file and its directory if it doesn't already exist.
-     *
-     * This can be used to ensure a file that is implictly relied on in a test exists
-     * without it having to be built.
-     *
-     * @param string $file The file name.
-     */
-    public static function touch($file)
-    {
-    }
 }
 /**
  * A class to handle additional command line arguments passed to the script.
@@ -664,6 +649,13 @@ class WP_PHPUnit_Util_Getopt
     {
     }
 }
+/**
+ * Unit Tests: Basic_Object cloass
+ *
+ * @package WordPress
+ * @subpackage UnitTests
+ * @since 4.7.0
+ */
 /**
  * Class used to test accessing methods and properties
  *
@@ -687,6 +679,7 @@ class Basic_Object
     public function __call($name, $arguments)
     {
     }
+    // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
     private function callMe()
     {
     }
@@ -698,6 +691,23 @@ class Basic_Object
  */
 class Basic_Subclass extends \Basic_Object
 {
+}
+/**
+ * Unit Tests: JsonSerializable_Object
+ *
+ * @package WordPress
+ * @subpackage UnitTests
+ * @since 5.3.0
+ */
+class JsonSerializable_Object implements \JsonSerializable
+{
+    private $data;
+    public function __construct($data)
+    {
+    }
+    public function jsonSerialize()
+    {
+    }
 }
 /**
  * WP_Fake_Block_Type for testing
@@ -1560,6 +1570,7 @@ class MockPHPMailer extends \PHPMailer
     {
     }
 }
+// phpcs:disable WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 class WP_Object_Cache
 {
     /**
@@ -1630,10 +1641,10 @@ class WP_Object_Cache
      * @param   string      $group          The group value appended to the $key.
      * @param   int         $expiration     The expiration time, defaults to 0.
      * @param   string      $server_key     The key identifying the server to store the value on.
-     * @param   bool        $byKey          True to store in internal cache by key; false to not store by key
+     * @param   bool        $by_key         True to store in internal cache by key; false to not store by key
      * @return  bool                        Returns TRUE on success or FALSE on failure.
      */
-    public function add($key, $value, $group = 'default', $expiration = 0, $server_key = '', $byKey = \false)
+    public function add($key, $value, $group = 'default', $expiration = 0, $server_key = '', $by_key = \false)
     {
     }
     /**
@@ -1699,10 +1710,10 @@ class WP_Object_Cache
      * @param   mixed       $value          Must be string as appending mixed values is not well-defined.
      * @param   string      $group          The group value appended to the $key.
      * @param   string      $server_key     The key identifying the server to store the value on.
-     * @param   bool        $byKey          True to store in internal cache by key; false to not store by key
+     * @param   bool        $by_key         True to store in internal cache by key; false to not store by key
      * @return  bool                        Returns TRUE on success or FALSE on failure.
      */
-    public function append($key, $value, $group = 'default', $server_key = '', $byKey = \false)
+    public function append($key, $value, $group = 'default', $server_key = '', $by_key = \false)
     {
     }
     /**
@@ -1740,10 +1751,10 @@ class WP_Object_Cache
      * @param   string      $group          The group value appended to the $key.
      * @param   int         $expiration     The expiration time, defaults to 0.
      * @param   string      $server_key     The key identifying the server to store the value on.
-     * @param   bool        $byKey          True to store in internal cache by key; false to not store by key
+     * @param   bool        $by_key         True to store in internal cache by key; false to not store by key
      * @return  bool                        Returns TRUE on success or FALSE on failure.
      */
-    public function cas($cas_token, $key, $value, $group = 'default', $expiration = 0, $server_key = '', $byKey = \false)
+    public function cas($cas_token, $key, $value, $group = 'default', $expiration = 0, $server_key = '', $by_key = \false)
     {
     }
     /**
@@ -1806,10 +1817,10 @@ class WP_Object_Cache
      * @param   string      $group      The group value appended to the $key.
      * @param   int         $time       The amount of time the server will wait to delete the item in seconds.
      * @param   string      $server_key The key identifying the server to store the value on.
-     * @param   bool        $byKey      True to store in internal cache by key; false to not store by key
+     * @param   bool        $by_key     True to store in internal cache by key; false to not store by key
      * @return  bool                    Returns TRUE on success or FALSE on failure.
      */
-    public function delete($key, $group = 'default', $time = 0, $server_key = '', $byKey = \false)
+    public function delete($key, $group = 'default', $time = 0, $server_key = '', $by_key = \false)
     {
     }
     /**
@@ -1881,12 +1892,12 @@ class WP_Object_Cache
      * @param   bool            $force      Whether or not to force a cache invalidation.
      * @param   null|bool       $found      Variable passed by reference to determine if the value was found or not.
      * @param   string          $server_key The key identifying the server to store the value on.
-     * @param   bool            $byKey      True to store in internal cache by key; false to not store by key
+     * @param   bool            $by_key     True to store in internal cache by key; false to not store by key
      * @param   null|callable   $cache_cb   Read-through caching callback.
      * @param   null|float      $cas_token  The variable to store the CAS token in.
      * @return  bool|mixed                  Cached object value.
      */
-    public function get($key, $group = 'default', $force = \false, &$found = \null, $server_key = '', $byKey = \false, $cache_cb = \null, &$cas_token = \null)
+    public function get($key, $group = 'default', $force = \false, &$found = \null, $server_key = '', $by_key = \false, $cache_cb = \null, &$cas_token = \null)
     {
     }
     /**
@@ -2095,10 +2106,10 @@ class WP_Object_Cache
      * @param   string    $value        Must be string as prepending mixed values is not well-defined.
      * @param   string    $group        The group value prepended to the $key.
      * @param   string    $server_key   The key identifying the server to store the value on.
-     * @param   bool      $byKey        True to store in internal cache by key; false to not store by key
+     * @param   bool      $by_key       True to store in internal cache by key; false to not store by key
      * @return  bool                    Returns TRUE on success or FALSE on failure.
      */
-    public function prepend($key, $value, $group = 'default', $server_key = '', $byKey = \false)
+    public function prepend($key, $value, $group = 'default', $server_key = '', $by_key = \false)
     {
     }
     /**
@@ -2135,11 +2146,11 @@ class WP_Object_Cache
      * @param   string      $key            The key under which to store the value.
      * @param   mixed       $value          The value to store.
      * @param   string      $group          The group value appended to the $key.
-     * @param   bool        $byKey          True to store in internal cache by key; false to not store by key
+     * @param   bool        $by_key         True to store in internal cache by key; false to not store by key
      * @param   int         $expiration     The expiration time, defaults to 0.
      * @return  bool                        Returns TRUE on success or FALSE on failure.
      */
-    public function replace($key, $value, $group = 'default', $expiration = 0, $server_key = '', $byKey = \false)
+    public function replace($key, $value, $group = 'default', $expiration = 0, $server_key = '', $by_key = \false)
     {
     }
     /**
@@ -2172,10 +2183,10 @@ class WP_Object_Cache
      * @param   string      $group      The group value appended to the $key.
      * @param   int         $expiration The expiration time, defaults to 0.
      * @param   string      $server_key The key identifying the server to store the value on.
-     * @param   bool        $byKey      True to store in internal cache by key; false to not store by key
+     * @param   bool        $by_key     True to store in internal cache by key; false to not store by key
      * @return  bool                    Returns TRUE on success or FALSE on failure.
      */
-    public function set($key, $value, $group = 'default', $expiration = 0, $server_key = '', $byKey = \false)
+    public function set($key, $value, $group = 'default', $expiration = 0, $server_key = '', $by_key = \false)
     {
     }
     /**
@@ -2210,10 +2221,10 @@ class WP_Object_Cache
      * @param   string|array    $groups         Group(s) to merge with key(s) in $items.
      * @param   int             $expiration     The expiration time, defaults to 0.
      * @param   string          $server_key     The key identifying the server to store the value on.
-     * @param   bool            $byKey          True to store in internal cache by key; false to not store by key
+     * @param   bool            $by_key         True to store in internal cache by key; false to not store by key
      * @return  bool                            Returns TRUE on success or FALSE on failure.
      */
-    public function setMulti($items, $groups = 'default', $expiration = 0, $server_key = '', $byKey = \false)
+    public function setMulti($items, $groups = 'default', $expiration = 0, $server_key = '', $by_key = \false)
     {
     }
     /**
@@ -2391,13 +2402,13 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      *
      * @var int
      */
-    protected $slowThreshold;
+    protected $slow_threshold;
     /**
      * Number of tests to report on for slowness.
      *
      * @var int
      */
-    protected $reportLength;
+    protected $report_length;
     /**
      * Collection of slow tests.
      *
@@ -2511,10 +2522,10 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      * Whether the given test execution time is considered slow.
      *
      * @param int $time          Test execution time in milliseconds
-     * @param int $slowThreshold Test execution time at which a test should be considered slow (milliseconds)
+     * @param int $slow_threshold Test execution time at which a test should be considered slow (milliseconds)
      * @return bool
      */
-    protected function isSlow($time, $slowThreshold)
+    protected function isSlow($time, $slow_threshold)
     {
     }
     /**
@@ -2968,9 +2979,11 @@ class TracTickets
     public static function isTracTicketClosed($trac_url, $ticket_id)
     {
     }
+    // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
     public static function usingLocalCache()
     {
     }
+    // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
     public static function forcingKnownBugs()
     {
     }
@@ -3010,7 +3023,7 @@ class MockAction
     function filter_append($arg)
     {
     }
-    function filterall($tag, $arg = \null)
+    function filterall($tag, ...$args)
     {
     }
     // return a list of all the actions, tags and args
@@ -3032,7 +3045,7 @@ class MockAction
 }
 // convert valid xml to an array tree structure
 // kinda lame but it works with a default php 4 installation
-class testXMLParser
+class TestXMLParser
 {
     var $xml;
     var $data = array();
@@ -3045,13 +3058,13 @@ class testXMLParser
     function parse($in)
     {
     }
-    function startHandler($parser, $name, $attributes)
+    function start_handler($parser, $name, $attributes)
     {
     }
-    function dataHandler($parser, $data)
+    function data_handler($parser, $data)
     {
     }
-    function endHandler($parser, $name)
+    function end_handler($parser, $name)
     {
     }
 }
@@ -3064,7 +3077,7 @@ class MockClass
 /**
  * Special class for exposing protected wpdb methods we need to access
  */
-class wpdb_exposed_methods_for_testing extends \wpdb
+class WpdbExposedMethodsForTesting extends \wpdb
 {
     public function __construct()
     {
@@ -3987,7 +4000,7 @@ function strip_ws($txt)
 function xml_to_array($in)
 {
 }
-function xml_find($tree)
+function xml_find($tree, ...$elements)
 {
 }
 function xml_join_atts($atts)
@@ -3996,7 +4009,7 @@ function xml_join_atts($atts)
 function xml_array_dumbdown(&$data)
 {
 }
-function dmp()
+function dmp(...$args)
 {
 }
 function dmp_filter($a)
