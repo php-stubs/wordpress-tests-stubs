@@ -74,6 +74,56 @@ class Basic_Object
 class Basic_Subclass extends \Basic_Object
 {
 }
+/**
+ * WP_Fake_Block_Type for testing
+ *
+ * @package WordPress
+ * @subpackage Blocks
+ * @since 5.0.0
+ */
+/**
+ * Test class extending WP_Block_Type
+ *
+ * @since 5.0.0
+ */
+class WP_Fake_Block_Type extends \WP_Block_Type
+{
+    /**
+     * Render the fake block.
+     *
+     * @param array  $attributes Optional. Block attributes. Default empty array.
+     * @param string $content    Optional. Block content. Default empty string.
+     * @return string Rendered block HTML.
+     */
+    public function render($attributes = array(), $content = '')
+    {
+    }
+}
+/**
+ * REST API: WP_REST_Test_Search_Handler class
+ *
+ * @package WordPress
+ * @subpackage REST_API
+ */
+/**
+ * Test class extending WP_REST_Search_Handler
+ */
+class WP_REST_Test_Search_Handler extends \WP_REST_Search_Handler
+{
+    protected $items = array();
+    public function __construct($amount = 10)
+    {
+    }
+    public function search_items(\WP_REST_Request $request)
+    {
+    }
+    public function prepare_item($id, array $fields)
+    {
+    }
+    public function prepare_item_links($id)
+    {
+    }
+}
 class WP_Tests_Exception extends \PHPUnit_Framework_Exception
 {
 }
@@ -1822,7 +1872,7 @@ class WP_UnitTestCase extends \PHPUnit_Framework_TestCase
     {
     }
     /**
-     * Allow tests to be skipped on some automated runs.
+     * Allow tests to be skipped on some automated runs
      *
      * For test runs on Travis for something other than trunk/master 
      * we want to skip tests that only need to run for master.
@@ -1844,14 +1894,6 @@ class WP_UnitTestCase extends \PHPUnit_Framework_TestCase
      * Use in conjunction with the ms-excluded group.
      */
     public function skipWithMultisite()
-    {
-    }
-    /**
-     * Allow tests to be skipped if the HTTP request times out.
-     *
-     * @param array|WP_Error $response HTTP response.
-     */
-    public function skipTestOnTimeout($response)
     {
     }
     /**
@@ -2631,6 +2673,15 @@ function _upload_dir_no_subdir($uploads)
  * Helper used with the `upload_dir` filter to set https upload URL.
  */
 function _upload_dir_https($uploads)
+{
+}
+/**
+ * After the init action has been run once, trying to re-register block types can cause
+ * _doing_it_wrong warnings. To avoid this, unhook the block registration functions.
+ *
+ * @since 5.0.0
+ */
+function _unhook_block_registration()
 {
 }
 /**
