@@ -1822,7 +1822,7 @@ class WP_UnitTestCase extends \PHPUnit_Framework_TestCase
     {
     }
     /**
-     * Allow tests to be skipped on some automated runs
+     * Allow tests to be skipped on some automated runs.
      *
      * For test runs on Travis for something other than trunk/master 
      * we want to skip tests that only need to run for master.
@@ -1844,6 +1844,14 @@ class WP_UnitTestCase extends \PHPUnit_Framework_TestCase
      * Use in conjunction with the ms-excluded group.
      */
     public function skipWithMultisite()
+    {
+    }
+    /**
+     * Allow tests to be skipped if the HTTP request times out.
+     *
+     * @param array|WP_Error $response HTTP response.
+     */
+    public function skipTestOnTimeout($response)
     {
     }
     /**
