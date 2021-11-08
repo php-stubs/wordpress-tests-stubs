@@ -16,6 +16,7 @@ Do_release()
     fi
 
     # Get new version
+    rm -r -f source/includes/
     wget -q -O- "https://api.github.com/repos/WordPress/wordpress-develop/tarball/refs/tags/${VERSION}" \
         | tar -x -z --directory=source/ --strip-components=3 --wildcards "*/tests/phpunit/includes/"
 
@@ -24,9 +25,8 @@ Do_release()
     ./generate.sh
 
     # Tag version
-    git commit --all -m "Generate stubs for WordPress Tests ${VERSION}"
+    git commit --all -m "Generate stubs for WordPress Tests ${VERSION}" --allow-empty
     git tag "v${VERSION}"
-exit
 }
 
 TESTS_JSON="$(wget -q -O- "https://api.github.com/repos/WordPress/wordpress-develop/tags?per_page=100&page=2")"
