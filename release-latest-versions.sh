@@ -29,8 +29,8 @@ Do_release()
     git tag "v${VERSION}"
 }
 
-TESTS_JSON="$(wget -q -O- "https://api.github.com/repos/WordPress/wordpress-develop/tags?per_page=100&page=2")"
+TESTS_JSON="$(wget -q -O- "https://api.github.com/repos/WordPress/wordpress-develop/tags?per_page=100")"
 
 while read -r TAG; do
     Do_release "${TAG}"
-done < <(jq -r '[.[].name] | reverse[]' <<<"${TESTS_JSON}" | grep -A 1000 -F -x '4.7.0')
+done < <(jq -r '[.[].name] | reverse[]' <<<"${TESTS_JSON}")
