@@ -1660,6 +1660,9 @@ class Spy_REST_Server extends \WP_REST_Server
     public function send_header($header, $value)
     {
     }
+    public function remove_header($header)
+    {
+    }
     /**
      * Override the dispatch method so we can get a handle on the request object.
      *
@@ -1745,7 +1748,7 @@ class WP_UnitTestCase extends \PHPUnit_Framework_TestCase
     {
     }
     /**
-     * Allow tests to be skipped on some automated runs.
+     * Allow tests to be skipped on some automated runs
      *
      * For test runs on Travis for something other than trunk/master 
      * we want to skip tests that only need to run for master.
@@ -1754,11 +1757,19 @@ class WP_UnitTestCase extends \PHPUnit_Framework_TestCase
     {
     }
     /**
-     * Allow tests to be skipped if the HTTP request times out.
+     * Allow tests to be skipped when Multisite is not in use.
      *
-     * @param array|WP_Error $response HTTP response.
+     * Use in conjunction with the ms-required group.
      */
-    public function skipTestOnTimeout($response)
+    public function skipWithoutMultisite()
+    {
+    }
+    /**
+     * Allow tests to be skipped when Multisite is in use.
+     *
+     * Use in conjunction with the ms-excluded group.
+     */
+    public function skipWithMultisite()
     {
     }
     /**
@@ -1897,6 +1908,12 @@ class WP_UnitTestCase extends \PHPUnit_Framework_TestCase
     function assertNotWPError($actual, $message = '')
     {
     }
+    function assertIXRError($actual, $message = '')
+    {
+    }
+    function assertNotIXRError($actual, $message = '')
+    {
+    }
     function assertEqualFields($object, $fields)
     {
     }
@@ -1907,6 +1924,14 @@ class WP_UnitTestCase extends \PHPUnit_Framework_TestCase
     {
     }
     function assertEqualSetsWithIndex($expected, $actual)
+    {
+    }
+    /**
+     * Asserts that the given variable is a multidimensional array, and that all arrays are non-empty.
+     *
+     * @param array $array
+     */
+    function assertNonEmptyMultidimensionalArray($array)
     {
     }
     /**
@@ -1967,7 +1992,7 @@ class WP_UnitTestCase extends \PHPUnit_Framework_TestCase
     /**
      * Check each of the WP_Query is_* functions/properties against expected boolean value.
      *
-     * Any properties that are listed by name as parameters will be expected to be true; any others are
+     * Any properties that are listed by name as parameters will be expected to be true; all others are
      * expected to be false. For example, assertQueryTrue('is_single', 'is_feed') means is_single()
      * and is_feed() must be true and everything else must be false to pass.
      *
@@ -2024,6 +2049,12 @@ class WP_UnitTestCase extends \PHPUnit_Framework_TestCase
     {
     }
     function _make_attachment($upload, $parent_post_id = 0)
+    {
+    }
+    /**
+     * There's no way to change post_modified through WP functions.
+     */
+    protected function update_post_modified($post_id, $date)
     {
     }
 }
