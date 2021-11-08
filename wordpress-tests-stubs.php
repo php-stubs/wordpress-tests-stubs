@@ -23,10 +23,10 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
     protected $caught_doing_it_wrong = array();
     protected static $hooks_saved = array();
     protected static $ignore_files;
-    function __isset($name)
+    public function __isset($name)
     {
     }
-    function __get($name)
+    public function __get($name)
     {
     }
     /**
@@ -37,29 +37,46 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
     protected static function factory()
     {
     }
+    /**
+     * Retrieves the name of the class the static method is called in.
+     *
+     * @return string The class name.
+     */
     public static function get_called_class()
     {
     }
+    /**
+     * Runs the routine before setting up all tests.
+     */
     public static function setUpBeforeClass()
     {
     }
+    /**
+     * Runs the routine after all tests have been run.
+     */
     public static function tearDownAfterClass()
     {
     }
-    function setUp()
+    /**
+     * Runs the routine before each test is executed.
+     */
+    public function setUp()
     {
     }
     /**
      * After a test method runs, reset any state in WordPress the test method might have changed.
      */
-    function tearDown()
-    {
-    }
-    function clean_up_global_scope()
+    public function tearDown()
     {
     }
     /**
-     * Allow tests to be skipped on some automated runs.
+     * Cleans the global scope (e.g `$_GET` and `$_POST`).
+     */
+    public function clean_up_global_scope()
+    {
+    }
+    /**
+     * Allow tests to be skipped on some automated runs
      *
      * For test runs on Travis for something other than trunk/master
      * we want to skip tests that only need to run for master.
@@ -81,14 +98,6 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      * Use in conjunction with the ms-excluded group.
      */
     public function skipWithMultisite()
-    {
-    }
-    /**
-     * Allow tests to be skipped if the HTTP request times out.
-     *
-     * @param array|WP_Error $response HTTP response.
-     */
-    public function skipTestOnTimeout($response)
     {
     }
     /**
@@ -132,7 +141,6 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      * @global array $wp_actions
      * @global array $wp_current_filter
      * @global array $wp_filter
-     * @return void
      */
     protected function _backup_hooks()
     {
@@ -144,12 +152,14 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      * @global array $wp_actions
      * @global array $wp_current_filter
      * @global array $wp_filter
-     * @return void
      */
     protected function _restore_hooks()
     {
     }
-    static function flush_cache()
+    /**
+     * Flushes the WordPress object cache.
+     */
+    public static function flush_cache()
     {
     }
     /**
@@ -159,10 +169,13 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      *
      * @global array $wp_meta_keys
      */
-    function unregister_all_meta_keys()
+    public function unregister_all_meta_keys()
     {
     }
-    function start_transaction()
+    /**
+     * Starts a database transaction.
+     */
+    public function start_transaction()
     {
     }
     /**
@@ -173,22 +186,55 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
     public static function commit_transaction()
     {
     }
-    function _create_temporary_tables($query)
+    /**
+     * Replaces the `CREATE TABLE` statement with a `CREATE TEMPORARY TABLE` statement.
+     *
+     * @param string $query The query to replace the statement for.
+     * @return string The altered query.
+     */
+    public function _create_temporary_tables($query)
     {
     }
-    function _drop_temporary_tables($query)
+    /**
+     * Replaces the `DROP TABLE` statement with a `DROP TEMPORARY TABLE` statement.
+     *
+     * @param string $query The query to replace the statement for.
+     * @return string The altered query.
+     */
+    public function _drop_temporary_tables($query)
     {
     }
-    function get_wp_die_handler($handler)
+    /**
+     * Retrieves the `wp_die()` handler.
+     *
+     * @param callable $handler The current die handler.
+     * @return callable The test die handler.
+     */
+    public function get_wp_die_handler($handler)
     {
     }
-    function wp_die_handler($message)
+    /**
+     * Throws an exception when called.
+     *
+     * @throws WPDieException Exception containing the message.
+     *
+     * @param string $message The `wp_die()` message.
+     */
+    public function wp_die_handler($message)
     {
     }
-    function expectDeprecated()
+    /**
+     * Sets up the expectations for testing a deprecated call.
+     */
+    public function expectDeprecated()
     {
     }
-    function expectedDeprecated()
+    /**
+     * Handles a deprecated expectation.
+     *
+     * The DocBlock should contain `@expectedDeprecated` to trigger this.
+     */
+    public function expectedDeprecated()
     {
     }
     /**
@@ -207,7 +253,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      * @since 4.2.0
      *
      * @param string $deprecated Name of the function, method, class, or argument that is deprecated. Must match
-     *                           first parameter of the `_deprecated_function()` or `_deprecated_argument()` call.
+     *                           the first parameter of the `_deprecated_function()` or `_deprecated_argument()` call.
      */
     public function setExpectedDeprecated($deprecated)
     {
@@ -217,8 +263,8 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      *
      * @since 4.2.0
      *
-     * @param string $deprecated Name of the function, method, or class that appears in the first argument of the
-     *                           source `_doing_it_wrong()` call.
+     * @param string $doing_it_wrong Name of the function, method, or class that appears in the first argument
+     *                               of the source `_doing_it_wrong()` call.
      */
     public function setExpectedIncorrectUsage($doing_it_wrong)
     {
@@ -233,28 +279,74 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
     public function setExpectedException($exception, $message = '', $code = \null)
     {
     }
-    function deprecated_function_run($function)
+    /**
+     * Adds a deprecated function to the list of caught deprecated calls.
+     *
+     * @param string $function The deprecated function.
+     */
+    public function deprecated_function_run($function)
     {
     }
-    function doing_it_wrong_run($function)
+    /**
+     * Adds a function called in a wrong way to the list of `_doing_it_wrong()` calls.
+     *
+     * @param string $function The function to add.
+     */
+    public function doing_it_wrong_run($function)
     {
     }
-    function assertWPError($actual, $message = '')
+    /**
+     * Asserts that the given value is an instance of WP_Error.
+     *
+     * @param mixed  $actual  The value to check.
+     * @param string $message Optional. Message to display when the assertion fails.
+     */
+    public function assertWPError($actual, $message = '')
     {
     }
-    function assertNotWPError($actual, $message = '')
+    /**
+     * Asserts that the given value is not an instance of WP_Error.
+     *
+     * @param mixed  $actual  The value to check.
+     * @param string $message Optional. Message to display when the assertion fails.
+     */
+    public function assertNotWPError($actual, $message = '')
     {
     }
-    function assertIXRError($actual, $message = '')
+    /**
+     * Asserts that the given value is an instance of IXR_Error.
+     *
+     * @param mixed  $actual  The value to check.
+     * @param string $message Optional. Message to display when the assertion fails.
+     */
+    public function assertIXRError($actual, $message = '')
     {
     }
-    function assertNotIXRError($actual, $message = '')
+    /**
+     * Asserts that the given value is not an instance of IXR_Error.
+     *
+     * @param mixed  $actual  The value to check.
+     * @param string $message Optional. Message to display when the assertion fails.
+     */
+    public function assertNotIXRError($actual, $message = '')
     {
     }
-    function assertEqualFields($object, $fields)
+    /**
+     * Asserts that the given fields are present in the given object.
+     *
+     * @param object $object The object to check.
+     * @param array  $fields The fields to check.
+     */
+    public function assertEqualFields($object, $fields)
     {
     }
-    function assertDiscardWhitespace($expected, $actual)
+    /**
+     * Asserts that two values are equal, with whitespace differences discarded.
+     *
+     * @param string $expected The expected value.
+     * @param string $actual   The actual value.
+     */
+    public function assertDiscardWhitespace($expected, $actual)
     {
     }
     /**
@@ -265,7 +357,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      * @param array $expected Expected array.
      * @param array $actual   Array to check.
      */
-    function assertEqualSets($expected, $actual)
+    public function assertEqualSets($expected, $actual)
     {
     }
     /**
@@ -276,7 +368,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      * @param array $expected Expected array.
      * @param array $actual   Array to check.
      */
-    function assertEqualSetsWithIndex($expected, $actual)
+    public function assertEqualSetsWithIndex($expected, $actual)
     {
     }
     /**
@@ -286,7 +378,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      *
      * @param array $array Array to check.
      */
-    function assertNonEmptyMultidimensionalArray($array)
+    public function assertNonEmptyMultidimensionalArray($array)
     {
     }
     /**
@@ -302,7 +394,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      *
      * @param string $url The URL for the request.
      */
-    function go_to($url)
+    public function go_to($url)
     {
     }
     /**
@@ -325,7 +417,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      *
      * @param int $ticket_id Ticket number.
      */
-    function knownWPBug($ticket_id)
+    public function knownWPBug($ticket_id)
     {
     }
     /**
@@ -337,7 +429,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      *
      * @param int $ticket_id Ticket number.
      */
-    function knownUTBug($ticket_id)
+    public function knownUTBug($ticket_id)
     {
     }
     /**
@@ -347,7 +439,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      *
      * @param int $ticket_id Ticket number.
      */
-    function knownPluginBug($ticket_id)
+    public function knownPluginBug($ticket_id)
     {
     }
     /**
@@ -368,9 +460,9 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      *
      * This method defines the constants after including files.
      *
-     * @param Text_Template $template
+     * @param Text_Template $template The template to prepare.
      */
-    function prepareTemplate(\Text_Template $template)
+    public function prepareTemplate(\Text_Template $template)
     {
     }
     /**
@@ -382,7 +474,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      *
      * @return string|bool Path on success, else false.
      */
-    function temp_filename()
+    public function temp_filename()
     {
     }
     /**
@@ -397,7 +489,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      *
      * @param string $prop,... Any number of WP_Query properties that are expected to be true for the current request.
      */
-    function assertQueryTrue()
+    public function assertQueryTrue()
     {
     }
     /**
@@ -407,7 +499,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      *
      * @param string $file File path.
      */
-    function unlink($file)
+    public function unlink($file)
     {
     }
     /**
@@ -417,7 +509,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      *
      * @param string $path Directory path.
      */
-    function rmdir($path)
+    public function rmdir($path)
     {
     }
     /**
@@ -429,7 +521,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      * - `rmdir()` and its helper methods only delete files that are not listed in the `$ignore_files` property. If
      *   called during `tearDown()` in tests, this will only delete files added during the previously run test.
      */
-    function remove_added_uploads()
+    public function remove_added_uploads()
     {
     }
     /**
@@ -438,10 +530,9 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      * @since 4.0.0
      *
      * @param string $dir Path to the directory to scan.
-     *
      * @return array List of file paths.
      */
-    function files_in_dir($dir)
+    public function files_in_dir($dir)
     {
     }
     /**
@@ -451,7 +542,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      *
      * @return array List of file paths.
      */
-    function scan_user_uploads()
+    public function scan_user_uploads()
     {
     }
     /**
@@ -461,7 +552,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      *
      * @param string $path Path to the directory to scan.
      */
-    function delete_folders($path)
+    public function delete_folders($path)
     {
     }
     /**
@@ -474,7 +565,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      *
      * @param string $dir Path to the directory to scan.
      */
-    function scandir($dir)
+    public function scandir($dir)
     {
     }
     /**
@@ -483,7 +574,6 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      * @since 4.1.0
      *
      * @param string $microtime Time string generated by `microtime()`.
-     *
      * @return float `microtime()` output as a float.
      */
     protected function _microtime_to_float($microtime)
@@ -495,7 +585,6 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      * @since 4.3.0
      *
      * @param int $user_id User ID.
-     *
      * @return bool True if the user was deleted.
      */
     public static function delete_user($user_id)
@@ -520,10 +609,9 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      *
      * @param array $upload         Array of information about the uploaded file, provided by wp_upload_bits().
      * @param int   $parent_post_id Optional. Parent post ID.
-     *
      * @return int|WP_Error The attachment ID on success. The value 0 or WP_Error on failure.
      */
-    function _make_attachment($upload, $parent_post_id = 0)
+    public function _make_attachment($upload, $parent_post_id = 0)
     {
     }
     /**
@@ -535,7 +623,6 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      *
      * @param int    $post_id Post ID.
      * @param string $date    Post date, in the format YYYY-MM-DD HH:MM:SS.
-     *
      * @return int|false 1 on success, or false on error.
      */
     protected function update_post_modified($post_id, $date)
@@ -682,13 +769,13 @@ class WP_UnitTest_Factory_Callback_After_Create
     /**
      * @var callable
      */
-    var $callback;
+    public $callback;
     /**
      * WP_UnitTest_Factory_Callback_After_Create constructor.
      *
      * @param callable $callback A callback function.
      */
-    function __construct($callback)
+    public function __construct($callback)
     {
     }
     /**
@@ -698,7 +785,7 @@ class WP_UnitTest_Factory_Callback_After_Create
      *
      * @return mixed The possibly altered object.
      */
-    function call($object)
+    public function call($object)
     {
     }
 }
@@ -707,8 +794,8 @@ class WP_UnitTest_Factory_Callback_After_Create
  */
 abstract class WP_UnitTest_Factory_For_Thing
 {
-    var $default_generation_definitions;
-    var $factory;
+    public $default_generation_definitions;
+    public $factory;
     /**
      * Creates a new factory, which will create objects of a specific Thing
      *
@@ -717,7 +804,7 @@ abstract class WP_UnitTest_Factory_For_Thing
      * can be generators -- an object with next() method. There are some default generators: {@link WP_UnitTest_Generator_Sequence},
      * {@link WP_UnitTest_Generator_Locale_Name}, {@link WP_UnitTest_Factory_Callback_After_Create}.
      */
-    function __construct($factory, $default_generation_definitions = array())
+    public function __construct($factory, $default_generation_definitions = array())
     {
     }
     /**
@@ -727,7 +814,7 @@ abstract class WP_UnitTest_Factory_For_Thing
      *
      * @return mixed The result. Can be anything.
      */
-    abstract function create_object($args);
+    public abstract function create_object($args);
     /**
      * Updates an existing object.
      *
@@ -736,7 +823,7 @@ abstract class WP_UnitTest_Factory_For_Thing
      *
      * @return mixed The result. Can be anything.
      */
-    abstract function update_object($object, $fields);
+    public abstract function update_object($object, $fields);
     /**
      * Creates an object.
      *
@@ -745,7 +832,7 @@ abstract class WP_UnitTest_Factory_For_Thing
      *
      * @return mixed The result. Can be anything.
      */
-    function create($args = array(), $generation_definitions = \null)
+    public function create($args = array(), $generation_definitions = \null)
     {
     }
     /**
@@ -756,7 +843,7 @@ abstract class WP_UnitTest_Factory_For_Thing
      *
      * @return mixed The created object. Can be anything.
      */
-    function create_and_get($args = array(), $generation_definitions = \null)
+    public function create_and_get($args = array(), $generation_definitions = \null)
     {
     }
     /**
@@ -766,7 +853,7 @@ abstract class WP_UnitTest_Factory_For_Thing
      *
      * @return mixed The object. Can be anything.
      */
-    abstract function get_object_by_id($object_id);
+    public abstract function get_object_by_id($object_id);
     /**
      * Creates multiple objects.
      *
@@ -776,7 +863,7 @@ abstract class WP_UnitTest_Factory_For_Thing
      *
      * @return array
      */
-    function create_many($count, $args = array(), $generation_definitions = \null)
+    public function create_many($count, $args = array(), $generation_definitions = \null)
     {
     }
     /**
@@ -789,7 +876,7 @@ abstract class WP_UnitTest_Factory_For_Thing
      *
      * @return array|WP_Error Combined array on success. WP_Error when default value is incorrent.
      */
-    function generate_args($args = array(), $generation_definitions = \null, &$callbacks = \null)
+    public function generate_args($args = array(), $generation_definitions = \null, &$callbacks = \null)
     {
     }
     /**
@@ -800,7 +887,7 @@ abstract class WP_UnitTest_Factory_For_Thing
      *
      * @return array The altered fields.
      */
-    function apply_callbacks($callbacks, $created)
+    public function apply_callbacks($callbacks, $created)
     {
     }
     /**
@@ -810,7 +897,7 @@ abstract class WP_UnitTest_Factory_For_Thing
      *
      * @return WP_UnitTest_Factory_Callback_After_Create
      */
-    function callback($function)
+    public function callback($function)
     {
     }
     /**
@@ -820,7 +907,7 @@ abstract class WP_UnitTest_Factory_For_Thing
      *
      * @return array|string The value with the possibly applied slashes.
      */
-    function addslashes_deep($value)
+    public function addslashes_deep($value)
     {
     }
 }
@@ -836,7 +923,7 @@ abstract class WP_UnitTest_Factory_For_Thing
  */
 class WP_UnitTest_Factory_For_Post extends \WP_UnitTest_Factory_For_Thing
 {
-    function __construct($factory = \null)
+    public function __construct($factory = \null)
     {
     }
     /**
@@ -846,7 +933,7 @@ class WP_UnitTest_Factory_For_Post extends \WP_UnitTest_Factory_For_Thing
      *
      * @return int|WP_Error The post ID on success. The value 0 or WP_Error on failure.
      */
-    function create_object($args)
+    public function create_object($args)
     {
     }
     /**
@@ -857,7 +944,7 @@ class WP_UnitTest_Factory_For_Post extends \WP_UnitTest_Factory_For_Thing
      *
      * @return int|WP_Error The value 0 or WP_Error on failure. The post ID on success.
      */
-    function update_object($post_id, $fields)
+    public function update_object($post_id, $fields)
     {
     }
     /**
@@ -867,7 +954,7 @@ class WP_UnitTest_Factory_For_Post extends \WP_UnitTest_Factory_For_Thing
      *
      * @return null|WP_Post WP_Post on success or null on failure.
      */
-    function get_object_by_id($post_id)
+    public function get_object_by_id($post_id)
     {
     }
 }
@@ -887,7 +974,7 @@ class WP_UnitTest_Factory_For_Attachment extends \WP_UnitTest_Factory_For_Post
      *
      * @return  int|WP_Error The attachment ID on success. The value 0 or WP_Error on failure.
      */
-    function create_object($args, $legacy_parent = 0, $legacy_args = array())
+    public function create_object($args, $legacy_parent = 0, $legacy_args = array())
     {
     }
     /**
@@ -898,7 +985,7 @@ class WP_UnitTest_Factory_For_Attachment extends \WP_UnitTest_Factory_For_Post
      *
      * @return int|WP_Error The attachment ID on success. The value 0 or WP_Error on failure.
      */
-    function create_upload_object($file, $parent = 0)
+    public function create_upload_object($file, $parent = 0)
     {
     }
 }
@@ -914,7 +1001,7 @@ class WP_UnitTest_Factory_For_Attachment extends \WP_UnitTest_Factory_For_Post
  */
 class WP_UnitTest_Factory_For_Blog extends \WP_UnitTest_Factory_For_Thing
 {
-    function __construct($factory = \null)
+    public function __construct($factory = \null)
     {
     }
     /**
@@ -924,7 +1011,7 @@ class WP_UnitTest_Factory_For_Blog extends \WP_UnitTest_Factory_For_Thing
      *
      * @return int|WP_Error Returns WP_Error object on failure, the site ID on success.
      */
-    function create_object($args)
+    public function create_object($args)
     {
     }
     /**
@@ -935,7 +1022,7 @@ class WP_UnitTest_Factory_For_Blog extends \WP_UnitTest_Factory_For_Thing
      *
      * @return void
      */
-    function update_object($blog_id, $fields)
+    public function update_object($blog_id, $fields)
     {
     }
     /**
@@ -945,7 +1032,7 @@ class WP_UnitTest_Factory_For_Blog extends \WP_UnitTest_Factory_For_Thing
      *
      * @return null|WP_Site The site object or null if not found.
      */
-    function get_object_by_id($blog_id)
+    public function get_object_by_id($blog_id)
     {
     }
 }
@@ -988,7 +1075,7 @@ class WP_UnitTest_Factory_For_Bookmark extends \WP_UnitTest_Factory_For_Thing
  */
 class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
 {
-    function __construct($factory = \null)
+    public function __construct($factory = \null)
     {
     }
     /**
@@ -998,7 +1085,7 @@ class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
      *
      * @return false|int The comment's ID on success, false on failure.
      */
-    function create_object($args)
+    public function create_object($args)
     {
     }
     /**
@@ -1009,7 +1096,7 @@ class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
      *
      * @return int When updated 1, not update 0.
      */
-    function update_object($comment_id, $fields)
+    public function update_object($comment_id, $fields)
     {
     }
     /**
@@ -1022,7 +1109,7 @@ class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
      *
      * @return int[] Array with the comment ids.
      */
-    function create_post_comments($post_id, $count = 1, $args = array(), $generation_definitions = \null)
+    public function create_post_comments($post_id, $count = 1, $args = array(), $generation_definitions = \null)
     {
     }
     /**
@@ -1032,7 +1119,7 @@ class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
      *
      * @return null|WP_Comment WP_Comment when found, null when not found.
      */
-    function get_object_by_id($comment_id)
+    public function get_object_by_id($comment_id)
     {
     }
 }
@@ -1048,16 +1135,16 @@ class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
  */
 class WP_UnitTest_Factory_For_Network extends \WP_UnitTest_Factory_For_Thing
 {
-    function __construct($factory = \null)
+    public function __construct($factory = \null)
     {
     }
-    function create_object($args)
+    public function create_object($args)
     {
     }
-    function update_object($network_id, $fields)
+    public function update_object($network_id, $fields)
     {
     }
-    function get_object_by_id($network_id)
+    public function get_object_by_id($network_id)
     {
     }
 }
@@ -1074,7 +1161,7 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
 {
     private $taxonomy;
     const DEFAULT_TAXONOMY = 'post_tag';
-    function __construct($factory = \null, $taxonomy = \null)
+    public function __construct($factory = \null, $taxonomy = \null)
     {
     }
     /**
@@ -1084,7 +1171,7 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
      *
      * @return array|WP_Error
      */
-    function create_object($args)
+    public function create_object($args)
     {
     }
     /**
@@ -1095,7 +1182,7 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
      *
      * @return int The term id.
      */
-    function update_object($term, $fields)
+    public function update_object($term, $fields)
     {
     }
     /**
@@ -1112,7 +1199,7 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
      *
      * @return array|false|WP_Error Array of term taxonomy IDs of affected terms. WP_Error or false on failure.
      */
-    function add_post_terms($post_id, $terms, $taxonomy, $append = \true)
+    public function add_post_terms($post_id, $terms, $taxonomy, $append = \true)
     {
     }
     /**
@@ -1123,7 +1210,7 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
      *
      * @return null|WP_Error|WP_Term WP_Term on success. WP_error if taxonomy does not exist. Null for miscellaneous failure.
      */
-    function create_and_get($args = array(), $generation_definitions = \null)
+    public function create_and_get($args = array(), $generation_definitions = \null)
     {
     }
     /**
@@ -1133,7 +1220,7 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
      *
      * @return null|WP_Error|WP_Term WP_Term on success. WP_error if taxonomy does not exist. Null for miscellaneous failure.
      */
-    function get_object_by_id($term_id)
+    public function get_object_by_id($term_id)
     {
     }
 }
@@ -1149,7 +1236,7 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
  */
 class WP_UnitTest_Factory_For_User extends \WP_UnitTest_Factory_For_Thing
 {
-    function __construct($factory = \null)
+    public function __construct($factory = \null)
     {
     }
     /**
@@ -1159,7 +1246,7 @@ class WP_UnitTest_Factory_For_User extends \WP_UnitTest_Factory_For_Thing
      *
      * @return int|WP_Error
      */
-    function create_object($args)
+    public function create_object($args)
     {
     }
     /**
@@ -1170,7 +1257,7 @@ class WP_UnitTest_Factory_For_User extends \WP_UnitTest_Factory_For_Thing
      *
      * @return int|WP_Error User id on success. WP_Error on failure.
      */
-    function update_object($user_id, $fields)
+    public function update_object($user_id, $fields)
     {
     }
     /**
@@ -1180,7 +1267,7 @@ class WP_UnitTest_Factory_For_User extends \WP_UnitTest_Factory_For_Thing
      *
      * @return WP_User The user.
      */
-    function get_object_by_id($user_id)
+    public function get_object_by_id($user_id)
     {
     }
 }
@@ -1232,7 +1319,7 @@ class WP_UnitTest_Factory
      * @var WP_UnitTest_Factory_For_Network
      */
     public $network;
-    function __construct()
+    public function __construct()
     {
     }
 }
@@ -1241,10 +1328,10 @@ class WP_UnitTest_Generator_Sequence
     static $incr = -1;
     public $next;
     public $template_string;
-    function __construct($template_string = '%s', $start = \null)
+    public function __construct($template_string = '%s', $start = \null)
     {
     }
-    function next()
+    public function next()
     {
     }
     /**
@@ -2632,7 +2719,7 @@ abstract class WP_Ajax_UnitTestCase extends \WP_UnitTestCase
      *
      * @var array
      */
-    protected static $_core_actions_post = array('oembed_cache', 'image-editor', 'delete-comment', 'delete-tag', 'delete-link', 'delete-meta', 'delete-post', 'trash-post', 'untrash-post', 'delete-page', 'dim-comment', 'add-link-category', 'add-tag', 'get-tagcloud', 'get-comments', 'replyto-comment', 'edit-comment', 'add-menu-item', 'add-meta', 'add-user', 'closed-postboxes', 'hidden-columns', 'update-welcome-panel', 'menu-get-metabox', 'wp-link-ajax', 'menu-locations-save', 'menu-quick-search', 'meta-box-order', 'get-permalink', 'sample-permalink', 'inline-save', 'inline-save-tax', 'find_posts', 'widgets-order', 'save-widget', 'set-post-thumbnail', 'date_format', 'time_format', 'wp-fullscreen-save-post', 'wp-remove-post-lock', 'dismiss-wp-pointer', 'send-attachment-to-editor', 'heartbeat', 'nopriv_heartbeat', 'get-revision-diffs', 'save-user-color-scheme', 'update-widget', 'query-themes', 'parse-embed', 'set-attachment-thumbnail', 'parse-media-shortcode', 'destroy-sessions', 'install-plugin', 'update-plugin', 'press-this-save-post', 'press-this-add-category', 'crop-image', 'generate-password', 'save-wporg-username', 'delete-plugin', 'search-plugins', 'search-install-plugins', 'activate-plugin', 'update-theme', 'delete-theme', 'install-theme', 'get-post-thumbnail-html');
+    protected static $_core_actions_post = array('oembed_cache', 'image-editor', 'delete-comment', 'delete-tag', 'delete-link', 'delete-meta', 'delete-post', 'trash-post', 'untrash-post', 'delete-page', 'dim-comment', 'add-link-category', 'add-tag', 'get-tagcloud', 'get-comments', 'replyto-comment', 'edit-comment', 'add-menu-item', 'add-meta', 'add-user', 'closed-postboxes', 'hidden-columns', 'update-welcome-panel', 'menu-get-metabox', 'wp-link-ajax', 'menu-locations-save', 'menu-quick-search', 'meta-box-order', 'get-permalink', 'sample-permalink', 'inline-save', 'inline-save-tax', 'find_posts', 'widgets-order', 'save-widget', 'set-post-thumbnail', 'date_format', 'time_format', 'wp-fullscreen-save-post', 'wp-remove-post-lock', 'dismiss-wp-pointer', 'send-attachment-to-editor', 'heartbeat', 'nopriv_heartbeat', 'get-revision-diffs', 'save-user-color-scheme', 'update-widget', 'query-themes', 'parse-embed', 'set-attachment-thumbnail', 'parse-media-shortcode', 'destroy-sessions', 'install-plugin', 'update-plugin', 'press-this-save-post', 'press-this-add-category', 'crop-image', 'generate-password', 'save-wporg-username', 'delete-plugin', 'search-plugins', 'search-install-plugins', 'activate-plugin', 'update-theme', 'delete-theme', 'install-theme', 'get-post-thumbnail-html', 'wp-privacy-export-personal-data', 'wp-privacy-erase-personal-data');
     public static function setUpBeforeClass()
     {
     }
@@ -2980,51 +3067,51 @@ Multiple profile blocks are permitted, and they may be nested.
 */
 class WPProfiler
 {
-    var $stack;
-    var $profile;
+    public $stack;
+    public $profile;
     /**
      * PHP5 constructor.
      */
-    function __construct()
+    public function __construct()
     {
     }
-    function start($name)
+    public function start($name)
     {
     }
-    function stop()
+    public function stop()
     {
     }
-    function microtime($since = 0.0)
+    public function microtime($since = 0.0)
     {
     }
-    function log_filter($tag)
+    public function log_filter($tag)
     {
     }
-    function log_action($tag)
+    public function log_action($tag)
     {
     }
-    function _current_action()
+    public function _current_action()
     {
     }
-    function results()
+    public function results()
     {
     }
-    function _query_summary($queries, &$out)
+    public function _query_summary($queries, &$out)
     {
     }
-    function _query_count($queries)
+    public function _query_count($queries)
     {
     }
-    function _dirty_objects_count($dirty_objects)
+    public function _dirty_objects_count($dirty_objects)
     {
     }
-    function array_add($a, $b)
+    public function array_add($a, $b)
     {
     }
-    function array_sub($a, $b)
+    public function array_sub($a, $b)
     {
     }
-    function print_summary()
+    public function print_summary()
     {
     }
 }
@@ -3033,6 +3120,8 @@ function wp_tests_options($value)
 }
 /**
  * Retrieves PHPUnit runner version.
+ *
+ * @return double The version number.
  */
 function tests_get_phpunit_version()
 {
@@ -3078,24 +3167,61 @@ function _delete_all_data()
 function _delete_all_posts()
 {
 }
+/**
+ * Handles the WP die handler by outputting the given values as text.
+ *
+ * @param string $message The message.
+ * @param string $title   The title.
+ * @param array  $args    Array with arguments.
+ */
 function _wp_die_handler($message, $title = '', $args = array())
 {
 }
+/**
+ * Disables the WP die handler.
+ */
 function _disable_wp_die()
 {
 }
+/**
+ * Enables the WP die handler.
+ */
 function _enable_wp_die()
 {
 }
+/**
+ * Returns the die handler.
+ *
+ * @return string The die handler.
+ */
 function _wp_die_handler_filter()
 {
 }
+/**
+ * Returns the die handler.
+ *
+ * @return string The die handler.
+ */
 function _wp_die_handler_filter_exit()
 {
 }
+/**
+ * Dies without an exit.
+ *
+ * @param string $message The message.
+ * @param string $title   The title.
+ * @param array  $args    Array with arguments.
+ */
 function _wp_die_handler_txt($message, $title, $args)
 {
 }
+/**
+ * Dies with an exit.
+ *
+ * @param string $message The message.
+ * @param string $title   The title.
+ * @param array  $args    Array with arguments.
+ */
 function _wp_die_handler_exit($message, $title, $args)
 {
 }
@@ -3112,18 +3238,24 @@ function _set_default_permalink_structure_for_tests()
 }
 /**
  * Helper used with the `upload_dir` filter to remove the /year/month sub directories from the uploads path and URL.
+ *
+ * @return array The altered array.
  */
 function _upload_dir_no_subdir($uploads)
 {
 }
 /**
  * Helper used with the `upload_dir` filter to set https upload URL.
+ *
+ * @return array The altered array.
  */
 function _upload_dir_https($uploads)
 {
 }
 /**
  * Use the Spy_REST_Server class for the REST server.
+ *
+ * @return string The server class name.
  */
 function _wp_rest_server_class_filter()
 {
