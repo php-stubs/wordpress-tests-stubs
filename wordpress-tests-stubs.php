@@ -14,7 +14,7 @@
  *
  * All WordPress unit tests should inherit from this class.
  */
-abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
+abstract class WP_UnitTestCase_Base extends \PHPUnit\Framework\TestCase
 {
     protected static $forced_tickets = array();
     protected $expected_deprecated = array();
@@ -651,17 +651,6 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
     protected function update_post_modified($post_id, $date)
     {
     }
-    /**
-     * Touches the given file and its directory if it doesn't already exist.
-     *
-     * This can be used to ensure a file that is implictly relied on in a test exists
-     * without it having to be built.
-     *
-     * @param string $file The file name.
-     */
-    public static function touch($file)
-    {
-    }
 }
 /**
  * A class to handle additional command line arguments passed to the script.
@@ -841,6 +830,136 @@ class WP_REST_Test_Search_Handler extends \WP_REST_Search_Handler
     {
     }
     public function prepare_item_links($id)
+    {
+    }
+}
+/**
+ * Class WP_Sitemaps_Empty_Test_Provider.
+ *
+ * Provides test data for additional registered providers.
+ */
+class WP_Sitemaps_Empty_Test_Provider extends \WP_Sitemaps_Provider
+{
+    /**
+     * WP_Sitemaps_Empty_Test_Provider constructor.
+     *
+     * @param string $object_type Optional. Object type name to use. Default 'test'.
+     */
+    public function __construct($object_type = 'test')
+    {
+    }
+    /**
+     * Gets a URL list for a sitemap.
+     *
+     * @param int    $page_num       Page of results.
+     * @param string $object_subtype Optional. Object subtype name. Default empty.
+     * @return array List of URLs for a sitemap.
+     */
+    public function get_url_list($page_num, $object_subtype = '')
+    {
+    }
+    /**
+     * Query for determining the number of pages.
+     *
+     * @param string $object_subtype Optional. Object subtype. Default empty.
+     * @return int Total number of pages.
+     */
+    public function get_max_num_pages($object_subtype = '')
+    {
+    }
+}
+/**
+ * Class WP_Sitemaps_Large_Test_Provider.
+ *
+ * Provides test data for additional registered providers.
+ */
+class WP_Sitemaps_Large_Test_Provider extends \WP_Sitemaps_Provider
+{
+    /**
+     * Number of entries in the sitemap the provider produces.
+     *
+     * @var integer
+     */
+    public $num_entries = 1;
+    /**
+     * WP_Sitemaps_Large_Test_Provider constructor.
+     *
+     * @param int $num_entries Optional. Number of entries in in the sitemap.
+     */
+    public function __construct($num_entries = 50001)
+    {
+    }
+    /**
+     * Gets a URL list for a sitemap.
+     *
+     * @param int    $page_num       Page of results.
+     * @param string $object_subtype Optional. Object subtype name. Default empty.
+     * @return array List of URLs for a sitemap.
+     */
+    public function get_url_list($page_num, $object_subtype = '')
+    {
+    }
+    /**
+     * Lists sitemap pages exposed by this provider.
+     *
+     * The returned data is used to populate the sitemap entries of the index.
+     *
+     * @return array[] Array of sitemap entries.
+     */
+    public function get_sitemap_entries()
+    {
+    }
+    /**
+     * Query for determining the number of pages.
+     *
+     * @param string $object_subtype Optional. Object subtype. Default empty.
+     * @return int Total number of pages.
+     */
+    public function get_max_num_pages($object_subtype = '')
+    {
+    }
+}
+/**
+ * Class WP_Sitemaps_Test_Provider.
+ *
+ * Provides test data for additional registered providers.
+ */
+class WP_Sitemaps_Test_Provider extends \WP_Sitemaps_Provider
+{
+    /**
+     * WP_Sitemaps_Posts constructor.
+     *
+     * @param string $object_type Optional. Object type name to use. Default 'test'.
+     */
+    public function __construct($object_type = 'test')
+    {
+    }
+    /**
+     * Return the public post types, which excludes nav_items and similar types.
+     * Attachments are also excluded. This includes custom post types with public = true
+     *
+     * @return array Map of object subtype objects (WP_Post_Type) keyed by their name.
+     */
+    public function get_object_subtypes()
+    {
+    }
+    /**
+     * Gets a URL list for a sitemap.
+     *
+     * @param int    $page_num       Page of results.
+     * @param string $object_subtype Optional. Object subtype name. Default empty.
+     * @return array List of URLs for a sitemap.
+     */
+    public function get_url_list($page_num, $object_subtype = '')
+    {
+    }
+    /**
+     * Query for determining the number of pages.
+     *
+     * @param string $object_subtype Optional. Object subtype. Default empty.
+     * @return int Total number of pages.
+     */
+    public function get_max_num_pages($object_subtype = '')
     {
     }
 }
@@ -1585,6 +1704,9 @@ class WP_Image_Editor_Mock extends \WP_Image_Editor
     public static $load_return = \true;
     public static $test_return = \true;
     public static $save_return = array();
+    public static $spy = array();
+    public static $edit_return = array();
+    public static $size_return = \null;
     // Allow testing of jpeg_quality filter.
     public function set_mime_type($mime_type = \null)
     {
@@ -1619,8 +1741,11 @@ class WP_Image_Editor_Mock extends \WP_Image_Editor
     public function stream($mime_type = \null)
     {
     }
+    public function get_size()
+    {
+    }
 }
-class MockPHPMailer extends \PHPMailer
+class MockPHPMailer extends \PHPMailer\PHPMailer\PHPMailer
 {
     var $mock_sent = array();
     function preSend()
@@ -3071,6 +3196,65 @@ abstract class WP_Test_REST_Post_Type_Controller_Testcase extends \WP_Test_REST_
      * @return string
      */
     public function protected_title_format()
+    {
+    }
+}
+abstract class WP_Test_XML_TestCase extends \WP_UnitTestCase
+{
+    /**
+     * Load XML from a string.
+     *
+     * @param string $xml
+     * @param int    $options Bitwise OR of the {@link https://www.php.net/manual/en/libxml.constants.php libxml option constants}.
+     *                        Default is 0.
+     * @return DOMDocument The DOMDocument object loaded from the XML.
+     */
+    public function loadXML($xml, $options = 0)
+    {
+    }
+    /**
+     * Normalize an XML document to make comparing two documents easier.
+     *
+     * @param string $xml
+     * @param int    $options Bitwise OR of the {@link https://www.php.net/manual/en/libxml.constants.php libxml option constants}.
+     *                        Default is 0.
+     * @return string The normalized form of `$xml`.
+     */
+    public function normalizeXML($xml, $options = 0)
+    {
+    }
+    /**
+     * Reports an error identified by `$message` if the namespace normalized form of the XML document in `$actualXml`
+     * is equal to the namespace normalized form of the XML document in `$expectedXml`.
+     *
+     * This is similar to {@link https://phpunit.de/manual/6.5/en/appendixes.assertions.html#appendixes.assertions.assertXmlStringEqualsXmlString assertXmlStringEqualsXmlString()}
+     * except that differences in namespace prefixes are normalized away, such that given
+     * `$actualXml = "<root xmlns='urn:wordpress.org'><child/></root>";` and
+     * `$expectedXml = "<ns0:root xmlns:ns0='urn:wordpress.org'><ns0:child></ns0:root>";`
+     * then `$this->assertXMLEquals( $expectedXml, $actualXml )` will succeed.
+     *
+     * @param string $expectedXml
+     * @param string $actualXml
+     * @param string $message   Optional. Message to display when the assertion fails.
+     */
+    public function assertXMLEquals($expectedXml, $actualXml, $message = '')
+    {
+    }
+    /**
+     * Reports an error identified by `$message` if the namespace normalized form of the XML document in `$actualXml`
+     * is not equal to the namespace normalized form of the XML document in `$expectedXml`.
+     *
+     * This is similar to {@link https://phpunit.de/manual/6.5/en/appendixes.assertions.html#appendixes.assertions.assertXmlStringEqualsXmlString assertXmlStringNotEqualsXmlString()}
+     * except that differences in namespace prefixes are normalized away, such that given
+     * `$actualXml = "<root xmlns='urn:wordpress.org'><child></root>";` and
+     * `$expectedXml = "<ns0:root xmlns:ns0='urn:wordpress.org'><ns0:child/></ns0:root>";`
+     * then `$this->assertXMLNotEquals( $expectedXml, $actualXml )` will fail.
+     *
+     * @param string $expectedXml
+     * @param string $actualXml
+     * @param string $message   Optional. Message to display when the assertion fails.
+     */
+    public function assertXMLNotEquals($expectedXml, $actualXml, $message = '')
     {
     }
 }
