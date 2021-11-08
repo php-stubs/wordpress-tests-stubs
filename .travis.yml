@@ -30,6 +30,9 @@ before_script:
         echo "Hiding deprecated errors in generate-stubs ..."
         sed -i -e '3s/^/error_reporting(E_ALL ^ E_DEPRECATED);/' ./vendor/giacocorsiglia/stubs-generator/bin/generate-stubs
     fi
+  - |
+    wget -q -O- "https://api.github.com/repos/WordPress/wordpress-develop/tarball/refs/tags/$(head -n 1 VERSION)" \
+        | tar -x -z --directory=source/ --strip-components=3 --wildcards "*/tests/phpunit/includes/"
 
 script:
   # Generate stubs

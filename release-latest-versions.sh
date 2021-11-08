@@ -11,11 +11,12 @@ Do_release()
     if git rev-parse "refs/tags/v${VERSION}" >/dev/null 2>&1; then
         echo "Tag exists!"
         echo
-        return 0;
+        return 0
     fi
 
     # Get new version
     rm -r -f source/includes/
+    echo "${VERSION}" >VERSION
     wget -q -O- "https://api.github.com/repos/WordPress/wordpress-develop/tarball/refs/tags/${VERSION}" \
         | tar -x -z --directory=source/ --strip-components=3 --wildcards "*/tests/phpunit/includes/"
 
