@@ -78,7 +78,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
     {
     }
     /**
-     * Allow tests to be skipped on some automated runs
+     * Allow tests to be skipped on some automated runs.
      *
      * For test runs on Travis for something other than trunk/master
      * we want to skip tests that only need to run for master.
@@ -100,6 +100,14 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      * Use in conjunction with the ms-excluded group.
      */
     public function skipWithMultisite()
+    {
+    }
+    /**
+     * Allow tests to be skipped if the HTTP request times out.
+     *
+     * @param array|WP_Error $response HTTP response.
+     */
+    public function skipTestOnTimeout($response)
     {
     }
     /**
@@ -630,6 +638,17 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      * @return int|false 1 on success, or false on error.
      */
     protected function update_post_modified($post_id, $date)
+    {
+    }
+    /**
+     * Touches the given file and its directory if it doesn't already exist.
+     *
+     * This can be used to ensure a file that is implictly relied on in a test exists
+     * without it having to be built.
+     *
+     * @param string $file The file name.
+     */
+    public static function touch($file)
     {
     }
 }
