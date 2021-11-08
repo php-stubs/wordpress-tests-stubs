@@ -573,6 +573,12 @@ class MockPHPMailer extends \PHPMailer
     {
     }
 }
+class PHPUnit_Util_Test extends \PHPUnit\Util\Test
+{
+    public static function getTickets($className, $methodName)
+    {
+    }
+}
 /**
  * A PHPUnit TestListener that exposes your slowest running tests by outputting
  * results directly to the console.
@@ -1292,6 +1298,16 @@ abstract class WP_Ajax_UnitTestCase extends \WP_UnitTestCase
      * @param string $action
      */
     protected function _handleAjax($action)
+    {
+    }
+    /**
+     * PHPUnit 6+ compatibility shim.
+     *
+     * @param mixed      $exception
+     * @param string     $message
+     * @param int|string $code
+     */
+    public function setExpectedException($exception, $message = '', $code = \null)
     {
     }
 }
