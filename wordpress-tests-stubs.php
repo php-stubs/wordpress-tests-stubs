@@ -161,6 +161,16 @@ abstract class WP_UnitTest_Factory_For_Thing
     {
     }
 }
+/**
+ * Unit test factory for posts.
+ *
+ * Note: The below @method notations are defined solely for the benefit of IDEs,
+ * as a way to indicate expected return values from the given factory methods.
+ *
+ * @method int create( $args = array(), $generation_definitions = null )
+ * @method WP_Post create_and_get( $args = array(), $generation_definitions = null )
+ * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
+ */
 class WP_UnitTest_Factory_For_Post extends \WP_UnitTest_Factory_For_Thing
 {
     function __construct($factory = \null)
@@ -197,6 +207,16 @@ class WP_UnitTest_Factory_For_Attachment extends \WP_UnitTest_Factory_For_Post
     {
     }
 }
+/**
+ * Unit test factory for sites on a multisite network.
+ *
+ * Note: The below @method notations are defined solely for the benefit of IDEs,
+ * as a way to indicate expected return values from the given factory methods.
+ *
+ * @method int create( $args = array(), $generation_definitions = null )
+ * @method WP_Site create_and_get( $args = array(), $generation_definitions = null )
+ * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
+ */
 class WP_UnitTest_Factory_For_Blog extends \WP_UnitTest_Factory_For_Thing
 {
     function __construct($factory = \null)
@@ -215,7 +235,14 @@ class WP_UnitTest_Factory_For_Blog extends \WP_UnitTest_Factory_For_Thing
 /**
  * Factory for creating fixtures for the deprecated Links/Bookmarks API.
  *
+ * Note: The below @method notations are defined solely for the benefit of IDEs,
+ * as a way to indicate expected return values from the given factory methods.
+ *
  * @since 4.6.0
+ *
+ * @method int create( $args = array(), $generation_definitions = null )
+ * @method object create_and_get( $args = array(), $generation_definitions = null )
+ * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
  */
 class WP_UnitTest_Factory_For_Bookmark extends \WP_UnitTest_Factory_For_Thing
 {
@@ -232,6 +259,16 @@ class WP_UnitTest_Factory_For_Bookmark extends \WP_UnitTest_Factory_For_Thing
     {
     }
 }
+/**
+ * Unit test factory for comments.
+ *
+ * Note: The below @method notations are defined solely for the benefit of IDEs,
+ * as a way to indicate expected return values from the given factory methods.
+ *
+ * @method int create( $args = array(), $generation_definitions = null )
+ * @method WP_Comment create_and_get( $args = array(), $generation_definitions = null )
+ * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
+ */
 class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
 {
     function __construct($factory = \null)
@@ -250,6 +287,16 @@ class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
     {
     }
 }
+/**
+ * Unit test factory for networks.
+ *
+ * Note: The below @method notations are defined solely for the benefit of IDEs,
+ * as a way to indicate expected return values from the given factory methods.
+ *
+ * @method int create( $args = array(), $generation_definitions = null )
+ * @method WP_Network create_and_get( $args = array(), $generation_definitions = null )
+ * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
+ */
 class WP_UnitTest_Factory_For_Network extends \WP_UnitTest_Factory_For_Thing
 {
     function __construct($factory = \null)
@@ -265,6 +312,15 @@ class WP_UnitTest_Factory_For_Network extends \WP_UnitTest_Factory_For_Thing
     {
     }
 }
+/**
+ * Unit test factory for terms.
+ *
+ * Note: The below @method notations are defined solely for the benefit of IDEs,
+ * as a way to indicate expected return values from the given factory methods.
+ *
+ * @method int create( $args = array(), $generation_definitions = null )
+ * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
+ */
 class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
 {
     private $taxonomy;
@@ -281,6 +337,9 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
     function add_post_terms($post_id, $terms, $taxonomy, $append = \true)
     {
     }
+    /**
+     * @return array|null|WP_Error|WP_Term
+     */
     function create_and_get($args = array(), $generation_definitions = \null)
     {
     }
@@ -288,6 +347,16 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
     {
     }
 }
+/**
+ * Unit test factory for users.
+ *
+ * Note: The below @method notations are defined solely for the benefit of IDEs,
+ * as a way to indicate expected return values from the given factory methods.
+ *
+ * @method int create( $args = array(), $generation_definitions = null )
+ * @method WP_User create_and_get( $args = array(), $generation_definitions = null )
+ * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
+ */
 class WP_UnitTest_Factory_For_User extends \WP_UnitTest_Factory_For_Thing
 {
     function __construct($factory = \null)
@@ -1713,6 +1782,11 @@ class WP_UnitTestCase extends \PHPUnit_Framework_TestCase
     function __get($name)
     {
     }
+    /**
+     * Fetches the factory object for generating WordPress fixtures.
+     *
+     * @return WP_UnitTest_Factory The fixture factory.
+     */
     protected static function factory()
     {
     }
@@ -1748,7 +1822,7 @@ class WP_UnitTestCase extends \PHPUnit_Framework_TestCase
     {
     }
     /**
-     * Allow tests to be skipped on some automated runs.
+     * Allow tests to be skipped on some automated runs
      *
      * For test runs on Travis for something other than trunk/master 
      * we want to skip tests that only need to run for master.
@@ -1770,14 +1844,6 @@ class WP_UnitTestCase extends \PHPUnit_Framework_TestCase
      * Use in conjunction with the ms-excluded group.
      */
     public function skipWithMultisite()
-    {
-    }
-    /**
-     * Allow tests to be skipped if the HTTP request times out.
-     *
-     * @param array|WP_Error $response HTTP response.
-     */
-    public function skipTestOnTimeout($response)
     {
     }
     /**
@@ -2088,7 +2154,7 @@ abstract class WP_Ajax_UnitTestCase extends \WP_UnitTestCase
      */
     protected $_last_response = '';
     /**
-     * List of ajax actions called via POST
+     * List of ajax actions called via GET
      * @var array
      */
     protected static $_core_actions_get = array('fetch-list', 'ajax-tag-search', 'wp-compression-test', 'imgedit-preview', 'oembed-cache', 'autocomplete-user', 'dashboard-widgets', 'logged-in');
@@ -2098,7 +2164,7 @@ abstract class WP_Ajax_UnitTestCase extends \WP_UnitTestCase
      */
     protected $_error_level = 0;
     /**
-     * List of ajax actions called via GET
+     * List of ajax actions called via POST
      * @var array
      */
     protected static $_core_actions_post = array('oembed_cache', 'image-editor', 'delete-comment', 'delete-tag', 'delete-link', 'delete-meta', 'delete-post', 'trash-post', 'untrash-post', 'delete-page', 'dim-comment', 'add-link-category', 'add-tag', 'get-tagcloud', 'get-comments', 'replyto-comment', 'edit-comment', 'add-menu-item', 'add-meta', 'add-user', 'closed-postboxes', 'hidden-columns', 'update-welcome-panel', 'menu-get-metabox', 'wp-link-ajax', 'menu-locations-save', 'menu-quick-search', 'meta-box-order', 'get-permalink', 'sample-permalink', 'inline-save', 'inline-save-tax', 'find_posts', 'widgets-order', 'save-widget', 'set-post-thumbnail', 'date_format', 'time_format', 'wp-fullscreen-save-post', 'wp-remove-post-lock', 'dismiss-wp-pointer', 'send-attachment-to-editor', 'heartbeat', 'nopriv_heartbeat', 'get-revision-diffs', 'save-user-color-scheme', 'update-widget', 'query-themes', 'parse-embed', 'set-attachment-thumbnail', 'parse-media-shortcode', 'destroy-sessions', 'install-plugin', 'update-plugin', 'press-this-save-post', 'press-this-add-category', 'crop-image', 'generate-password', 'save-wporg-username', 'delete-plugin', 'search-plugins', 'search-install-plugins', 'activate-plugin', 'update-theme', 'delete-theme', 'install-theme', 'get-post-thumbnail-html');
@@ -2107,7 +2173,7 @@ abstract class WP_Ajax_UnitTestCase extends \WP_UnitTestCase
     }
     /**
      * Set up the test fixture.
-     * Override wp_die(), pretend to be ajax, and suppres E_WARNINGs
+     * Override wp_die(), pretend to be ajax, and suppress E_WARNINGs
      */
     public function setUp()
     {
@@ -2314,7 +2380,7 @@ class WP_XMLRPC_UnitTestCase extends \WP_UnitTestCase
 class TracTickets
 {
     /**
-     * When open tickets for a Trac install is requested, the results are stored here.
+     * When open tickets for a Trac installation is requested, the results are stored here.
      *
      * @var array
      */
@@ -2390,7 +2456,7 @@ class MockAction
     }
 }
 // convert valid xml to an array tree structure
-// kinda lame but it works with a default php 4 install
+// kinda lame but it works with a default php 4 installation
 class testXMLParser
 {
     var $xml;
@@ -2527,7 +2593,13 @@ function _enable_wp_die()
 function _wp_die_handler_filter()
 {
 }
+function _wp_die_handler_filter_exit()
+{
+}
 function _wp_die_handler_txt($message, $title, $args)
+{
+}
+function _wp_die_handler_exit($message, $title, $args)
 {
 }
 /**
@@ -3227,6 +3299,15 @@ function wp_cache_add_global_groups($groups)
  * @return  void
  */
 function wp_cache_add_non_persistent_groups($groups)
+{
+}
+/**
+ * Legacy plural form function.
+ *
+ * @param int $nplurals
+ * @param string $expression
+ */
+function tests_make_plural_form_function($nplurals, $expression)
 {
 }
 // misc help functions and utilities
