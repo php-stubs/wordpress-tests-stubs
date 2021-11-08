@@ -651,6 +651,17 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit\Framework\TestCase
     protected function update_post_modified($post_id, $date)
     {
     }
+    /**
+     * Touches the given file and its directory if it doesn't already exist.
+     *
+     * This can be used to ensure a file that is implictly relied on in a test exists
+     * without it having to be built.
+     *
+     * @param string $file The file name.
+     */
+    public static function touch($file)
+    {
+    }
 }
 /**
  * A class to handle additional command line arguments passed to the script.
