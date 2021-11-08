@@ -929,6 +929,15 @@ class WP_UnitTestCase extends \PHPUnit_Framework_TestCase
     {
     }
     /**
+     * Allow tests to be skipped on some automated runs
+     *
+     * For test runs on Travis for something other than trunk/master 
+     * we want to skip tests that only need to run for master.
+     */
+    public function skipOnAutomatedBranches()
+    {
+    }
+    /**
      * Unregister existing post types and register defaults.
      *
      * Run before each test in order to clean up the global scope, in case
@@ -1064,6 +1073,17 @@ class WP_UnitTestCase extends \PHPUnit_Framework_TestCase
     {
     }
     function assertEqualSetsWithIndex($expected, $actual)
+    {
+    }
+    /**
+     * Asserts that a condition is not false.
+     *
+     * @param bool   $condition
+     * @param string $message
+     *
+     * @throws PHPUnit_Framework_AssertionFailedError
+     */
+    public static function assertNotFalse($condition, $message = '')
     {
     }
     /**
@@ -1658,14 +1678,6 @@ function _upload_dir_no_subdir($uploads)
  * Helper used with the `upload_dir` filter to set https upload URL.
  */
 function _upload_dir_https($uploads)
-{
-}
-// Skip `setcookie` calls in auth_cookie functions due to warning:
-// Cannot modify header information - headers already sent by ...
-function wp_set_auth_cookie($user_id, $remember = \false, $secure = '', $token = '')
-{
-}
-function wp_clear_auth_cookie()
 {
 }
 /**
