@@ -6,7 +6,7 @@ dist: "bionic"
 
 php:
   # giacocorsiglia/stubs-generator does not support PHP 7.0
-  - "8.0"
+#  - "8.0"
   - "7.4"
   - "7.3"
   - "7.2"
@@ -39,4 +39,5 @@ script:
   # Check stubs changes compared to repository
   - "git diff --exit-code"
   # Execute stubs
+  - "composer require --dev phpunit/phpunit:^7"
   - "php -f wordpress-tests-stubs.php"

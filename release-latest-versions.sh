@@ -5,7 +5,6 @@ set -e
 Do_release()
 {
     local VERSION="$1"
-    local SED_EXP
 
     echo "Releasing ${VERSION} version ..."
 
