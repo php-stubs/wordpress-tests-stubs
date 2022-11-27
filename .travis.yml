@@ -15,10 +15,10 @@ cache:
 
 before_install:
   - "phpenv config-rm xdebug.ini"
-  - "composer validate --strict"
+  - "composer validate --no-interaction --strict"
 
 install:
-  - "composer update --no-interaction --no-suggest"
+  - "composer update --no-interaction"
 
 before_script:
   - |
