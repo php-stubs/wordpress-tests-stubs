@@ -21,3 +21,10 @@ namespace PHPMailer\PHPMailer {
     class PHPMailer {}
 
 }
+
+// Needed since WordPress 5.9.
+namespace Yoast\PHPUnitPolyfills\TestCases {
+
+    class TestCase {}
+
+}
