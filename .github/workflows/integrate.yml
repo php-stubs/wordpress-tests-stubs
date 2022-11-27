@@ -1,0 +1,87 @@
+name: "Integrate"
+
+on:
+  push:
+    branches:
+      - "master"
+  pull_request: null
+  # Add [skip ci] to commit message to skip CI.
+
+permissions:
+  contents: "read"
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  regenerate:
+    name: "Regenerate stubs on PHP ${{ matrix.php-version }}"
+    strategy:
+      matrix:
+        php-version:
+          - "8.2"
+          - "8.1"
+          - "8.0"
+          - "7.4"
+          - "7.3"
+    runs-on: "ubuntu-20.04"
+    timeout-minutes: 5
+    steps:
+    - name: "Setup PHP"
+      uses: "shivammathur/setup-php@v2"
+      with:
+        php-version: "${{ matrix.php-version }}"
+        coverage: none
+
+    - name: "Checkout code"
+      uses: "actions/checkout@v3"
+
+    - name: "Validate Composer configuration"
+      run: composer validate --no-interaction --strict
+
+    - name: "Install dependencies"
+      uses: "ramsey/composer-install@v2"
+
+    - name: "Download WordPress tests"
+      run: |
+        wget -q -O- "https://api.github.com/repos/WordPress/wordpress-develop/tarball/refs/tags/$(head -n 1 VERSION)" \
+          | tar -x -z --directory=source/ --strip-components=3 --wildcards "*/tests/phpunit/includes/"
+
+    - name: "Regenerate stubs"
+      run: "bash -x ./generate.sh"
+
+    - name: "Check whether stubs changed compared to repository"
+      run: "git diff --exit-code"
+
+  syntax_errors:
+    name: "Syntax errors on PHP ${{ matrix.php-version }}"
+    strategy:
+      matrix:
+        php-version:
+          - "8.2"
+          - "8.1"
+          - "8.0"
+          - "7.4"
+          - "7.3"
+    runs-on: "ubuntu-20.04"
+    timeout-minutes: 5
+    steps:
+    - name: "Setup PHP"
+      uses: "shivammathur/setup-php@v2"
+      with:
+        php-version: "${{ matrix.php-version }}"
+        coverage: none
+
+    - name: "Checkout code"
+      uses: "actions/checkout@v3"
+
+    - name: "Install dependencies"
+      uses: "ramsey/composer-install@v2"
+
+    - name: "Check stubs for syntax errors"
+      run: "php -l wordpress-tests-stubs.php"
+
+    - name: "Execute stubs"
+      run: |
+        php -r 'require "vendor/autoload.php"; require "extended-classes.php"; require "wordpress-tests-stubs.php";'
