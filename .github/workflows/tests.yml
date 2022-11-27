@@ -18,7 +18,6 @@ jobs:
     name: Tests (PHP ${{ matrix.php }})
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
         php: [ '8.2', '8.1', '8.0', '7.4', '7.3' ]
