@@ -8,7 +8,7 @@ Stubs are generated directly from the [source](https://github.com/wordpress/word
 
 ### Requirements
 
-- PHP >=7.1
+- PHP >=7.3
 
 ### Installation
 
