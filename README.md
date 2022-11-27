@@ -27,6 +27,6 @@ Include all stubs in PHPStan configuration file.
 ```yaml
 parameters:
     scanFiles:
-        - vendor/php-stubs/wordpress-tests-stubs/wordpress-stubs.php
-        - vendor/php-stubs/wordpress-tests-stubs/wordpress-tests-stubs.php
+        - %rootDir%/../../php-stubs/wordpress-stubs/wordpress-stubs.php
+        - %rootDir%/../../php-stubs/wordpress-tests-stubs/wordpress-tests-stubs.php
 ```
