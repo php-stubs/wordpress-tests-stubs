@@ -97,8 +97,8 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     /**
      * Allows tests to be skipped on some automated runs.
      *
-     * For test runs on GitHub Actions for something other than trunk/master,
-     * we want to skip tests that only need to run for master.
+     * For test runs on GitHub Actions for something other than trunk,
+     * we want to skip tests that only need to run for trunk.
      */
     public function skipOnAutomatedBranches()
     {
