@@ -43,6 +43,11 @@ jobs:
     - name: "Install dependencies"
       uses: "ramsey/composer-install@v2"
 
+    - name: "Download WordPress tests"
+      run: |
+        wget -q -O- "https://api.github.com/repos/WordPress/wordpress-develop/tarball/refs/tags/$(head -n 1 VERSION)" \
+          | tar -x -z --directory=source/ --strip-components=3 --wildcards "*/tests/phpunit/includes/"
+
     - name: "Regenerate stubs"
       run: "bash -x ./generate.sh"
 
