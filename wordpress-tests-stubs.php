@@ -834,7 +834,6 @@ class WP_PHPUnit_Util_Getopt
  */
 class Basic_Object
 {
-    private $arbitrary_props = array('foo' => 'bar');
     public function __get($name)
     {
     }
@@ -848,10 +847,6 @@ class Basic_Object
     {
     }
     public function __call($name, $arguments)
-    {
-    }
-    // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
-    private function callMe()
     {
     }
 }
@@ -872,7 +867,6 @@ class Basic_Subclass extends \Basic_Object
  */
 class JsonSerializable_Object implements \JsonSerializable
 {
-    private $data;
     public function __construct($data)
     {
     }
@@ -1153,14 +1147,6 @@ class WP_Test_Stream
      */
     public $context;
     /**
-     * Initializes internal state for reading the given URL.
-     *
-     * @param string $url A URL of the form "protocol://bucket/path".
-     */
-    private function open($url)
-    {
-    }
-    /**
      * Opens a URL.
      *
      * @see streamWrapper::stream_open
@@ -1229,15 +1215,6 @@ class WP_Test_Stream
     {
     }
     /**
-     * Creates a file metadata object, with defaults.
-     *
-     * @param array $stats Partial file metadata.
-     * @return array Complete file metadata.
-     */
-    private function make_stat($stats)
-    {
-    }
-    /**
      * Retrieves information about a file.
      *
      * @see streamWrapper::stream_stat
@@ -1259,14 +1236,6 @@ class WP_Test_Stream
      * @see streamWrapper::unlink
      */
     public function unlink($path)
-    {
-    }
-    /**
-     * Interprets this stream's path as a directory, and returns the entry.
-     *
-     * @return A reference to the data entry for the directory.
-     */
-    private function &get_directory_ref()
     {
     }
 }
@@ -1836,7 +1805,6 @@ class WP_UnitTest_Factory_For_Network extends \WP_UnitTest_Factory_For_Thing
  */
 class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
 {
-    private $taxonomy;
     const DEFAULT_TAXONOMY = 'post_tag';
     public function __construct($factory = \null, $taxonomy = \null)
     {
@@ -2071,12 +2039,6 @@ class WP_UnitTest_Generator_Sequence
 }
 class WP_Filesystem_MockFS extends \WP_Filesystem_Base
 {
-    private $cwd;
-    // Holds a array of objects which contain an array of objects, etc.
-    private $fs = \null;
-    // Holds a array of /path/to/file.php and /path/to/dir/ map to an object in $fs above.
-    // A fast, more efficient way of determining if a path exists, and access to that node.
-    private $fs_map = array();
     public $verbose = \false;
     // Enable to debug WP_Filesystem_Base::find_folder() / etc.
     public $errors = array();
@@ -2103,18 +2065,6 @@ class WP_Filesystem_MockFS extends \WP_Filesystem_Base
      * "Bulk Loads" a filesystem into the internal virtual filesystem
      */
     public function setfs($paths)
-    {
-    }
-    /**
-     * Locates a filesystem "node"
-     */
-    private function locate_node($path)
-    {
-    }
-    /**
-     * Locates a filesystem node for the parent of the given item
-     */
-    private function locate_parent_node($path)
     {
     }
     // Here starteth the WP_Filesystem functions.
