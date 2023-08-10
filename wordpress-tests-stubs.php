@@ -360,6 +360,17 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
     {
     }
     /**
+     * Asserts that two values are equal, with EOL differences discarded.
+     *
+     * @since 5.4.0
+     *
+     * @param string $expected The expected value.
+     * @param string $actual   The actual value.
+     */
+    public function assertEqualsIgnoreEOL($expected, $actual)
+    {
+    }
+    /**
      * Asserts that the contents of two un-keyed, single arrays are equal, without accounting for the order of elements.
      *
      * @since 3.5.0
@@ -412,8 +423,8 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Framework_TestCase
      *
      * This is a custom extension of the PHPUnit requirements handling.
      *
-     * Contains legacy code for skipping tests that are associated with an open Trac ticket. Core tests no longer
-     * support this behaviour.
+     * Contains legacy code for skipping tests that are associated with an open Trac ticket.
+     * Core tests no longer support this behaviour.
      *
      * @since 3.5.0
      */
@@ -748,6 +759,61 @@ class WP_Fake_Block_Type extends \WP_Block_Type
     }
 }
 /**
+ * Unit tests covering WP_REST_Controller functionality using a flexible schema.
+ *
+ * @package WordPress
+ * @subpackage REST API
+ * @since 5.4.0
+ */
+/**
+ * WP_REST_Test_Configurable_Controller class.
+ *
+ * @group restapi
+ *
+ * @since 5.4.0
+ */
+class WP_REST_Test_Configurable_Controller extends \WP_REST_Controller
+{
+    /**
+     * Test schema.
+     *
+     * @since 5.4.0
+     *
+     * @var array $test_schema
+     */
+    protected $test_schema;
+    /**
+     * Class constructor.
+     *
+     * @since 5.4.0
+     *
+     * @param array $test_schema Schema for use in testing.
+     */
+    public function __construct($test_schema)
+    {
+    }
+    /**
+     * Provides the test schema.
+     *
+     * @since 5.4.0
+     *
+     * @return array Test schema.
+     */
+    public function get_test_schema()
+    {
+    }
+    /**
+     * Get the item's schema, conforming to JSON Schema.
+     *
+     * @since 5.4.0
+     *
+     * @return array
+     */
+    public function get_item_schema()
+    {
+    }
+}
+/**
  * REST API: WP_REST_Test_Search_Handler class
  *
  * @package WordPress
@@ -776,14 +842,15 @@ class WP_Tests_Exception extends \PHPUnit_Framework_Exception
 {
 }
 /**
- * General exception for wp_die()
+ * General exception for wp_die().
  */
 class WPDieException extends \Exception
 {
 }
 /**
- * Exception for cases of wp_die(), for ajax tests.
- * This means there was an error (no output, and a call to wp_die)
+ * Exception for cases of wp_die(), for Ajax tests.
+ *
+ * This means there was an error (no output, and a call to wp_die).
  *
  * @package    WordPress
  * @subpackage Unit Tests
@@ -793,11 +860,11 @@ class WPAjaxDieStopException extends \WPDieException
 {
 }
 /**
- * Exception for cases of wp_die(), for ajax tests.
- * This means execution of the ajax function should be halted, but the unit
- * test can continue.  The function finished normally and there was not an
- * error (output happened, but wp_die was called to end execution)  This is
- * used with WP_Ajax_Response::send
+ * Exception for cases of wp_die(), for Ajax tests.
+ *
+ * This means the execution of the Ajax function should be halted, but the unit test
+ * can continue. The function finished normally and there was no error (output happened,
+ * but wp_die was called to end execution). This is used with WP_Ajax_Response::send().
  *
  * @package    WordPress
  * @subpackage Unit Tests
@@ -821,7 +888,7 @@ class WP_UnitTest_Factory_Callback_After_Create
     {
     }
     /**
-     * Calls the set callback on given object.
+     * Calls the set callback on a given object.
      *
      * @param mixed $object The object to apply the callback on.
      *
@@ -860,7 +927,7 @@ abstract class WP_UnitTest_Factory_For_Thing
     /**
      * Updates an existing object.
      *
-     * @param int   $object The object id.
+     * @param int   $object The object ID.
      * @param array $fields The values to update.
      *
      * @return mixed The result. Can be anything.
@@ -891,7 +958,7 @@ abstract class WP_UnitTest_Factory_For_Thing
     /**
      * Retrieves an object by ID.
      *
-     * @param int $object_id The object id.
+     * @param int $object_id The object ID.
      *
      * @return mixed The object. Can be anything.
      */
@@ -909,7 +976,7 @@ abstract class WP_UnitTest_Factory_For_Thing
     {
     }
     /**
-     * Combines the given argument with the generation_definitions (defaults) and applies
+     * Combines the given arguments with the generation_definitions (defaults) and applies
      * possibly set callbacks on it.
      *
      * @param array       $args                   Optional. The arguments to combine with defaults. Default is empty array.
@@ -981,20 +1048,20 @@ class WP_UnitTest_Factory_For_Post extends \WP_UnitTest_Factory_For_Thing
     /**
      * Updates an existing post object.
      *
-     * @param int   $post_id The post id to update.
+     * @param int   $post_id ID of the post to update.
      * @param array $fields  Post data.
      *
-     * @return int|WP_Error The value 0 or WP_Error on failure. The post ID on success.
+     * @return int|WP_Error The post ID on success. The value 0 or WP_Error on failure.
      */
     public function update_object($post_id, $fields)
     {
     }
     /**
-     * Retrieves a object by an id.
+     * Retrieves a post by a given ID.
      *
-     * @param int   $post_id The post id to update.
+     * @param int $post_id ID of the post to retrieve.
      *
-     * @return null|WP_Post WP_Post on success or null on failure.
+     * @return WP_Post|null WP_Post object on success, null on failure.
      */
     public function get_object_by_id($post_id)
     {
@@ -1014,7 +1081,7 @@ class WP_UnitTest_Factory_For_Attachment extends \WP_UnitTest_Factory_For_Post
      * @param int   $legacy_parent Deprecated.
      * @param array $legacy_args   Deprecated.
      *
-     * @return  int|WP_Error The attachment ID on success. The value 0 or WP_Error on failure.
+     * @return int|WP_Error The attachment ID on success. The value 0 or WP_Error on failure.
      */
     public function create_object($args, $legacy_parent = 0, $legacy_args = array())
     {
@@ -1023,7 +1090,7 @@ class WP_UnitTest_Factory_For_Attachment extends \WP_UnitTest_Factory_For_Post
      * Saves an attachment.
      *
      * @param string $file   The file name to create attachment object for.
-     * @param int    $parent The post id to attach the file to.
+     * @param int    $parent ID of the post to attach the file to.
      *
      * @return int|WP_Error The attachment ID on success. The value 0 or WP_Error on failure.
      */
@@ -1047,19 +1114,19 @@ class WP_UnitTest_Factory_For_Blog extends \WP_UnitTest_Factory_For_Thing
     {
     }
     /**
-     * Creates a blog object.
+     * Creates a site object.
      *
      * @param array $args Arguments for the site object.
      *
-     * @return int|WP_Error Returns WP_Error object on failure, the site ID on success.
+     * @return int|WP_Error The site ID on success, WP_Error object on failure.
      */
     public function create_object($args)
     {
     }
     /**
-     * Updates a blog object. Not implemented.
+     * Updates a site object. Not implemented.
      *
-     * @param int   $blog_id The blog id to update.
+     * @param int   $blog_id ID of the site to update.
      * @param array $fields  The fields to update.
      *
      * @return void
@@ -1068,11 +1135,11 @@ class WP_UnitTest_Factory_For_Blog extends \WP_UnitTest_Factory_For_Thing
     {
     }
     /**
-     * Retrieves a site by given blog id.
+     * Retrieves a site by a given ID.
      *
-     * @param int $blog_id The blog id to retrieve.
+     * @param int $blog_id ID of the site to retrieve.
      *
-     * @return null|WP_Site The site object or null if not found.
+     * @return WP_Site|null The site object on success, null on failure.
      */
     public function get_object_by_id($blog_id)
     {
@@ -1125,7 +1192,7 @@ class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
      *
      * @param array $args The comment details.
      *
-     * @return false|int The comment's ID on success, false on failure.
+     * @return int|false The comment's ID on success, false on failure.
      */
     public function create_object($args)
     {
@@ -1133,33 +1200,33 @@ class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
     /**
      * Updates a comment.
      *
-     * @param int   $comment_id The comment id.
+     * @param int   $comment_id The comment ID.
      * @param array $fields     The comment details.
      *
-     * @return int When updated 1, not update 0.
+     * @return int The value 1 if the comment was updated, 0 if not updated.
      */
     public function update_object($comment_id, $fields)
     {
     }
     /**
-     * Creates multiple comments on given post.
+     * Creates multiple comments on a given post.
      *
-     * @param int   $post_id                The post id to create comments for.
+     * @param int   $post_id                ID of the post to create comments for.
      * @param int   $count                  Total amount of comments to create.
      * @param array $args                   The comment details.
      * @param null  $generation_definitions Default values.
      *
-     * @return int[] Array with the comment ids.
+     * @return int[] Array with the comment IDs.
      */
     public function create_post_comments($post_id, $count = 1, $args = array(), $generation_definitions = \null)
     {
     }
     /**
-     * Returns a comment.
+     * Retrieves a comment by a given ID.
      *
-     * @param int $comment_id The comment id.
+     * @param int $comment_id ID of the comment to retrieve.
      *
-     * @return null|WP_Comment WP_Comment when found, null when not found.
+     * @return WP_Comment|null WP_Comment object on success, null on failure.
      */
     public function get_object_by_id($comment_id)
     {
@@ -1197,6 +1264,7 @@ class WP_UnitTest_Factory_For_Network extends \WP_UnitTest_Factory_For_Thing
  * as a way to indicate expected return values from the given factory methods.
  *
  * @method int create( $args = array(), $generation_definitions = null )
+ * @method WP_Term create_and_get( $args = array(), $generation_definitions = null )
  * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
  */
 class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
@@ -1221,15 +1289,15 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
      * @param int|object   $term   The term to update.
      * @param array|string $fields The context in which to relate the term to the object.
      *
-     * @return int The term id.
+     * @return int The term ID.
      */
     public function update_object($term, $fields)
     {
     }
     /**
-     * Attach terms on the given post.
+     * Attach terms to the given post.
      *
-     * @param int          $post_id  The Post ID.
+     * @param int          $post_id  The post ID.
      * @param string|array $terms    An array of terms to set for the post, or a string of terms
      *                               separated by commas. Hierarchical taxonomies must always pass IDs rather
      *                               than names so that children with the same names but different parents
@@ -1244,22 +1312,22 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
     {
     }
     /**
-     * Create a term and returns it as a object.
+     * Create a term and returns it as an object.
      *
      * @param array $args                   Array or string of arguments for inserting a term.
      * @param null  $generation_definitions The default values.
      *
-     * @return null|WP_Error|WP_Term WP_Term on success. WP_error if taxonomy does not exist. Null for miscellaneous failure.
+     * @return WP_Term|WP_Error|null WP_Term on success. WP_error if taxonomy does not exist. Null for miscellaneous failure.
      */
     public function create_and_get($args = array(), $generation_definitions = \null)
     {
     }
     /**
-     * Retrieves the term by given term id.
+     * Retrieves the term by a given ID.
      *
-     * @param int $term_id The term id to retrieve.
+     * @param int $term_id ID of the term to retrieve.
      *
-     * @return null|WP_Error|WP_Term WP_Term on success. WP_error if taxonomy does not exist. Null for miscellaneous failure.
+     * @return WP_Term|WP_Error|null WP_Term on success. WP_error if taxonomy does not exist. Null for miscellaneous failure.
      */
     public function get_object_by_id($term_id)
     {
@@ -1285,7 +1353,7 @@ class WP_UnitTest_Factory_For_User extends \WP_UnitTest_Factory_For_Thing
      *
      * @param array $args The user data to insert.
      *
-     * @return int|WP_Error
+     * @return int|WP_Error The user ID on success, WP_Error object on failure.
      */
     public function create_object($args)
     {
@@ -1293,20 +1361,20 @@ class WP_UnitTest_Factory_For_User extends \WP_UnitTest_Factory_For_Thing
     /**
      * Updates the user data.
      *
-     * @param int   $user_id The user id to update.
+     * @param int   $user_id ID of the user to update.
      * @param array $fields  The user data to update.
      *
-     * @return int|WP_Error User id on success. WP_Error on failure.
+     * @return int|WP_Error The user ID on success, WP_Error object on failure.
      */
     public function update_object($user_id, $fields)
     {
     }
     /**
-     * Retrieves the user for given user id.
+     * Retrieves the user for a given ID.
      *
-     * @param int $user_id The user id to get.
+     * @param int $user_id ID of the user ID to retrieve.
      *
-     * @return WP_User The user.
+     * @return WP_User The user object.
      */
     public function get_object_by_id($user_id)
     {
@@ -1412,7 +1480,7 @@ class WP_Filesystem_MockFS extends \WP_Filesystem_Base
     function abspath($path = \false)
     {
     }
-    // Mock FS specific functions:
+    // Mock FS-specific functions:
     /**
      * Sets initial filesystem environment and/or clears the current environment.
      * Can also be passed the initial filesystem to be setup which is passed to self::setfs()
@@ -1464,9 +1532,9 @@ class WP_Filesystem_MockFS extends \WP_Filesystem_Base
 class MockFS_Node
 {
     public $name;
-    // The "name" of the entry, does not include a slash (exception, root)
+    // The "name" of the entry, does not include a slash (exception, root).
     public $type;
-    // The type of the entry 'f' for file, 'd' for Directory
+    // The type of the entry 'f' for file, 'd' for directory.
     public $path;
     // The full path to the entry.
     function __construct($path)
@@ -1483,13 +1551,13 @@ class MockFS_Directory_Node extends \MockFS_Node
 {
     public $type = 'd';
     public $children = array();
-    // The child nodes of this directory
+    // The child nodes of this directory.
 }
 class MockFS_File_Node extends \MockFS_Node
 {
     public $type = 'f';
     public $contents = '';
-    // The contents of the file
+    // The contents of the file.
     function __construct($path, $contents = '')
     {
     }
@@ -1617,14 +1685,15 @@ class WP_Object_Cache
      */
     public $blog_prefix = '';
     /**
-     * Instantiate the Memcached class.
+     * Instantiates the Memcached class.
      *
      * Instantiates the Memcached class and returns adds the servers specified
      * in the $memcached_servers global array.
      *
-     * @link    http://www.php.net/manual/en/memcached.construct.php
+     * @link https://www.php.net/manual/en/memcached.construct.php
      *
-     * @param   null    $persistent_id      To create an instance that persists between requests, use persistent_id to specify a unique ID for the instance.
+     * @param null $persistent_id To create an instance that persists between requests,
+     *                            use persistent_id to specify a unique ID for the instance.
      */
     public function __construct($persistent_id = \null)
     {
@@ -1635,15 +1704,15 @@ class WP_Object_Cache
      * If the specified key already exists, the value is not stored and the function
      * returns false.
      *
-     * @link    http://www.php.net/manual/en/memcached.add.php
+     * @link https://www.php.net/manual/en/memcached.add.php
      *
-     * @param   string      $key            The key under which to store the value.
-     * @param   mixed       $value          The value to store.
-     * @param   string      $group          The group value appended to the $key.
-     * @param   int         $expiration     The expiration time, defaults to 0.
-     * @param   string      $server_key     The key identifying the server to store the value on.
-     * @param   bool        $by_key         True to store in internal cache by key; false to not store by key
-     * @return  bool                        Returns TRUE on success or FALSE on failure.
+     * @param string $key        The key under which to store the value.
+     * @param mixed  $value      The value to store.
+     * @param string $group      The group value appended to the $key.
+     * @param int    $expiration The expiration time, defaults to 0.
+     * @param string $server_key The key identifying the server to store the value on.
+     * @param bool   $by_key     True to store in internal cache by key; false to not store by key.
+     * @return bool True on success, false on failure.
      */
     public function add($key, $value, $group = 'default', $expiration = 0, $server_key = '', $by_key = \false)
     {
@@ -1656,27 +1725,28 @@ class WP_Object_Cache
      * _cache object as part of the runtime cache. It will add it to an array for the
      * specified server_key.
      *
-     * @link    http://www.php.net/manual/en/memcached.addbykey.php
+     * @link https://www.php.net/manual/en/memcached.addbykey.php
      *
-     * @param   string      $server_key     The key identifying the server to store the value on.
-     * @param   string      $key            The key under which to store the value.
-     * @param   mixed       $value          The value to store.
-     * @param   string      $group          The group value appended to the $key.
-     * @param   int         $expiration     The expiration time, defaults to 0.
-     * @return  bool                        Returns TRUE on success or FALSE on failure.
+     * @param string $server_key The key identifying the server to store the value on.
+     * @param string $key        The key under which to store the value.
+     * @param mixed  $value      The value to store.
+     * @param string $group      The group value appended to the $key.
+     * @param int    $expiration The expiration time, defaults to 0.
+     * @return bool True on success, false on failure.
      */
     public function addByKey($server_key, $key, $value, $group = 'default', $expiration = 0)
     {
     }
     /**
-     * Add a single server to the list of Memcached servers.
+     * Adds a single server to the list of Memcached servers.
      *
-     * @link http://www.php.net/manual/en/memcached.addserver.php
+     * @link https://www.php.net/manual/en/memcached.addserver.php
      *
-     * @param   string      $host           The hostname of the memcache server.
-     * @param   int         $port           The port on which memcache is running.
-     * @param   int         $weight         The weight of the server relative to the total weight of all the servers in the pool.
-     * @return  bool                        Returns TRUE on success or FALSE on failure.
+     * @param string $host   The hostname of the memcache server.
+     * @param int    $port   The port on which memcache is running.
+     * @param int    $weight The weight of the server relative to the total weight
+     *                       of all the servers in the pool.
+     * @return bool True on success, false on failure.
      */
     public function addServer($host, $port, $weight = 0)
     {
@@ -1687,53 +1757,53 @@ class WP_Object_Cache
      * Each individual server in the array must include a domain and port, with an optional
      * weight value: $servers = array( array( '127.0.0.1', 11211, 0 ) );
      *
-     * @link    http://www.php.net/manual/en/memcached.addservers.php
+     * @link https://www.php.net/manual/en/memcached.addservers.php
      *
-     * @param   array       $servers        Array of server to register.
-     * @return  bool                        True on success; false on failure.
+     * @param array $servers Array of server to register.
+     * @return bool True on success, false on failure.
      */
     public function addServers($servers)
     {
     }
     /**
-     * Append data to an existing item.
+     * Appends data to an existing item.
      *
-     * This method should throw an error if it is used with compressed data. This
-     * is an expected behavior. Memcached casts the value to be appended to the initial value to the
-     * type of the initial value. Be careful as this leads to unexpected behavior at times. Due to
-     * how memcached treats types, the behavior has been mimicked in the internal cache to produce
-     * similar results and improve consistency. It is recommend that appends only occur with data of
+     * This method should throw an error if it is used with compressed data.
+     * This is an expected behavior. Memcached casts the value to be appended to the initial value
+     * to the type of the initial value. Be careful as this leads to unexpected behavior at times.
+     * Due to how memcached treats types, the behavior has been mimicked in the internal cache to produce
+     * similar results and improve consistency. It is recommended that appends only occur with data of
      * the same type.
      *
-     * @link    http://www.php.net/manual/en/memcached.append.php
+     * @link https://www.php.net/manual/en/memcached.append.php
      *
-     * @param   string      $key            The key under which to store the value.
-     * @param   mixed       $value          Must be string as appending mixed values is not well-defined.
-     * @param   string      $group          The group value appended to the $key.
-     * @param   string      $server_key     The key identifying the server to store the value on.
-     * @param   bool        $by_key         True to store in internal cache by key; false to not store by key
-     * @return  bool                        Returns TRUE on success or FALSE on failure.
+     * @param string $key        The key under which to store the value.
+     * @param mixed  $value      Must be string as appending mixed values is not well-defined.
+     * @param string $group      The group value appended to the $key.
+     * @param string $server_key The key identifying the server to store the value on.
+     * @param bool   $by_key     True to store in internal cache by key; false to not store by key.
+     * @return bool True on success, false on failure.
      */
     public function append($key, $value, $group = 'default', $server_key = '', $by_key = \false)
     {
     }
     /**
-     * Append data to an existing item by server key.
+     * Appends data to an existing item by server key.
      *
-     * This method should throw an error if it is used with compressed data. This
-     * is an expected behavior. Memcached casts the value to be appended to the initial value to the
-     * type of the initial value. Be careful as this leads to unexpected behavior at times. Due to
-     * how memcached treats types, the behavior has been mimicked in the internal cache to produce
-     * similar results and improve consistency. It is recommend that appends only occur with data of
+     * This method should throw an error if it is used with compressed data.
+     * This is an expected behavior. Memcached casts the value to be appended to the initial value
+     * to the type of the initial value. Be careful as this leads to unexpected behavior at times.
+     * Due to how memcached treats types, the behavior has been mimicked in the internal cache to produce
+     * similar results and improve consistency. It is recommended that appends only occur with data of
      * the same type.
      *
-     * @link    http://www.php.net/manual/en/memcached.appendbykey.php
+     * @link https://www.php.net/manual/en/memcached.appendbykey.php
      *
-     * @param   string      $server_key     The key identifying the server to store the value on.
-     * @param   string      $key            The key under which to store the value.
-     * @param   mixed       $value          Must be string as appending mixed values is not well-defined
-     * @param   string      $group          The group value appended to the $key.
-     * @return  bool                        Returns TRUE on success or FALSE on failure.
+     * @param string $server_key The key identifying the server to store the value on.
+     * @param string $key        The key under which to store the value.
+     * @param mixed  $value      Must be string as appending mixed values is not well-defined.
+     * @param string $group      The group value appended to the $key.
+     * @return bool True on success, false on failure.
      */
     public function appendByKey($server_key, $key, $value, $group = 'default')
     {
@@ -1741,19 +1811,19 @@ class WP_Object_Cache
     /**
      * Performs a "check and set" to store data.
      *
-     * The set will be successful only if the no other request has updated the value since it was fetched since
-     * this request.
+     * The set will be successful only if the no other request has updated the value
+     * since it was fetched by this request.
      *
-     * @link    http://www.php.net/manual/en/memcached.cas.php
+     * @link https://www.php.net/manual/en/memcached.cas.php
      *
-     * @param   float       $cas_token      Unique value associated with the existing item. Generated by memcached.
-     * @param   string      $key            The key under which to store the value.
-     * @param   mixed       $value          The value to store.
-     * @param   string      $group          The group value appended to the $key.
-     * @param   int         $expiration     The expiration time, defaults to 0.
-     * @param   string      $server_key     The key identifying the server to store the value on.
-     * @param   bool        $by_key         True to store in internal cache by key; false to not store by key
-     * @return  bool                        Returns TRUE on success or FALSE on failure.
+     * @param float  $cas_token  Unique value associated with the existing item. Generated by memcached.
+     * @param string $key        The key under which to store the value.
+     * @param mixed  $value      The value to store.
+     * @param string $group      The group value appended to the $key.
+     * @param int    $expiration The expiration time, defaults to 0.
+     * @param string $server_key The key identifying the server to store the value on.
+     * @param bool   $by_key     True to store in internal cache by key; false to not store by key.
+     * @return bool True on success, false on failure.
      */
     public function cas($cas_token, $key, $value, $group = 'default', $expiration = 0, $server_key = '', $by_key = \false)
     {
@@ -1761,197 +1831,202 @@ class WP_Object_Cache
     /**
      * Performs a "check and set" to store data with a server key.
      *
-     * The set will be successful only if the no other request has updated the value since it was fetched by
-     * this request.
+     * The set will be successful only if the no other request has updated the value
+     * since it was fetched by this request.
      *
-     * @link    http://www.php.net/manual/en/memcached.casbykey.php
+     * @link https://www.php.net/manual/en/memcached.casbykey.php
      *
-     * @param   string      $server_key     The key identifying the server to store the value on.
-     * @param   float       $cas_token      Unique value associated with the existing item. Generated by memcached.
-     * @param   string      $key            The key under which to store the value.
-     * @param   mixed       $value          The value to store.
-     * @param   string      $group          The group value appended to the $key.
-     * @param   int         $expiration     The expiration time, defaults to 0.
-     * @return  bool                        Returns TRUE on success or FALSE on failure.
+     * @param string $server_key The key identifying the server to store the value on.
+     * @param float  $cas_token  Unique value associated with the existing item. Generated by memcached.
+     * @param string $key        The key under which to store the value.
+     * @param mixed  $value      The value to store.
+     * @param string $group      The group value appended to the $key.
+     * @param int    $expiration The expiration time, defaults to 0.
+     * @return bool True on success, false on failure.
      */
     public function casByKey($cas_token, $server_key, $key, $value, $group = 'default', $expiration = 0)
     {
     }
     /**
-     * Decrement a numeric item's value.
+     * Decrements a numeric item's value.
      *
-     * @link http://www.php.net/manual/en/memcached.decrement.php
+     * @link https://www.php.net/manual/en/memcached.decrement.php
      *
-     * @param string    $key    The key under which to store the value.
-     * @param int       $offset The amount by which to decrement the item's value.
-     * @param string    $group  The group value appended to the $key.
-     * @return int|bool         Returns item's new value on success or FALSE on failure.
+     * @param string $key    The key under which to store the value.
+     * @param int    $offset The amount by which to decrement the item's value.
+     * @param string $group  The group value appended to the $key.
+     * @return int|bool Item's new value on success, false on failure.
      */
     public function decrement($key, $offset = 1, $group = 'default')
     {
     }
     /**
-     * Decrement a numeric item's value.
+     * Decrements a numeric item's value.
      *
-     * Alias for $this->decrement. Other caching backends use this abbreviated form of the function. It *may* cause
-     * breakage somewhere, so it is nice to have. This function will also allow the core unit tests to pass.
+     * Alias for $this->decrement(). Other caching backends use this abbreviated form
+     * of the function. It *may* cause breakage somewhere, so it is nice to have.
+     * This function will also allow the core unit tests to pass.
      *
-     * @param string    $key    The key under which to store the value.
-     * @param int       $offset The amount by which to decrement the item's value.
-     * @param string    $group  The group value appended to the $key.
-     * @return int|bool         Returns item's new value on success or FALSE on failure.
+     * @param string $key    The key under which to store the value.
+     * @param int    $offset The amount by which to decrement the item's value.
+     * @param string $group  The group value appended to the $key.
+     * @return int|bool Item's new value on success, false on failure.
      */
     public function decr($key, $offset = 1, $group = 'default')
     {
     }
     /**
-     * Remove the item from the cache.
+     * Removes the item from the cache.
      *
-     * Remove an item from memcached with identified by $key after $time seconds. The
-     * $time parameter allows an object to be queued for deletion without immediately
-     * deleting. Between the time that it is queued and the time it's deleted, add,
-     * replace, and get will fail, but set will succeed.
+     * Removes an item from memcached with identified by $key after $time seconds.
+     * The $time parameter allows an object to be queued for deletion without
+     * immediately deleting. Between the time that it is queued and the time it's deleted,
+     * add, replace, and get will fail, but set will succeed.
      *
-     * @link http://www.php.net/manual/en/memcached.delete.php
+     * @link https://www.php.net/manual/en/memcached.delete.php
      *
-     * @param   string      $key        The key under which to store the value.
-     * @param   string      $group      The group value appended to the $key.
-     * @param   int         $time       The amount of time the server will wait to delete the item in seconds.
-     * @param   string      $server_key The key identifying the server to store the value on.
-     * @param   bool        $by_key     True to store in internal cache by key; false to not store by key
-     * @return  bool                    Returns TRUE on success or FALSE on failure.
+     * @param string $key        The key under which to store the value.
+     * @param string $group      The group value appended to the $key.
+     * @param int    $time       The amount of time the server will wait to delete the item in seconds.
+     * @param string $server_key The key identifying the server to store the value on.
+     * @param bool   $by_key     True to store in internal cache by key; false to not store by key.
+     * @return bool True on success, false on failure.
      */
     public function delete($key, $group = 'default', $time = 0, $server_key = '', $by_key = \false)
     {
     }
     /**
-     * Remove the item from the cache by server key.
+     * Removes the item from the cache by server key.
      *
-     * Remove an item from memcached with identified by $key after $time seconds. The
-     * $time parameter allows an object to be queued for deletion without immediately
-     * deleting. Between the time that it is queued and the time it's deleted, add,
-     * replace, and get will fail, but set will succeed.
+     * Removes an item from memcached with identified by $key after $time seconds.
+     * The $time parameter allows an object to be queued for deletion without
+     * immediately deleting. Between the time that it is queued and the time it's deleted,
+     * add, replace, and get will fail, but set will succeed.
      *
-     * @link http://www.php.net/manual/en/memcached.deletebykey.php
+     * @link https://www.php.net/manual/en/memcached.deletebykey.php
      *
-     * @param   string      $server_key The key identifying the server to store the value on.
-     * @param   string      $key        The key under which to store the value.
-     * @param   string      $group      The group value appended to the $key.
-     * @param   int         $time       The amount of time the server will wait to delete the item in seconds.
-     * @return  bool                    Returns TRUE on success or FALSE on failure.
+     * @param string $server_key The key identifying the server to store the value on.
+     * @param string $key        The key under which to store the value.
+     * @param string $group      The group value appended to the $key.
+     * @param int    $time       The amount of time the server will wait to delete the item in seconds.
+     * @return bool True on success, false on failure.
      */
     public function deleteByKey($server_key, $key, $group = 'default', $time = 0)
     {
     }
     /**
-     * Fetch the next result.
+     * Fetches the next result.
      *
-     * @link http://www.php.net/manual/en/memcached.fetch.php
+     * @link https://www.php.net/manual/en/memcached.fetch.php
      *
-     * @return array|bool   Returns the next result or FALSE on failure.
+     * @return array|false The next result on success, false on failure.
      */
     public function fetch()
     {
     }
     /**
-     * Fetch all remaining results from the last request.
+     * Fetches all remaining results from the last request.
      *
-     * @link http://www.php.net/manual/en/memcached.fetchall.php
+     * @link https://www.php.net/manual/en/memcached.fetchall.php
      *
-     * @return  array|bool          Returns the results or FALSE on failure.
+     * @return array|false The results on success, false on failure.
      */
     public function fetchAll()
     {
     }
     /**
-     * Invalidate all items in the cache.
+     * Invalidates all items in the cache.
      *
-     * @link http://www.php.net/manual/en/memcached.flush.php
+     * @link https://www.php.net/manual/en/memcached.flush.php
      *
-     * @param   int     $delay      Number of seconds to wait before invalidating the items.
-     * @return  bool                Returns TRUE on success or FALSE on failure.
+     * @param int $delay Number of seconds to wait before invalidating the items.
+     * @return bool True on success, false on failure.
      */
     public function flush($delay = 0)
     {
     }
     /**
-     * Retrieve object from cache.
+     * Retrieves object from cache.
      *
-     * Gets an object from cache based on $key and $group. In order to fully support the $cache_cb and $cas_token
-     * parameters, the runtime cache is ignored by this function if either of those values are set. If either of
-     * those values are set, the request is made directly to the memcached server for proper handling of the
-     * callback and/or token. Note that the $cas_token variable cannot be directly passed to the function. The
-     * variable need to be first defined with a non null value.
+     * Gets an object from cache based on $key and $group. In order to fully support
+     * the $cache_cb and $cas_token parameters, the runtime cache is ignored by this function
+     * if either of those values are set. In that case, the request is made directly
+     * to the memcached server for proper handling of the callback and/or token.
+     * Note that the $cas_token variable cannot be directly passed to the function.
+     * The variable needs to be first defined with a non-null value.
      *
-     * If using the $cache_cb argument, the new value will always have an expiration of time of 0 (forever). This
-     * is a limitation of the Memcached PECL extension.
+     * If using the $cache_cb argument, the new value will always have an expiration
+     * of time of 0 (forever). This is a limitation of the Memcached PECL extension.
      *
-     * @link http://www.php.net/manual/en/memcached.get.php
+     * @link https://www.php.net/manual/en/memcached.get.php
      *
-     * @param   string          $key        The key under which to store the value.
-     * @param   string          $group      The group value appended to the $key.
-     * @param   bool            $force      Whether or not to force a cache invalidation.
-     * @param   null|bool       $found      Variable passed by reference to determine if the value was found or not.
-     * @param   string          $server_key The key identifying the server to store the value on.
-     * @param   bool            $by_key     True to store in internal cache by key; false to not store by key
-     * @param   null|callable   $cache_cb   Read-through caching callback.
-     * @param   null|float      $cas_token  The variable to store the CAS token in.
-     * @return  bool|mixed                  Cached object value.
+     * @param string        $key        The key under which to store the value.
+     * @param string        $group      The group value appended to the $key.
+     * @param bool          $force      Whether or not to force a cache invalidation.
+     * @param null|bool     $found      Variable passed by reference to determine if the value was found or not.
+     * @param string        $server_key The key identifying the server to store the value on.
+     * @param bool          $by_key     True to store in internal cache by key; false to not store by key.
+     * @param null|callable $cache_cb   Read-through caching callback.
+     * @param null|float    $cas_token  The variable to store the CAS token in.
+     * @return bool|mixed Cached object value.
      */
     public function get($key, $group = 'default', $force = \false, &$found = \null, $server_key = '', $by_key = \false, $cache_cb = \null, &$cas_token = \null)
     {
     }
     /**
-     * Retrieve object from cache from specified server.
+     * Retrieves object from cache from specified server.
      *
-     * Gets an object from cache based on $key, $group and $server_key. In order to fully support the $cache_cb and $cas_token
-     * parameters, the runtime cache is ignored by this function if either of those values are set. If either of
-     * those values are set, the request is made directly to the memcached server for proper handling of the
-     * callback and/or token. Note that the $cas_token variable cannot be directly passed to the function. The
-     * variable need to be first defined with a non null value.
+     * Gets an object from cache based on $key and $group, and $server_key. In order to fully support
+     * the $cache_cb and $cas_token parameters, the runtime cache is ignored by this function
+     * if either of those values are set. In that case, the request is made directly
+     * to the memcached server for proper handling of the callback and/or token.
+     * Note that the $cas_token variable cannot be directly passed to the function.
+     * The variable needs to be first defined with a non-null value.
      *
-     * If using the $cache_cb argument, the new value will always have an expiration of time of 0 (forever). This
-     * is a limitation of the Memcached PECL extension.
+     * If using the $cache_cb argument, the new value will always have an expiration
+     * of time of 0 (forever). This is a limitation of the Memcached PECL extension.
      *
-     * @link http://www.php.net/manual/en/memcached.getbykey.php
+     * @link https://www.php.net/manual/en/memcached.getbykey.php
      *
-     * @param   string          $server_key The key identifying the server to store the value on.
-     * @param   string          $key        The key under which to store the value.
-     * @param   string          $group      The group value appended to the $key.
-     * @param   bool            $force      Whether or not to force a cache invalidation.
-     * @param   null|bool       $found      Variable passed by reference to determine if the value was found or not.
-     * @param   null|string     $cache_cb   Read-through caching callback.
-     * @param   null|float      $cas_token  The variable to store the CAS token in.
-     * @return  bool|mixed                  Cached object value.
+     * @param string      $server_key The key identifying the server to store the value on.
+     * @param string      $key        The key under which to store the value.
+     * @param string      $group      The group value appended to the $key.
+     * @param bool        $force      Whether or not to force a cache invalidation.
+     * @param null|bool   $found      Variable passed by reference to determine if the value was found or not.
+     * @param null|string $cache_cb   Read-through caching callback.
+     * @param null|float  $cas_token  The variable to store the CAS token in.
+     * @return bool|mixed Cached object value.
      */
     public function getByKey($server_key, $key, $group = 'default', $force = \false, &$found = \null, $cache_cb = \null, &$cas_token = \null)
     {
     }
     /**
-     * Request multiple keys without blocking.
+     * Requests multiple keys without blocking.
      *
-     * @link http://www.php.net/manual/en/memcached.getdelayed.php
+     * @link https://www.php.net/manual/en/memcached.getdelayed.php
      *
-     * @param   string|array    $keys       Array or string of key(s) to request.
-     * @param   string|array    $groups     Array or string of group(s) for the key(s). See buildKeys for more on how these are handled.
-     * @param   bool            $with_cas   Whether to request CAS token values also.
-     * @param   null            $value_cb   The result callback or NULL.
-     * @return  bool                        Returns TRUE on success or FALSE on failure.
+     * @param string|array $keys     Array or string of key(s) to request.
+     * @param string|array $groups   Array or string of group(s) for the key(s).
+     *                               See buildKeys for more on how these are handled.
+     * @param bool         $with_cas Whether to request CAS token values also.
+     * @param null         $value_cb The result callback or null.
+     * @return bool True on success, false on failure.
      */
     public function getDelayed($keys, $groups = 'default', $with_cas = \false, $value_cb = \null)
     {
     }
     /**
-     * Request multiple keys without blocking from a specified server.
+     * Requests multiple keys without blocking from a specified server.
      *
-     * @link http://www.php.net/manual/en/memcached.getdelayed.php
+     * @link https://www.php.net/manual/en/memcached.getdelayed.php
      *
-     * @param   string          $server_key The key identifying the server to store the value on.
-     * @param   string|array    $keys       Array or string of key(s) to request.
-     * @param   string|array    $groups     Array or string of group(s) for the key(s). See buildKeys for more on how these are handled.
-     * @param   bool            $with_cas   Whether to request CAS token values also.
-     * @param   null            $value_cb   The result callback or NULL.
-     * @return  bool                        Returns TRUE on success or FALSE on failure.
+     * @param string       $server_key The key identifying the server to store the value on.
+     * @param string|array $keys       Array or string of key(s) to request.
+     * @param string|array $groups     Array or string of group(s) for the key(s).
+     *                                 See buildKeys for more on how these are handled.
+     * @param bool         $with_cas   Whether to request CAS token values also.
+     * @param null         $value_cb   The result callback or null.
+     * @return bool True on success, false on failure.
      */
     public function getDelayedByKey($server_key, $keys, $groups = 'default', $with_cas = \false, $value_cb = \null)
     {
@@ -1961,14 +2036,15 @@ class WP_Object_Cache
      *
      * See the buildKeys method definition to understand the $keys/$groups parameters.
      *
-     * @link http://www.php.net/manual/en/memcached.getmulti.php
+     * @link https://www.php.net/manual/en/memcached.getmulti.php
      *
-     * @param   array           $keys       Array of keys to retrieve.
-     * @param   string|array    $groups     If string, used for all keys. If arrays, corresponds with the $keys array.
-     * @param   string          $server_key The key identifying the server to store the value on.
-     * @param   null|array      $cas_tokens The variable to store the CAS tokens for the found items.
-     * @param   int             $flags      The flags for the get operation.
-     * @return  bool|array                  Returns the array of found items or FALSE on failure.
+     * @param array        $keys       Array of keys to retrieve.
+     * @param string|array $groups     If string, used for all keys.
+     *                                 If arrays, corresponds with the $keys array.
+     * @param string       $server_key The key identifying the server to store the value on.
+     * @param null|array   $cas_tokens The variable to store the CAS tokens for the found items.
+     * @param int          $flags      The flags for the get operation.
+     * @return bool|array The array of found items on success, false on failure.
      */
     public function getMulti($keys, $groups = 'default', $server_key = '', &$cas_tokens = \null, $flags = \null)
     {
@@ -1978,35 +2054,36 @@ class WP_Object_Cache
      *
      * See the buildKeys method definition to understand the $keys/$groups parameters.
      *
-     * @link http://www.php.net/manual/en/memcached.getmultibykey.php
+     * @link https://www.php.net/manual/en/memcached.getmultibykey.php
      *
-     * @param   string          $server_key The key identifying the server to store the value on.
-     * @param   array           $keys       Array of keys to retrieve.
-     * @param   string|array    $groups     If string, used for all keys. If arrays, corresponds with the $keys array.
-     * @param   null|array      $cas_tokens The variable to store the CAS tokens for the found items.
-     * @param   int             $flags      The flags for the get operation.
-     * @return  bool|array                  Returns the array of found items or FALSE on failure.
+     * @param string       $server_key The key identifying the server to store the value on.
+     * @param array        $keys       Array of keys to retrieve.
+     * @param string|array $groups     If string, used for all keys.
+     *                                 If arrays, corresponds with the $keys array.
+     * @param null|array   $cas_tokens The variable to store the CAS tokens for the found items.
+     * @param int          $flags      The flags for the get operation.
+     * @return bool|array The array of found items on success, false on failure.
      */
     public function getMultiByKey($server_key, $keys, $groups = 'default', &$cas_tokens = \null, $flags = \null)
     {
     }
     /**
-     * Retrieve a Memcached option value.
+     * Retrieves a Memcached option value.
      *
-     * @link http://www.php.net/manual/en/memcached.getoption.php
+     * @link https://www.php.net/manual/en/memcached.getoption.php
      *
-     * @param   int         $option     One of the Memcached::OPT_* constants.
-     * @return  mixed                   Returns the value of the requested option, or FALSE on error.
+     * @param int $option One of the Memcached::OPT_* constants.
+     * @return mixed The value of the requested option on success, false on failure.
      */
     public function getOption($option)
     {
     }
     /**
-     * Return the result code of the last option.
+     * Returns the result code of the last option.
      *
-     * @link http://www.php.net/manual/en/memcached.getresultcode.php
+     * @link https://www.php.net/manual/en/memcached.getresultcode.php
      *
-     * @return  int     Result code of the last Memcached operation.
+     * @return int Result code of the last Memcached operation.
      */
     public function getResultCode()
     {
@@ -2014,123 +2091,124 @@ class WP_Object_Cache
     /**
      * Return the message describing the result of the last operation.
      *
-     * @link    http://www.php.net/manual/en/memcached.getresultmessage.php
+     * @link https://www.php.net/manual/en/memcached.getresultmessage.php
      *
-     * @return  string      Message describing the result of the last Memcached operation.
+     * @return string Message describing the result of the last Memcached operation.
      */
     public function getResultMessage()
     {
     }
     /**
-     * Get server information by key.
+     * Gets server information by key.
      *
-     * @link    http://www.php.net/manual/en/memcached.getserverbykey.php
+     * @link https://www.php.net/manual/en/memcached.getserverbykey.php
      *
-     * @param   string      $server_key     The key identifying the server to store the value on.
-     * @return  array                       Array with host, post, and weight on success, FALSE on failure.
+     * @param string $server_key The key identifying the server to store the value on.
+     * @return array Array with host, post, and weight on success, false on failure.
      */
     public function getServerByKey($server_key)
     {
     }
     /**
-     * Get the list of servers in the pool.
+     * Gets the list of servers in the pool.
      *
-     * @link    http://www.php.net/manual/en/memcached.getserverlist.php
+     * @link https://www.php.net/manual/en/memcached.getserverlist.php
      *
-     * @return  array       The list of all servers in the server pool.
+     * @return array The list of all servers in the server pool.
      */
     public function getServerList()
     {
     }
     /**
-     * Get server pool statistics.
+     * Gets server pool statistics.
      *
-     * @link    http://www.php.net/manual/en/memcached.getstats.php
+     * @link https://www.php.net/manual/en/memcached.getstats.php
      *
-     * @return  array       Array of server statistics, one entry per server.
+     * @return array Array of server statistics, one entry per server.
      */
     public function getStats()
     {
     }
     /**
-     * Get server pool memcached version information.
+     * Gets server pool memcached version information.
      *
-     * @link    http://www.php.net/manual/en/memcached.getversion.php
+     * @link https://www.php.net/manual/en/memcached.getversion.php
      *
-     * @return  array       Array of server versions, one entry per server.
+     * @return array Array of server versions, one entry per server.
      */
     public function getVersion()
     {
     }
     /**
-     * Increment a numeric item's value.
+     * Increments a numeric item's value.
      *
-     * @link http://www.php.net/manual/en/memcached.increment.php
+     * @link https://www.php.net/manual/en/memcached.increment.php
      *
-     * @param   string      $key        The key under which to store the value.
-     * @param   int         $offset     The amount by which to increment the item's value.
-     * @param   string      $group      The group value appended to the $key.
-     * @return  int|bool                Returns item's new value on success or FALSE on failure.
+     * @param string $key    The key under which to store the value.
+     * @param int    $offset The amount by which to increment the item's value.
+     * @param string $group  The group value appended to the $key.
+     * @return int|bool Item's new value on success, false on failure.
      */
     public function increment($key, $offset = 1, $group = 'default')
     {
     }
     /**
-     * Synonymous with $this->incr.
+     * Alias for $this->incr().
      *
-     * Certain plugins expect an "incr" method on the $wp_object_cache object (e.g., Batcache). Since the original
-     * version of this library matched names to the memcached methods, the "incr" method was missing. Adding this
-     * method restores compatibility with plugins expecting an "incr" method.
+     * Certain plugins expect an "incr" method on the $wp_object_cache object (e.g., Batcache).
+     * Since the original version of this library matched names to the memcached methods,
+     * the "incr" method was missing. Adding this method restores compatibility with plugins
+     * expecting an "incr" method.
      *
-     * @param   string      $key        The key under which to store the value.
-     * @param   int         $offset     The amount by which to increment the item's value.
-     * @param   string      $group      The group value appended to the $key.
-     * @return  int|bool                Returns item's new value on success or FALSE on failure.
+     * @param string $key    The key under which to store the value.
+     * @param int    $offset The amount by which to increment the item's value.
+     * @param string $group  The group value appended to the $key.
+     * @return int|bool Item's new value on success, false on failure.
      */
     public function incr($key, $offset = 1, $group = 'default')
     {
     }
     /**
-     * Prepend data to an existing item.
+     * Prepends data to an existing item.
      *
      * This method should throw an error if it is used with compressed data. This is an expected behavior.
-     * Memcached casts the value to be prepended to the initial value to the type of the initial value. Be
-     * careful as this leads to unexpected behavior at times. For instance, prepending (float) 45.23 to
-     * (int) 23 will result in 45, because the value is first combined (45.2323) then cast to "integer"
+     * Memcached casts the value to be prepended to the initial value to the type of the initial value.
+     * Be careful as this leads to unexpected behavior at times. For instance, prepending (float) 45.23
+     * to (int) 23 will result in 45, because the value is first combined (45.2323) then cast to "integer"
      * (the original value), which will be (int) 45. Due to how memcached treats types, the behavior has been
-     * mimicked in the internal cache to produce similar results and improve consistency. It is recommend
+     * mimicked in the internal cache to produce similar results and improve consistency. It is recommended
      * that prepends only occur with data of the same type.
      *
-     * @link    http://www.php.net/manual/en/memcached.prepend.php
+     * @link https://www.php.net/manual/en/memcached.prepend.php
      *
-     * @param   string    $key          The key under which to store the value.
-     * @param   string    $value        Must be string as prepending mixed values is not well-defined.
-     * @param   string    $group        The group value prepended to the $key.
-     * @param   string    $server_key   The key identifying the server to store the value on.
-     * @param   bool      $by_key       True to store in internal cache by key; false to not store by key
-     * @return  bool                    Returns TRUE on success or FALSE on failure.
+     * @param string $key        The key under which to store the value.
+     * @param string $value      Must be string as prepending mixed values is not well-defined.
+     * @param string $group      The group value prepended to the $key.
+     * @param string $server_key The key identifying the server to store the value on.
+     * @param bool   $by_key     True to store in internal cache by key; false to not store by key.
+     * @return bool True on success, false on failure.
      */
     public function prepend($key, $value, $group = 'default', $server_key = '', $by_key = \false)
     {
     }
     /**
-     * Append data to an existing item by server key.
+     * Appends data to an existing item by server key.
      *
      * This method should throw an error if it is used with compressed data. This is an expected behavior.
-     * Memcached casts the value to be prepended to the initial value to the type of the initial value. Be
-     * careful as this leads to unexpected behavior at times. For instance, prepending (float) 45.23 to
-     * (int) 23 will result in 45, because the value is first combined (45.2323) then cast to "integer"
+     * Memcached casts the value to be prepended to the initial value to the type of the initial value.
+     * Be careful as this leads to unexpected behavior at times. For instance, prepending (float) 45.23
+     * to (int) 23 will result in 45, because the value is first combined (45.2323) then cast to "integer"
      * (the original value), which will be (int) 45. Due to how memcached treats types, the behavior has been
-     * mimicked in the internal cache to produce similar results and improve consistency. It is recommend
+     * mimicked in the internal cache to produce similar results and improve consistency. It is recommended
      * that prepends only occur with data of the same type.
      *
-     * @link    http://www.php.net/manual/en/memcached.prependbykey.php
+     * @link https://www.php.net/manual/en/memcached.prependbykey.php
      *
-     * @param   string    $server_key   The key identifying the server to store the value on.
-     * @param   string    $key          The key under which to store the value.
-     * @param   string    $value        Must be string as prepending mixed values is not well-defined.
-     * @param   string    $group        The group value prepended to the $key.
-     * @return  bool                    Returns TRUE on success or FALSE on failure.
+     * @param string $server_key The key identifying the server to store the value on.
+     * @param string $key        The key under which to store the value.
+     * @param string $value      Must be string as prepending mixed values is not well-defined.
+     * @param string $group      The group value prepended to the $key.
+     * @return bool True on success, false on failure.
      */
     public function prependByKey($server_key, $key, $value, $group = 'default')
     {
@@ -2138,18 +2216,18 @@ class WP_Object_Cache
     /**
      * Replaces a value in cache.
      *
-     * This method is similar to "add"; however, is does not successfully set a value if
-     * the object's key is not already set in cache.
+     * This method is similar to "add"; however, is does not successfully set a value
+     * if the object's key is not already set in cache.
      *
-     * @link    http://www.php.net/manual/en/memcached.replace.php
+     * @link https://www.php.net/manual/en/memcached.replace.php
      *
-     * @param   string      $server_key     The key identifying the server to store the value on.
-     * @param   string      $key            The key under which to store the value.
-     * @param   mixed       $value          The value to store.
-     * @param   string      $group          The group value appended to the $key.
-     * @param   bool        $by_key         True to store in internal cache by key; false to not store by key
-     * @param   int         $expiration     The expiration time, defaults to 0.
-     * @return  bool                        Returns TRUE on success or FALSE on failure.
+     * @param string $server_key The key identifying the server to store the value on.
+     * @param string $key        The key under which to store the value.
+     * @param mixed  $value      The value to store.
+     * @param string $group      The group value appended to the $key.
+     * @param bool   $by_key     True to store in internal cache by key; false to not store by key.
+     * @param int    $expiration The expiration time, defaults to 0.
+     * @return bool True on success, false on failure.
      */
     public function replace($key, $value, $group = 'default', $expiration = 0, $server_key = '', $by_key = \false)
     {
@@ -2157,17 +2235,17 @@ class WP_Object_Cache
     /**
      * Replaces a value in cache on a specific server.
      *
-     * This method is similar to "addByKey"; however, is does not successfully set a value if
-     * the object's key is not already set in cache.
+     * This method is similar to "addByKey"; however, is does not successfully set a value
+     * if the object's key is not already set in cache.
      *
-     * @link    http://www.php.net/manual/en/memcached.addbykey.php
+     * @link https://www.php.net/manual/en/memcached.addbykey.php
      *
-     * @param   string      $server_key     The key identifying the server to store the value on.
-     * @param   string      $key            The key under which to store the value.
-     * @param   mixed       $value          The value to store.
-     * @param   string      $group          The group value appended to the $key.
-     * @param   int         $expiration     The expiration time, defaults to 0.
-     * @return  bool                        Returns TRUE on success or FALSE on failure.
+     * @param string $server_key The key identifying the server to store the value on.
+     * @param string $key        The key under which to store the value.
+     * @param mixed  $value      The value to store.
+     * @param string $group      The group value appended to the $key.
+     * @param int    $expiration The expiration time, defaults to 0.
+     * @return bool True on success, false on failure.
      */
     public function replaceByKey($server_key, $key, $value, $group = 'default', $expiration = 0)
     {
@@ -2177,15 +2255,15 @@ class WP_Object_Cache
      *
      * The value is set whether or not this key already exists in memcached.
      *
-     * @link http://www.php.net/manual/en/memcached.set.php
+     * @link https://www.php.net/manual/en/memcached.set.php
      *
-     * @param   string      $key        The key under which to store the value.
-     * @param   mixed       $value      The value to store.
-     * @param   string      $group      The group value appended to the $key.
-     * @param   int         $expiration The expiration time, defaults to 0.
-     * @param   string      $server_key The key identifying the server to store the value on.
-     * @param   bool        $by_key     True to store in internal cache by key; false to not store by key
-     * @return  bool                    Returns TRUE on success or FALSE on failure.
+     * @param string $key        The key under which to store the value.
+     * @param mixed  $value      The value to store.
+     * @param string $group      The group value appended to the $key.
+     * @param int    $expiration The expiration time, defaults to 0.
+     * @param string $server_key The key identifying the server to store the value on.
+     * @param bool   $by_key     True to store in internal cache by key; false to not store by key.
+     * @return bool True on success, false on failure.
      */
     public function set($key, $value, $group = 'default', $expiration = 0, $server_key = '', $by_key = \false)
     {
@@ -2195,20 +2273,20 @@ class WP_Object_Cache
      *
      * The value is set whether or not this key already exists in memcached.
      *
-     * @link    http://www.php.net/manual/en/memcached.setbykey.php
+     * @link https://www.php.net/manual/en/memcached.setbykey.php
      *
-     * @param   string      $server_key     The key identifying the server to store the value on.
-     * @param   string      $key            The key under which to store the value.
-     * @param   mixed       $value          The value to store.
-     * @param   string      $group          The group value appended to the $key.
-     * @param   int         $expiration     The expiration time, defaults to 0.
-     * @return  bool                        Returns TRUE on success or FALSE on failure.
+     * @param string $server_key The key identifying the server to store the value on.
+     * @param string $key        The key under which to store the value.
+     * @param mixed  $value      The value to store.
+     * @param string $group      The group value appended to the $key.
+     * @param int    $expiration The expiration time, defaults to 0.
+     * @return bool True on success, false on failure.
      */
     public function setByKey($server_key, $key, $value, $group = 'default', $expiration = 0)
     {
     }
     /**
-     * Set multiple values to cache at once.
+     * Sets multiple values to cache at once.
      *
      * By sending an array of $items to this function, all values are saved at once to
      * memcached, reducing the need for multiple requests to memcached. The $items array
@@ -2216,20 +2294,20 @@ class WP_Object_Cache
      * are merged with the $groups array/string value via buildKeys to determine the
      * final key for the object.
      *
-     * @link    http://www.php.net/manual/en/memcached.setmulti.php
+     * @link https://www.php.net/manual/en/memcached.setmulti.php
      *
-     * @param   array           $items          An array of key/value pairs to store on the server.
-     * @param   string|array    $groups         Group(s) to merge with key(s) in $items.
-     * @param   int             $expiration     The expiration time, defaults to 0.
-     * @param   string          $server_key     The key identifying the server to store the value on.
-     * @param   bool            $by_key         True to store in internal cache by key; false to not store by key
-     * @return  bool                            Returns TRUE on success or FALSE on failure.
+     * @param array        $items      An array of key/value pairs to store on the server.
+     * @param string|array $groups     Group(s) to merge with key(s) in $items.
+     * @param int          $expiration The expiration time, defaults to 0.
+     * @param string       $server_key The key identifying the server to store the value on.
+     * @param bool         $by_key     True to store in internal cache by key; false to not store by key.
+     * @return bool True on success, false on failure.
      */
     public function setMulti($items, $groups = 'default', $expiration = 0, $server_key = '', $by_key = \false)
     {
     }
     /**
-     * Set multiple values to cache at once on specified server.
+     * Sets multiple values to cache at once on specified server.
      *
      * By sending an array of $items to this function, all values are saved at once to
      * memcached, reducing the need for multiple requests to memcached. The $items array
@@ -2237,25 +2315,25 @@ class WP_Object_Cache
      * are merged with the $groups array/string value via buildKeys to determine the
      * final key for the object.
      *
-     * @link    http://www.php.net/manual/en/memcached.setmultibykey.php
+     * @link https://www.php.net/manual/en/memcached.setmultibykey.php
      *
-     * @param   string          $server_key     The key identifying the server to store the value on.
-     * @param   array           $items          An array of key/value pairs to store on the server.
-     * @param   string|array    $groups         Group(s) to merge with key(s) in $items.
-     * @param   int             $expiration     The expiration time, defaults to 0.
-     * @return  bool                            Returns TRUE on success or FALSE on failure.
+     * @param string       $server_key  The key identifying the server to store the value on.
+     * @param array        $items       An array of key/value pairs to store on the server.
+     * @param string|array $groups      Group(s) to merge with key(s) in $items.
+     * @param int          $expiration  The expiration time, defaults to 0.
+     * @return bool True on success, false on failure.
      */
     public function setMultiByKey($server_key, $items, $groups = 'default', $expiration = 0)
     {
     }
     /**
-     * Set a Memcached option.
+     * Sets a Memcached option.
      *
-     * @link    http://www.php.net/manual/en/memcached.setoption.php
+     * @link https://www.php.net/manual/en/memcached.setoption.php
      *
-     * @param   int         $option     Option name.
-     * @param   mixed       $value      Option value.
-     * @return  bool                Returns TRUE on success or FALSE on failure.
+     * @param int   $option Option name.
+     * @param mixed $value  Option value.
+     * @return bool True on success, false on failure.
      */
     public function setOption($option, $value)
     {
@@ -2263,12 +2341,14 @@ class WP_Object_Cache
     /**
      * Builds a key for the cached object using the blog_id, key, and group values.
      *
-     * @author  Ryan Boren   This function is inspired by the original WP Memcached Object cache.
-     * @link    http://wordpress.org/extend/plugins/memcached/
+     * This function is inspired by the original WP Memcached Object cache.
      *
-     * @param   string      $key        The key under which to store the value.
-     * @param   string      $group      The group value appended to the $key.
-     * @return  string
+     * @author Ryan Boren
+     * @link http://wordpress.org/extend/plugins/memcached/
+     *
+     * @param string $key   The key under which to store the value.
+     * @param string $group The group value appended to the $key.
+     * @return string
      */
     public function buildKey($key, $group = 'default')
     {
@@ -2285,22 +2365,22 @@ class WP_Object_Cache
      * than $keys, the method will return an empty array. This method is primarily a helper method for methods
      * that call memcached with an array of keys.
      *
-     * @param   string|array    $keys       Key(s) to merge with group(s).
-     * @param   string|array    $groups     Group(s) to merge with key(s).
-     * @return  array                       Array that combines keys and groups into a single set of memcached keys.
+     * @param string|array $keys   Key(s) to merge with group(s).
+     * @param string|array $groups Group(s) to merge with key(s).
+     * @return array Array that combines keys and groups into a single set of memcached keys.
      */
     public function buildKeys($keys, $groups = 'default')
     {
     }
     /**
-     * Ensure that a proper expiration time is set.
+     * Ensures that a proper expiration time is set.
      *
-     * Memcached treats any value over 30 days as a timestamp. If a developer sets the expiration for greater than 30
-     * days or less than the current timestamp, the timestamp is in the past and the value isn't cached. This function
-     * detects values in that range and corrects them.
+     * Memcached treats any value over 30 days as a timestamp. If a developer sets the expiration
+     * for greater than 30 days or less than the current timestamp, the timestamp is in the past
+     * and the value isn't cached. This function detects values in that range and corrects them.
      *
-     * @param  string|int    $expiration    The dirty expiration time.
-     * @return string|int                   The sanitized expiration time.
+     * @param string|int $expiration The dirty expiration time.
+     * @return string|int The sanitized expiration time.
      */
     public function sanitize_expiration($expiration)
     {
@@ -2312,10 +2392,10 @@ class WP_Object_Cache
      * by memcached. In both cases, whichever value is the original value in the combined value
      * will dictate the type of the combined value.
      *
-     * @param   mixed       $original   Original value that dictates the combined type.
-     * @param   mixed       $pended     Value to combine with original value.
-     * @param   string      $direction  Either 'pre' or 'app'.
-     * @return  mixed                   Combined value casted to the type of the first value.
+     * @param mixed  $original  Original value that dictates the combined type.
+     * @param mixed  $pended    Value to combine with original value.
+     * @param string $direction Either 'pre' or 'app'.
+     * @return mixed Combined value casted to the type of the first value.
      */
     public function combine_values($original, $pended, $direction)
     {
@@ -2323,8 +2403,8 @@ class WP_Object_Cache
     /**
      * Simple wrapper for saving object to the internal cache.
      *
-     * @param   string      $derived_key    Key to save value under.
-     * @param   mixed       $value          Object value.
+     * @param string $derived_key Key to save value under.
+     * @param mixed  $value       Object value.
      */
     public function add_to_internal_cache($derived_key, $value)
     {
@@ -2332,50 +2412,54 @@ class WP_Object_Cache
     /**
      * Determines if a no_mc_group exists in a group of groups.
      *
-     * @param   mixed   $groups     The groups to search.
-     * @return  bool                True if a no_mc_group is present; false if a no_mc_group is not present.
+     * @param mixed $groups The groups to search.
+     * @return bool True if a no_mc_group is present; false if a no_mc_group is not present.
      */
     public function contains_no_mc_group($groups)
     {
     }
     /**
-     * Add global groups.
+     * Adds global groups.
      *
-     * @author  Ryan Boren   This function comes straight from the original WP Memcached Object cache
-     * @link    http://wordpress.org/extend/plugins/memcached/
+     * This function comes straight from the original WP Memcached Object cache.
      *
-     * @param   array       $groups     Array of groups.
-     * @return  void
+     * @author Ryan Boren
+     * @link http://wordpress.org/extend/plugins/memcached/
+     *
+     * @param array $groups Array of groups.
+     * @return void
      */
     public function add_global_groups($groups)
     {
     }
     /**
-     * Add non-persistent groups.
+     * Adds non-persistent groups.
      *
-     * @author  Ryan Boren   This function comes straight from the original WP Memcached Object cache
-     * @link    http://wordpress.org/extend/plugins/memcached/
+     * This function comes straight from the original WP Memcached Object cache.
      *
-     * @param   array       $groups     Array of groups.
-     * @return  void
+     * @author Ryan Boren
+     * @link http://wordpress.org/extend/plugins/memcached/
+     *
+     * @param array $groups Array of groups.
+     * @return void
      */
     public function add_non_persistent_groups($groups)
     {
     }
     /**
-     * Get a value specifically from the internal, run-time cache, not memcached.
+     * Gets a value specifically from the internal, run-time cache, not memcached.
      *
-     * @param   int|string  $key        Key value.
-     * @param   int|string  $group      Group that the value belongs to.
-     * @return  bool|mixed              Value on success; false on failure.
+     * @param int|string $key   Key value.
+     * @param int|string $group Group that the value belongs to.
+     * @return bool|mixed Value on success, false on failure.
      */
     public function get_from_runtime_cache($key, $group)
     {
     }
     /**
-     * Switch blog prefix, which changes the cache that is accessed.
+     * Switches blog prefix, which changes the cache that is accessed.
      *
-     * @param  int     $blog_id    Blog to switch to.
+     * @param int $blog_id Blog to switch to.
      * @return void
      */
     public function switch_to_blog($blog_id)
@@ -2429,7 +2513,7 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      *
      * @param PHPUnit_Framework_Test $test
      * @param Exception              $e
-     * @param float                   $time
+     * @param float                  $time
      */
     public function addError(\PHPUnit\Framework\Test $test, \Throwable $t, float $time) : void
     {
@@ -2450,7 +2534,7 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      *
      * @param PHPUnit_Framework_Test                 $test
      * @param PHPUnit_Framework_AssertionFailedError $e
-     * @param float                                   $time
+     * @param float                                  $time
      */
     public function addFailure(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\AssertionFailedError $e, float $time) : void
     {
@@ -2460,7 +2544,7 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      *
      * @param PHPUnit_Framework_Test $test
      * @param Exception              $e
-     * @param float                   $time
+     * @param float                  $time
      */
     public function addIncompleteTest(\PHPUnit\Framework\Test $test, \Throwable $t, float $time) : void
     {
@@ -2470,7 +2554,7 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      *
      * @param PHPUnit_Framework_Test $test
      * @param Exception              $e
-     * @param float                   $time
+     * @param float                  $time
      * @since  Method available since Release 4.0.0
      */
     public function addRiskyTest(\PHPUnit\Framework\Test $test, \Throwable $t, float $time) : void
@@ -2481,7 +2565,7 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      *
      * @param PHPUnit_Framework_Test $test
      * @param Exception              $e
-     * @param float                   $time
+     * @param float                  $time
      */
     public function addSkippedTest(\PHPUnit\Framework\Test $test, \Throwable $t, float $time) : void
     {
@@ -2498,7 +2582,7 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      * A test ended.
      *
      * @param PHPUnit_Framework_Test $test
-     * @param float                   $time
+     * @param float                  $time
      */
     public function endTest(\PHPUnit\Framework\Test $test, float $time) : void
     {
@@ -2522,7 +2606,7 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
     /**
      * Whether the given test execution time is considered slow.
      *
-     * @param int $time          Test execution time in milliseconds
+     * @param int $time           Test execution time in milliseconds
      * @param int $slow_threshold Test execution time at which a test should be considered slow (milliseconds)
      * @return bool
      */
@@ -2533,7 +2617,7 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      * Stores a test as slow.
      *
      * @param PHPUnit_Framework_TestCase $test
-     * @param int                         $time Test execution time in milliseconds
+     * @param int                        $time Test execution time in milliseconds
      */
     protected function addSlowTest(\PHPUnit_Framework_TestCase $test, $time)
     {
@@ -2733,7 +2817,7 @@ class Spy_REST_Server extends \WP_REST_Server
     public $last_request = \null;
     public $override_by_default = \false;
     /**
-     * Get the raw $endpoints data from the server
+     * Gets the raw $endpoints data from the server.
      *
      * @return array
      */
@@ -2741,54 +2825,65 @@ class Spy_REST_Server extends \WP_REST_Server
     {
     }
     /**
-     * Allow calling protected methods from tests
+     * Allow calling protected methods from tests.
      *
-     * @param string $method Method to call
-     * @param array $args Arguments to pass to the method
+     * @param string $method Method to call.
+     * @param array  $args   Arguments to pass to the method.
      * @return mixed
      */
     public function __call($method, $args)
     {
     }
+    /**
+     * Adds a header to the list of sent headers.
+     *
+     * @param string $header Header name.
+     * @param string $value  Header value.
+     */
     public function send_header($header, $value)
     {
     }
+    /**
+     * Removes a header from the list of sent headers.
+     *
+     * @param string $header Header name.
+     */
     public function remove_header($header)
     {
     }
     /**
-     * Override the dispatch method so we can get a handle on the request object.
+     * Overrides the dispatch method so we can get a handle on the request object.
      *
-     * @param  WP_REST_Request $request
+     * @param  WP_REST_Request $request Request to attempt dispatching.
      * @return WP_REST_Response Response returned by the callback.
      */
     public function dispatch($request)
     {
     }
     /**
-     * Override the register_route method so we can re-register routes internally if needed.
+     * Overrides the register_route method so we can re-register routes internally if needed.
      *
      * @param string $namespace  Namespace.
      * @param string $route      The REST route.
      * @param array  $route_args Route arguments.
      * @param bool   $override   Optional. Whether the route should be overridden if it already exists.
-     *                           Default false. Also set $GLOBALS['wp_rest_server']->override_by_default = true
+     *                           Default false. Also set `$GLOBALS['wp_rest_server']->override_by_default = true`
      *                           to set overrides when you don't have access to the caller context.
      */
     public function register_route($namespace, $route, $route_args, $override = \false)
     {
     }
+    /**
+     * Serves the request and returns the result.
+     *
+     * @param string $path Optional. The request route. If not set, `$_SERVER['PATH_INFO']` will be used.
+     *                     Default null.
+     * @return null|false Null if not served and a HEAD request, false otherwise.
+     */
     public function serve_request($path = \null)
     {
     }
 }
-/**
- * Ajax test cases
- *
- * @package    WordPress
- * @subpackage UnitTests
- * @since      3.4.0
- */
 /**
  * Ajax test case class
  *
@@ -2799,25 +2894,25 @@ class Spy_REST_Server extends \WP_REST_Server
 abstract class WP_Ajax_UnitTestCase extends \WP_UnitTestCase
 {
     /**
-     * Last AJAX response.  This is set via echo -or- wp_die.
+     * Last Ajax response. This is set via echo -or- wp_die.
      *
      * @var string
      */
     protected $_last_response = '';
     /**
-     * List of ajax actions called via GET
+     * List of Ajax actions called via GET.
      *
      * @var array
      */
     protected static $_core_actions_get = array('fetch-list', 'ajax-tag-search', 'wp-compression-test', 'imgedit-preview', 'oembed-cache', 'autocomplete-user', 'dashboard-widgets', 'logged-in');
     /**
-     * Saved error reporting level
+     * Saved error reporting level.
      *
      * @var int
      */
     protected $_error_level = 0;
     /**
-     * List of ajax actions called via POST
+     * List of Ajax actions called via POST.
      *
      * @var array
      */
@@ -2826,27 +2921,29 @@ abstract class WP_Ajax_UnitTestCase extends \WP_UnitTestCase
     {
     }
     /**
-     * Set up the test fixture.
-     * Override wp_die(), pretend to be ajax, and suppress E_WARNINGs
+     * Sets up the test fixture.
+     *
+     * Overrides wp_die(), pretends to be Ajax, and suppresses E_WARNINGs.
      */
     public function setUp()
     {
     }
     /**
-     * Tear down the test fixture.
-     * Reset $_POST, remove the wp_die() override, restore error reporting
+     * Tears down the test fixture.
+     *
+     * Resets $_POST, removes the wp_die() override, restores error reporting.
      */
     public function tearDown()
     {
     }
     /**
-     * Clear login cookies, unset the current user
+     * Clears login cookies, unsets the current user.
      */
     public function logout()
     {
     }
     /**
-     * Return our callback handler
+     * Returns our callback handler
      *
      * @return callback
      */
@@ -2854,8 +2951,10 @@ abstract class WP_Ajax_UnitTestCase extends \WP_UnitTestCase
     {
     }
     /**
-     * Handler for wp_die()
+     * Handler for wp_die().
+     *
      * Save the output for analysis, stop execution by throwing an exception.
+     *
      * Error conditions (no output, just die) will throw <code>WPAjaxDieStopException( $message )</code>
      * You can test for this with:
      * <code>
@@ -2867,26 +2966,32 @@ abstract class WP_Ajax_UnitTestCase extends \WP_UnitTestCase
      * $this->setExpectedException( 'WPAjaxDieContinueException', 'something contained in $message' );
      * </code>
      *
-     * @param string $message
+     * @param string $message The message to set.
+     *
+     * @throws WPAjaxDieStopException     Thrown to stop further execution.
+     * @throws WPAjaxDieContinueException Thrown to stop execution of the Ajax function,
+     *                                    but continue the unit test.
      */
     public function dieHandler($message)
     {
     }
     /**
-     * Switch between user roles
-     * E.g. administrator, editor, author, contributor, subscriber
+     * Switches between user roles.
      *
-     * @param string $role
+     * E.g. administrator, editor, author, contributor, subscriber.
+     *
+     * @param string $role The role to set.
      */
     protected function _setRole($role)
     {
     }
     /**
-     * Mimic the ajax handling of admin-ajax.php
-     * Capture the output via output buffering, and if there is any, store
-     * it in $this->_last_response.
+     * Mimics the Ajax handling of admin-ajax.php.
      *
-     * @param string $action
+     * Captures the output via output buffering, and if there is any,
+     * stores it in $this->_last_response.
+     *
+     * @param string $action The action to handle.
      */
     protected function _handleAjax($action)
     {
@@ -3060,10 +3165,12 @@ class TracTickets
     {
     }
 }
-// helper class for testing code that involves actions and filters
-// typical use:
-// $ma = new MockAction();
-// add_action('foo', array(&$ma, 'action'));
+/*
+ * Helper class for testing code that involves actions and filters.
+ * Typical use:
+ * $ma = new MockAction();
+ * add_action( 'foo', array( &$ma, 'action' ) );
+ */
 class MockAction
 {
     var $events;
@@ -3098,25 +3205,25 @@ class MockAction
     function filterall($tag, ...$args)
     {
     }
-    // return a list of all the actions, tags and args
+    // Return a list of all the actions, tags and args.
     function get_events()
     {
     }
-    // return a count of the number of times the action was called since the last reset
+    // Return a count of the number of times the action was called since the last reset.
     function get_call_count($tag = '')
     {
     }
-    // return an array of the tags that triggered calls to this action
+    // Return an array of the tags that triggered calls to this action.
     function get_tags()
     {
     }
-    // return an array of args passed in calls to this action
+    // Return an array of args passed in calls to this action.
     function get_args()
     {
     }
 }
-// convert valid xml to an array tree structure
-// kinda lame but it works with a default php 4 installation
+// Convert valid XML to an array tree structure.
+// Kinda lame, but it works with a default PHP 4 installation.
 class TestXMLParser
 {
     var $xml;
@@ -3159,16 +3266,20 @@ class WpdbExposedMethodsForTesting extends \wpdb
     }
 }
 /*
-A simple manually-instrumented profiler for WordPress.
-This records basic execution time, and a summary of the actions and SQL queries run within each block.
-start() and stop() must be called in pairs, for example:
-function something_to_profile() {
-	wppf_start(__FUNCTION__);
-	do_stuff();
-	wppf_stop();
-}
-Multiple profile blocks are permitted, and they may be nested.
-*/
+ * A simple manually-instrumented profiler for WordPress.
+ *
+ * This records basic execution time, and a summary of the actions and SQL queries run within each block.
+ *
+ * start() and stop() must be called in pairs, for example:
+ *
+ * function something_to_profile() {
+ * 	wppf_start(__FUNCTION__);
+ * 	do_stuff();
+ * 	wppf_stop();
+ * }
+ *
+ * Multiple profile blocks are permitted, and they may be nested.
+ */
 class WPProfiler
 {
     public $stack;
@@ -3239,11 +3350,17 @@ function tests_reset__SERVER()
 /**
  * Adds hooks before loading WP.
  *
- * @param string       $tag             The name for the filter to add.
- * @param object|array $function_to_add The function/callback to execute on call.
- * @param int          $priority        The priority.
- * @param int          $accepted_args   The amount of accepted arguments.
- * @return bool Always true.
+ * @see add_filter()
+ *
+ * @param string   $tag             The name of the filter to hook the $function_to_add callback to.
+ * @param callable $function_to_add The callback to be run when the filter is applied.
+ * @param int      $priority        Optional. Used to specify the order in which the functions
+ *                                  associated with a particular action are executed.
+ *                                  Lower numbers correspond with earlier execution,
+ *                                  and functions with the same priority are executed
+ *                                  in the order in which they were added to the action. Default 10.
+ * @param int      $accepted_args   Optional. The number of arguments the function accepts. Default 1.
+ * @return true
  */
 function tests_add_filter($tag, $function_to_add, $priority = 10, $accepted_args = 1)
 {
@@ -3251,10 +3368,13 @@ function tests_add_filter($tag, $function_to_add, $priority = 10, $accepted_args
 /**
  * Generates a unique function ID based on the given arguments.
  *
- * @param string       $tag      Unused. The name of the filter to build ID for.
- * @param object|array $function The function to generate ID for.
- * @param int          $priority Unused. The priority.
- * @return string Unique function ID.
+ * @see _wp_filter_build_unique_id()
+ *
+ * @param string   $tag      Unused. The name of the filter to build ID for.
+ * @param callable $function The function to generate ID for.
+ * @param int      $priority Unused. The order in which the functions
+ *                           associated with a particular action are executed.
+ * @return string Unique function ID for usage as array key.
  */
 function _test_filter_build_unique_id($tag, $function, $priority)
 {
@@ -3399,13 +3519,13 @@ function reset_phpmailer_instance()
  * If the specified key already exists, the value is not stored and the function
  * returns false.
  *
- * @link http://www.php.net/manual/en/memcached.add.php
+ * @link https://www.php.net/manual/en/memcached.add.php
  *
- * @param string    $key        The key under which to store the value.
- * @param mixed     $value      The value to store.
- * @param string    $group      The group value appended to the $key.
- * @param int       $expiration The expiration time, defaults to 0.
- * @return bool                 Returns TRUE on success or FALSE on failure.
+ * @param string $key        The key under which to store the value.
+ * @param mixed  $value      The value to store.
+ * @param string $group      The group value appended to the $key.
+ * @param int    $expiration The expiration time, defaults to 0.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_add($key, $value, $group = '', $expiration = 0)
 {
@@ -3418,27 +3538,28 @@ function wp_cache_add($key, $value, $group = '', $expiration = 0)
  * _cache object as part of the runtime cache. It will add it to an array for the
  * specified server_key.
  *
- * @link http://www.php.net/manual/en/memcached.addbykey.php
+ * @link https://www.php.net/manual/en/memcached.addbykey.php
  *
- * @param string    $server_key     The key identifying the server to store the value on.
- * @param string    $key            The key under which to store the value.
- * @param mixed     $value          The value to store.
- * @param string    $group          The group value appended to the $key.
- * @param int       $expiration     The expiration time, defaults to 0.
- * @return bool                     Returns TRUE on success or FALSE on failure.
+ * @param string $server_key The key identifying the server to store the value on.
+ * @param string $key        The key under which to store the value.
+ * @param mixed  $value      The value to store.
+ * @param string $group      The group value appended to the $key.
+ * @param int    $expiration The expiration time, defaults to 0.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_add_by_key($server_key, $key, $value, $group = '', $expiration = 0)
 {
 }
 /**
- * Add a single server to the list of Memcached servers.
+ * Adds a single server to the list of Memcached servers.
  *
- * @link http://www.php.net/manual/en/memcached.addserver.php
+ * @link https://www.php.net/manual/en/memcached.addserver.php
  *
- * @param string        $host   The hostname of the memcache server.
- * @param int           $port   The port on which memcache is running.
- * @param int           $weight The weight of the server relative to the total weight of all the servers in the pool.
- * @return bool                 Returns TRUE on success or FALSE on failure.
+ * @param string $host   The hostname of the memcache server.
+ * @param int    $port   The port on which memcache is running.
+ * @param int    $weight The weight of the server relative to the total weight
+ *                       of all the servers in the pool.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_add_server($host, $port, $weight = 0)
 {
@@ -3449,51 +3570,51 @@ function wp_cache_add_server($host, $port, $weight = 0)
  * Each individual server in the array must include a domain and port, with an optional
  * weight value: $servers = array( array( '127.0.0.1', 11211, 0 ) );
  *
- * @link http://www.php.net/manual/en/memcached.addservers.php
+ * @link https://www.php.net/manual/en/memcached.addservers.php
  *
- * @param array     $servers    Array of server to register.
- * @return bool                 True on success; false on failure.
+ * @param array $servers Array of server to register.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_add_servers($servers)
 {
 }
 /**
- * Append data to an existing item.
+ * Appends data to an existing item.
  *
- * This method should throw an error if it is used with compressed data. This
- * is an expected behavior. Memcached casts the value to be appended to the initial value to the
- * type of the initial value. Be careful as this leads to unexpected behavior at times. Due to
- * how memcached treats types, the behavior has been mimicked in the internal cache to produce
- * similar results and improve consistency. It is recommend that appends only occur with data of
+ * This method should throw an error if it is used with compressed data.
+ * This is an expected behavior. Memcached casts the value to be appended to the initial value
+ * to the type of the initial value. Be careful as this leads to unexpected behavior at times.
+ * Due to how memcached treats types, the behavior has been mimicked in the internal cache to produce
+ * similar results and improve consistency. It is recommended that appends only occur with data of
  * the same type.
  *
- * @link http://www.php.net/manual/en/memcached.append.php
+ * @link https://www.php.net/manual/en/memcached.append.php
  *
- * @param string    $key    The key under which to store the value.
- * @param mixed     $value  Must be string as appending mixed values is not well-defined
- * @param string    $group  The group value appended to the $key.
- * @return bool             Returns TRUE on success or FALSE on failure.
+ * @param string $key   The key under which to store the value.
+ * @param mixed  $value Must be string as appending mixed values is not well-defined.
+ * @param string $group The group value appended to the $key.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_append($key, $value, $group = '')
 {
 }
 /**
- * Append data to an existing item by server key.
+ * Appends data to an existing item by server key.
  *
- * This method should throw an error if it is used with compressed data. This
- * is an expected behavior. Memcached casts the value to be appended to the initial value to the
- * type of the initial value. Be careful as this leads to unexpected behavior at times. Due to
- * how memcached treats types, the behavior has been mimicked in the internal cache to produce
- * similar results and improve consistency. It is recommend that appends only occur with data of
+ * This method should throw an error if it is used with compressed data.
+ * This is an expected behavior. Memcached casts the value to be appended to the initial value
+ * to the type of the initial value. Be careful as this leads to unexpected behavior at times.
+ * Due to how memcached treats types, the behavior has been mimicked in the internal cache to produce
+ * similar results and improve consistency. It is recommended that appends only occur with data of
  * the same type.
  *
- * @link http://www.php.net/manual/en/memcached.appendbykey.php
+ * @link https://www.php.net/manual/en/memcached.appendbykey.php
  *
- * @param string    $server_key     The key identifying the server to store the value on.
- * @param string    $key            The key under which to store the value.
- * @param mixed     $value          Must be string as appending mixed values is not well-defined
- * @param string    $group          The group value appended to the $key.
- * @return bool                     Returns TRUE on success or FALSE on failure.
+ * @param string $server_key The key identifying the server to store the value on.
+ * @param string $key        The key under which to store the value.
+ * @param mixed  $value      Must be string as appending mixed values is not well-defined.
+ * @param string $group      The group value appended to the $key.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_append_by_key($server_key, $key, $value, $group = '')
 {
@@ -3501,17 +3622,17 @@ function wp_cache_append_by_key($server_key, $key, $value, $group = '')
 /**
  * Performs a "check and set" to store data.
  *
- * The set will be successful only if the no other request has updated the value since it was fetched by
- * this request.
+ * The set will be successful only if the no other request has updated the value
+ * since it was fetched by this request.
  *
- * @link http://www.php.net/manual/en/memcached.cas.php
+ * @link https://www.php.net/manual/en/memcached.cas.php
  *
- * @param float     $cas_token  Unique value associated with the existing item. Generated by memcached.
- * @param string    $key        The key under which to store the value.
- * @param mixed     $value      The value to store.
- * @param string    $group      The group value appended to the $key.
- * @param int       $expiration The expiration time, defaults to 0.
- * @return bool                 Returns TRUE on success or FALSE on failure.
+ * @param float  $cas_token  Unique value associated with the existing item. Generated by memcached.
+ * @param string $key        The key under which to store the value.
+ * @param mixed  $value      The value to store.
+ * @param string $group      The group value appended to the $key.
+ * @param int    $expiration The expiration time, defaults to 0.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_cas($cas_token, $key, $value, $group = '', $expiration = 0)
 {
@@ -3519,18 +3640,18 @@ function wp_cache_cas($cas_token, $key, $value, $group = '', $expiration = 0)
 /**
  * Performs a "check and set" to store data with a server key.
  *
- * The set will be successful only if the no other request has updated the value since it was fetched by
- * this request.
+ * The set will be successful only if the no other request has updated the value
+ * since it was fetched by this request.
  *
- * @link http://www.php.net/manual/en/memcached.casbykey.php
+ * @link https://www.php.net/manual/en/memcached.casbykey.php
  *
- * @param string    $server_key The key identifying the server to store the value on.
- * @param float     $cas_token  Unique value associated with the existing item. Generated by memcached.
- * @param string    $key        The key under which to store the value.
- * @param mixed     $value      The value to store.
- * @param string    $group      The group value appended to the $key.
- * @param int       $expiration The expiration time, defaults to 0.
- * @return bool                 Returns TRUE on success or FALSE on failure.
+ * @param string $server_key The key identifying the server to store the value on.
+ * @param float  $cas_token  Unique value associated with the existing item. Generated by memcached.
+ * @param string $key        The key under which to store the value.
+ * @param mixed  $value      The value to store.
+ * @param string $group      The group value appended to the $key.
+ * @param int    $expiration The expiration time, defaults to 0.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_cas_by_key($cas_token, $server_key, $key, $value, $group = '', $expiration = 0)
 {
@@ -3538,185 +3659,188 @@ function wp_cache_cas_by_key($cas_token, $server_key, $key, $value, $group = '',
 /**
  * Closes the cache.
  *
- * This function has ceased to do anything since WordPress 2.5. The
- * functionality was removed along with the rest of the persistent cache. This
- * does not mean that plugins can't implement this function when they need to
- * make sure that the cache is cleaned up after WordPress no longer needs it.
+ * This function has ceased to do anything since WordPress 2.5.
+ * The functionality was removed along with the rest of the persistent cache.
+ * This does not mean that plugins can't implement this function when they need
+ * to make sure that the cache is cleaned up after WordPress no longer needs it.
  *
  * @since 2.0.0
  *
- * @return  bool    Always returns True
+ * @return bool Always returns true.
  */
 function wp_cache_close()
 {
 }
 /**
- * Decrement a numeric item's value.
+ * Decrements a numeric item's value.
  *
- * @link http://www.php.net/manual/en/memcached.decrement.php
+ * @link https://www.php.net/manual/en/memcached.decrement.php
  *
- * @param string    $key    The key under which to store the value.
- * @param int       $offset The amount by which to decrement the item's value.
- * @param string    $group  The group value appended to the $key.
- * @return int|bool         Returns item's new value on success or FALSE on failure.
+ * @param string $key    The key under which to store the value.
+ * @param int    $offset The amount by which to decrement the item's value.
+ * @param string $group  The group value appended to the $key.
+ * @return int|bool Item's new value on success, false on failure.
  */
 function wp_cache_decrement($key, $offset = 1, $group = '')
 {
 }
 /**
- * Decrement a numeric item's value.
+ * Decrements a numeric item's value.
  *
- * Same as wp_cache_decrement. Original WordPress caching backends use wp_cache_decr. I
- * want both spellings to work.
+ * This is the same as wp_cache_decrement(), but kept for backward compatibility.
+ * The original WordPress caching backends use wp_cache_decr().
  *
- * @link http://www.php.net/manual/en/memcached.decrement.php
+ * @link https://www.php.net/manual/en/memcached.decrement.php
  *
- * @param string    $key    The key under which to store the value.
- * @param int       $offset The amount by which to decrement the item's value.
- * @param string    $group  The group value appended to the $key.
- * @return int|bool         Returns item's new value on success or FALSE on failure.
+ * @param string $key    The key under which to store the value.
+ * @param int    $offset The amount by which to decrement the item's value.
+ * @param string $group  The group value appended to the $key.
+ * @return int|bool Item's new value on success, false on failure.
  */
 function wp_cache_decr($key, $offset = 1, $group = '')
 {
 }
 /**
- * Remove the item from the cache.
+ * Removes the item from the cache.
  *
- * Remove an item from memcached with identified by $key after $time seconds. The
- * $time parameter allows an object to be queued for deletion without immediately
- * deleting. Between the time that it is queued and the time it's deleted, add,
- * replace, and get will fail, but set will succeed.
+ * Removes an item from memcached with identified by $key after $time seconds.
+ * The $time parameter allows an object to be queued for deletion without
+ * immediately deleting. Between the time that it is queued and the time it's deleted,
+ * add, replace, and get will fail, but set will succeed.
  *
- * @link http://www.php.net/manual/en/memcached.delete.php
+ * @link https://www.php.net/manual/en/memcached.delete.php
  *
- * @param string    $key    The key under which to store the value.
- * @param string    $group  The group value appended to the $key.
- * @param int       $time   The amount of time the server will wait to delete the item in seconds.
- * @return bool             Returns TRUE on success or FALSE on failure.
+ * @param string $key   The key under which to store the value.
+ * @param string $group The group value appended to the $key.
+ * @param int    $time  The amount of time the server will wait to delete the item in seconds.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_delete($key, $group = '', $time = 0)
 {
 }
 /**
- * Remove the item from the cache by server key.
+ * Removes the item from the cache by server key.
  *
- * Remove an item from memcached with identified by $key after $time seconds. The
- * $time parameter allows an object to be queued for deletion without immediately
- * deleting. Between the time that it is queued and the time it's deleted, add,
- * replace, and get will fail, but set will succeed.
+ * Removes an item from memcached with identified by $key after $time seconds.
+ * The $time parameter allows an object to be queued for deletion without
+ * immediately deleting. Between the time that it is queued and the time it's deleted,
+ * add, replace, and get will fail, but set will succeed.
  *
- * @link http://www.php.net/manual/en/memcached.deletebykey.php
+ * @link https://www.php.net/manual/en/memcached.deletebykey.php
  *
- * @param string        $server_key The key identifying the server to store the value on.
- * @param string        $key        The key under which to store the value.
- * @param string        $group      The group value appended to the $key.
- * @param int           $time       The amount of time the server will wait to delete the item in seconds.
- * @return bool                     Returns TRUE on success or FALSE on failure.
+ * @param string $server_key The key identifying the server to store the value on.
+ * @param string $key        The key under which to store the value.
+ * @param string $group      The group value appended to the $key.
+ * @param int    $time       The amount of time the server will wait to delete the item in seconds.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_delete_by_key($server_key, $key, $group = '', $time = 0)
 {
 }
 /**
- * Fetch the next result.
+ * Fetches the next result.
  *
- * @link http://www.php.net/manual/en/memcached.fetch.php
+ * @link https://www.php.net/manual/en/memcached.fetch.php
  *
- * @return  array|bool   Returns the next result or FALSE otherwise.
+ * @return array|false The next result on success, false on failure.
  */
 function wp_cache_fetch()
 {
 }
 /**
- * Fetch all remaining results from the last request.
+ * Fetches all remaining results from the last request.
  *
- * @link http://www.php.net/manual/en/memcached.fetchall.php
+ * @link https://www.php.net/manual/en/memcached.fetchall.php
  *
- * @return  array|bool  Returns the results or FALSE on failure.
+ * @return array|false The results on success, false on failure.
  */
 function wp_cache_fetch_all()
 {
 }
 /**
- * Invalidate all items in the cache.
+ * Invalidates all items in the cache.
  *
- * @link http://www.php.net/manual/en/memcached.flush.php
+ * @link https://www.php.net/manual/en/memcached.flush.php
  *
- * @param int       $delay  Number of seconds to wait before invalidating the items.
- * @return bool             Returns TRUE on success or FALSE on failure.
+ * @param int $delay Number of seconds to wait before invalidating the items.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_flush($delay = 0)
 {
 }
 /**
- * Retrieve object from cache.
+ * Retrieves object from cache.
  *
- * Gets an object from cache based on $key and $group. In order to fully support the $cache_cb and $cas_token
- * parameters, the runtime cache is ignored by this function if either of those values are set. If either of
- * those values are set, the request is made directly to the memcached server for proper handling of the
- * callback and/or token.
+ * Gets an object from cache based on $key and $group. In order to fully support
+ * the $cache_cb and $cas_token parameters, the runtime cache is ignored by this function
+ * if either of those values are set. In that case, the request is made directly
+ * to the memcached server for proper handling of the callback and/or token.
  *
- * Note that the $deprecated and $found args are only here for compatibility with the native wp_cache_get function.
+ * Note that the $deprecated and $found args are only here for compatibility
+ * with the native wp_cache_get() function.
  *
- * @link http://www.php.net/manual/en/memcached.get.php
+ * @link https://www.php.net/manual/en/memcached.get.php
  *
- * @param string        $key        The key under which to store the value.
- * @param string        $group      The group value appended to the $key.
- * @param bool          $force      Whether or not to force a cache invalidation.
- * @param null|bool     $found      Variable passed by reference to determine if the value was found or not.
- * @param null|string   $cache_cb   Read-through caching callback.
- * @param null|float    $cas_token  The variable to store the CAS token in.
- * @return bool|mixed               Cached object value.
+ * @param string      $key       The key under which to store the value.
+ * @param string      $group     The group value appended to the $key.
+ * @param bool        $force     Whether or not to force a cache invalidation.
+ * @param null|bool   $found     Variable passed by reference to determine if the value was found or not.
+ * @param null|string $cache_cb  Read-through caching callback.
+ * @param null|float  $cas_token The variable to store the CAS token in.
+ * @return bool|mixed Cached object value.
  */
 function wp_cache_get($key, $group = '', $force = \false, &$found = \null, $cache_cb = \null, &$cas_token = \null)
 {
 }
 /**
- * Retrieve object from cache from specified server.
+ * Retrieves object from cache from specified server.
  *
- * Gets an object from cache based on $key, $group and $server_key. In order to fully support the $cache_cb and $cas_token
- * parameters, the runtime cache is ignored by this function if either of those values are set. If either of
- * those values are set, the request is made directly to the memcached server for proper handling of the
- * callback and/or token.
+ * Gets an object from cache based on $key, $group, and $server_key. In order to fully support
+ * the $cache_cb and $cas_token parameters, the runtime cache is ignored by this function
+ * if either of those values are set. In that case, the request is made directly
+ * to the memcached server for proper handling of the callback and/or token.
  *
- * @link http://www.php.net/manual/en/memcached.getbykey.php
+ * @link https://www.php.net/manual/en/memcached.getbykey.php
  *
- * @param string        $server_key The key identifying the server to store the value on.
- * @param string        $key        The key under which to store the value.
- * @param string        $group      The group value appended to the $key.
- * @param bool          $force      Whether or not to force a cache invalidation.
- * @param null|bool     $found      Variable passed by reference to determine if the value was found or not.
- * @param null|string   $cache_cb   Read-through caching callback.
- * @param null|float    $cas_token  The variable to store the CAS token in.
- * @return bool|mixed               Cached object value.
+ * @param string      $server_key The key identifying the server to store the value on.
+ * @param string      $key        The key under which to store the value.
+ * @param string      $group      The group value appended to the $key.
+ * @param bool        $force      Whether or not to force a cache invalidation.
+ * @param null|bool   $found      Variable passed by reference to determine if the value was found or not.
+ * @param null|string $cache_cb   Read-through caching callback.
+ * @param null|float  $cas_token  The variable to store the CAS token in.
+ * @return bool|mixed Cached object value.
  */
 function wp_cache_get_by_key($server_key, $key, $group = '', $force = \false, &$found = \null, $cache_cb = \null, &$cas_token = \null)
 {
 }
 /**
- * Request multiple keys without blocking.
+ * Requests multiple keys without blocking.
  *
- * @link http://www.php.net/manual/en/memcached.getdelayed.php
+ * @link https://www.php.net/manual/en/memcached.getdelayed.php
  *
- * @param string|array  $keys       Array or string of key(s) to request.
- * @param string|array  $groups     Array or string of group(s) for the key(s). See buildKeys for more on how these are handled.
- * @param bool          $with_cas   Whether to request CAS token values also.
- * @param null          $value_cb   The result callback or NULL.
- * @return bool                     Returns TRUE on success or FALSE on failure.
+ * @param string|array $keys     Array or string of key(s) to request.
+ * @param string|array $groups   Array or string of group(s) for the key(s).
+ *                               See buildKeys for more on how these are handled.
+ * @param bool         $with_cas Whether to request CAS token values also.
+ * @param null         $value_cb The result callback or null.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_get_delayed($keys, $groups = '', $with_cas = \false, $value_cb = \null)
 {
 }
 /**
- * Request multiple keys without blocking from a specified server.
+ * Requests multiple keys without blocking from a specified server.
  *
- * @link http://www.php.net/manual/en/memcached.getdelayed.php
+ * @link https://www.php.net/manual/en/memcached.getdelayed.php
  *
- * @param string        $server_key The key identifying the server to store the value on.
- * @param string|array  $keys       Array or string of key(s) to request.
- * @param string|array  $groups     Array or string of group(s) for the key(s). See buildKeys for more on how these are handled.
- * @param bool          $with_cas   Whether to request CAS token values also.
- * @param null          $value_cb   The result callback or NULL.
- * @return bool                     Returns TRUE on success or FALSE on failure.
+ * @param string       $server_key The key identifying the server to store the value on.
+ * @param string|array $keys       Array or string of key(s) to request.
+ * @param string|array $groups     Array or string of group(s) for the key(s).
+ *                                 See buildKeys for more on how these are handled.
+ * @param bool         $with_cas   Whether to request CAS token values also.
+ * @param null         $value_cb   The result callback or null.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_get_delayed_by_key($server_key, $keys, $groups = '', $with_cas = \false, $value_cb = \null)
 {
@@ -3726,13 +3850,14 @@ function wp_cache_get_delayed_by_key($server_key, $keys, $groups = '', $with_cas
  *
  * See the buildKeys method definition to understand the $keys/$groups parameters.
  *
- * @link http://www.php.net/manual/en/memcached.getmulti.php
+ * @link https://www.php.net/manual/en/memcached.getmulti.php
  *
- * @param array         $keys       Array of keys to retrieve.
- * @param string|array  $groups     If string, used for all keys. If arrays, corresponds with the $keys array.
- * @param null|array    $cas_tokens The variable to store the CAS tokens for the found items.
- * @param int           $flags      The flags for the get operation.
- * @return bool|array               Returns the array of found items or FALSE on failure.
+ * @param array        $keys       Array of keys to retrieve.
+ * @param string|array $groups     If string, used for all keys.
+ *                                 If arrays, corresponds with the $keys array.
+ * @param null|array   $cas_tokens The variable to store the CAS tokens for the found items.
+ * @param int          $flags      The flags for the get operation.
+ * @return bool|array The array of found items on success, false on failure.
  */
 function wp_cache_get_multi($keys, $groups = '', &$cas_tokens = \null, $flags = \null)
 {
@@ -3742,35 +3867,36 @@ function wp_cache_get_multi($keys, $groups = '', &$cas_tokens = \null, $flags = 
  *
  * See the buildKeys method definition to understand the $keys/$groups parameters.
  *
- * @link http://www.php.net/manual/en/memcached.getmultibykey.php
+ * @link https://www.php.net/manual/en/memcached.getmultibykey.php
  *
- * @param string        $server_key The key identifying the server to store the value on.
- * @param array         $keys       Array of keys to retrieve.
- * @param string|array  $groups     If string, used for all keys. If arrays, corresponds with the $keys array.
- * @param null|array    $cas_tokens The variable to store the CAS tokens for the found items.
- * @param int           $flags      The flags for the get operation.
- * @return bool|array               Returns the array of found items or FALSE on failure.
+ * @param string       $server_key The key identifying the server to store the value on.
+ * @param array        $keys       Array of keys to retrieve.
+ * @param string|array $groups     If string, used for all keys.
+ *                                 If arrays, corresponds with the $keys array.
+ * @param null|array   $cas_tokens The variable to store the CAS tokens for the found items.
+ * @param int          $flags      The flags for the get operation.
+ * @return bool|array The array of found items on success, false on failure.
  */
 function wp_cache_get_multi_by_key($server_key, $keys, $groups = '', &$cas_tokens = \null, $flags = \null)
 {
 }
 /**
- * Retrieve a Memcached option value.
+ * Retrieves a Memcached option value.
  *
- * @link http://www.php.net/manual/en/memcached.getoption.php
+ * @link https://www.php.net/manual/en/memcached.getoption.php
  *
- * @param int   $option One of the Memcached::OPT_* constants.
- * @return mixed        Returns the value of the requested option, or FALSE on error.
+ * @param int $option One of the Memcached::OPT_* constants.
+ * @return mixed The value of the requested option on success, false on failure.
  */
 function wp_cache_get_option($option)
 {
 }
 /**
- * Return the result code of the last option.
+ * Returns the result code of the last option.
  *
- * @link http://www.php.net/manual/en/memcached.getresultcode.php
+ * @link https://www.php.net/manual/en/memcached.getresultcode.php
  *
- * @return int  Result code of the last Memcached operation.
+ * @return int Result code of the last Memcached operation.
  */
 function wp_cache_get_result_code()
 {
@@ -3778,122 +3904,122 @@ function wp_cache_get_result_code()
 /**
  * Return the message describing the result of the last operation.
  *
- * @link http://www.php.net/manual/en/memcached.getresultmessage.php
+ * @link https://www.php.net/manual/en/memcached.getresultmessage.php
  *
- * @return string   Message describing the result of the last Memcached operation.
+ * @return string Message describing the result of the last Memcached operation.
  */
 function wp_cache_get_result_message()
 {
 }
 /**
- * Get server information by key.
+ * Gets server information by key.
  *
- * @link http://www.php.net/manual/en/memcached.getserverbykey.php
+ * @link https://www.php.net/manual/en/memcached.getserverbykey.php
  *
- * @param string    $server_key The key identifying the server to store the value on.
- * @return array                Array with host, post, and weight on success, FALSE on failure.
+ * @param string $server_key The key identifying the server to store the value on.
+ * @return array Array with host, post, and weight on success, fales on failure.
  */
 function wp_cache_get_server_by_key($server_key)
 {
 }
 /**
- * Get the list of servers in the pool.
+ * Gets the list of servers in the pool.
  *
- * @link http://www.php.net/manual/en/memcached.getserverlist.php
+ * @link https://www.php.net/manual/en/memcached.getserverlist.php
  *
- * @return array    The list of all servers in the server pool.
+ * @return array The list of all servers in the server pool.
  */
 function wp_cache_get_server_list()
 {
 }
 /**
- * Get server pool statistics.
+ * Gets server pool statistics.
  *
- * @link http://www.php.net/manual/en/memcached.getstats.php
+ * @link https://www.php.net/manual/en/memcached.getstats.php
  *
- * @return array    Array of server statistics, one entry per server.
+ * @return array Array of server statistics, one entry per server.
  */
 function wp_cache_get_stats()
 {
 }
 /**
- * Get server pool memcached version information.
+ * Gets server pool memcached version information.
  *
- * @link http://www.php.net/manual/en/memcached.getversion.php
+ * @link https://www.php.net/manual/en/memcached.getversion.php
  *
- * @return array    Array of server versions, one entry per server.
+ * @return array Array of server versions, one entry per server.
  */
 function wp_cache_get_version()
 {
 }
 /**
- * Increment a numeric item's value.
+ * Increments a numeric item's value.
  *
- * @link http://www.php.net/manual/en/memcached.increment.php
+ * @link https://www.php.net/manual/en/memcached.increment.php
  *
- * @param string    $key    The key under which to store the value.
- * @param int       $offset The amount by which to increment the item's value.
- * @param string    $group  The group value appended to the $key.
- * @return int|bool         Returns item's new value on success or FALSE on failure.
+ * @param string $key    The key under which to store the value.
+ * @param int    $offset The amount by which to increment the item's value.
+ * @param string $group  The group value appended to the $key.
+ * @return int|bool Item's new value on success, false on failure.
  */
 function wp_cache_increment($key, $offset = 1, $group = '')
 {
 }
 /**
- * Increment a numeric item's value.
+ * Increments a numeric item's value.
  *
- * This is the same as wp_cache_increment, but kept for back compatibility. The original
- * WordPress caching backends use wp_cache_incr. I want both to work.
+ * This is the same as wp_cache_increment(), but kept for backward compatibility.
+ * The original WordPress caching backends use wp_cache_incr().
  *
- * @link http://www.php.net/manual/en/memcached.increment.php
+ * @link https://www.php.net/manual/en/memcached.increment.php
  *
- * @param string    $key    The key under which to store the value.
- * @param int       $offset The amount by which to increment the item's value.
- * @param string    $group  The group value appended to the $key.
- * @return int|bool         Returns item's new value on success or FALSE on failure.
+ * @param string $key    The key under which to store the value.
+ * @param int    $offset The amount by which to increment the item's value.
+ * @param string $group  The group value appended to the $key.
+ * @return int|bool Item's new value on success, false on failure.
  */
 function wp_cache_incr($key, $offset = 1, $group = '')
 {
 }
 /**
- * Prepend data to an existing item.
+ * Prepends data to an existing item.
  *
  * This method should throw an error if it is used with compressed data. This is an expected behavior.
- * Memcached casts the value to be prepended to the initial value to the type of the initial value. Be
- * careful as this leads to unexpected behavior at times. For instance, prepending (float) 45.23 to
- * (int) 23 will result in 45, because the value is first combined (45.2323) then cast to "integer"
+ * Memcached casts the value to be prepended to the initial value to the type of the initial value.
+ * Be careful as this leads to unexpected behavior at times. For instance, prepending (float) 45.23
+ * to (int) 23 will result in 45, because the value is first combined (45.2323) then cast to "integer"
  * (the original value), which will be (int) 45. Due to how memcached treats types, the behavior has been
- * mimicked in the internal cache to produce similar results and improve consistency. It is recommend
+ * mimicked in the internal cache to produce similar results and improve consistency. It is recommended
  * that prepends only occur with data of the same type.
  *
- * @link http://www.php.net/manual/en/memcached.prepend.php
+ * @link https://www.php.net/manual/en/memcached.prepend.php
  *
- * @param string    $key    The key under which to store the value.
- * @param string    $value  Must be string as prepending mixed values is not well-defined.
- * @param string    $group  The group value prepended to the $key.
- * @return bool             Returns TRUE on success or FALSE on failure.
+ * @param string $key   The key under which to store the value.
+ * @param string $value Must be string as prepending mixed values is not well-defined.
+ * @param string $group The group value prepended to the $key.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_prepend($key, $value, $group = '')
 {
 }
 /**
- * Append data to an existing item by server key.
+ * Appends data to an existing item by server key.
  *
  * This method should throw an error if it is used with compressed data. This is an expected behavior.
- * Memcached casts the value to be prepended to the initial value to the type of the initial value. Be
- * careful as this leads to unexpected behavior at times. For instance, prepending (float) 45.23 to
- * (int) 23 will result in 45, because the value is first combined (45.2323) then cast to "integer"
+ * Memcached casts the value to be prepended to the initial value to the type of the initial value.
+ * Be careful as this leads to unexpected behavior at times. For instance, prepending (float) 45.23
+ * to (int) 23 will result in 45, because the value is first combined (45.2323) then cast to "integer"
  * (the original value), which will be (int) 45. Due to how memcached treats types, the behavior has been
- * mimicked in the internal cache to produce similar results and improve consistency. It is recommend
+ * mimicked in the internal cache to produce similar results and improve consistency. It is recommended
  * that prepends only occur with data of the same type.
  *
- * @link http://www.php.net/manual/en/memcached.prependbykey.php
+ * @link https://www.php.net/manual/en/memcached.prependbykey.php
  *
- * @param string    $server_key     The key identifying the server to store the value on.
- * @param string    $key            The key under which to store the value.
- * @param string    $value          Must be string as prepending mixed values is not well-defined.
- * @param string    $group          The group value prepended to the $key.
- * @return bool                     Returns TRUE on success or FALSE on failure.
+ * @param string $server_key The key identifying the server to store the value on.
+ * @param string $key        The key under which to store the value.
+ * @param string $value      Must be string as prepending mixed values is not well-defined.
+ * @param string $group      The group value prepended to the $key.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_prepend_by_key($server_key, $key, $value, $group = '')
 {
@@ -3901,16 +4027,16 @@ function wp_cache_prepend_by_key($server_key, $key, $value, $group = '')
 /**
  * Replaces a value in cache.
  *
- * This method is similar to "add"; however, is does not successfully set a value if
- * the object's key is not already set in cache.
+ * This method is similar to "add"; however, is does not successfully set a value
+ * if the object's key is not already set in cache.
  *
- * @link http://www.php.net/manual/en/memcached.replace.php
+ * @link https://www.php.net/manual/en/memcached.replace.php
  *
- * @param string    $key        The key under which to store the value.
- * @param mixed     $value      The value to store.
- * @param string    $group      The group value appended to the $key.
- * @param int       $expiration The expiration time, defaults to 0.
- * @return bool                 Returns TRUE on success or FALSE on failure.
+ * @param string $key        The key under which to store the value.
+ * @param mixed  $value      The value to store.
+ * @param string $group      The group value appended to the $key.
+ * @param int    $expiration The expiration time, defaults to 0.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_replace($key, $value, $group = '', $expiration = 0)
 {
@@ -3918,17 +4044,17 @@ function wp_cache_replace($key, $value, $group = '', $expiration = 0)
 /**
  * Replaces a value in cache on a specific server.
  *
- * This method is similar to "addByKey"; however, is does not successfully set a value if
- * the object's key is not already set in cache.
+ * This method is similar to "addByKey"; however, is does not successfully set a value
+ * if the object's key is not already set in cache.
  *
- * @link http://www.php.net/manual/en/memcached.addbykey.php
+ * @link https://www.php.net/manual/en/memcached.addbykey.php
  *
- * @param string    $server_key     The key identifying the server to store the value on.
- * @param string    $key            The key under which to store the value.
- * @param mixed     $value          The value to store.
- * @param string    $group          The group value appended to the $key.
- * @param int       $expiration     The expiration time, defaults to 0.
- * @return bool                     Returns TRUE on success or FALSE on failure.
+ * @param string $server_key The key identifying the server to store the value on.
+ * @param string $key        The key under which to store the value.
+ * @param mixed  $value      The value to store.
+ * @param string $group      The group value appended to the $key.
+ * @param int    $expiration The expiration time, defaults to 0.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_replace_by_key($server_key, $key, $value, $group = '', $expiration = 0)
 {
@@ -3938,13 +4064,13 @@ function wp_cache_replace_by_key($server_key, $key, $value, $group = '', $expira
  *
  * The value is set whether or not this key already exists in memcached.
  *
- * @link http://www.php.net/manual/en/memcached.set.php
+ * @link https://www.php.net/manual/en/memcached.set.php
  *
- * @param string    $key        The key under which to store the value.
- * @param mixed     $value      The value to store.
- * @param string    $group      The group value appended to the $key.
- * @param int       $expiration The expiration time, defaults to 0.
- * @return bool                 Returns TRUE on success or FALSE on failure.
+ * @param string $key        The key under which to store the value.
+ * @param mixed  $value      The value to store.
+ * @param string $group      The group value appended to the $key.
+ * @param int    $expiration The expiration time, defaults to 0.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_set($key, $value, $group = '', $expiration = 0)
 {
@@ -3954,20 +4080,20 @@ function wp_cache_set($key, $value, $group = '', $expiration = 0)
  *
  * The value is set whether or not this key already exists in memcached.
  *
- * @link http://www.php.net/manual/en/memcached.set.php
+ * @link https://www.php.net/manual/en/memcached.set.php
  *
- * @param string    $server_key     The key identifying the server to store the value on.
- * @param string    $key            The key under which to store the value.
- * @param mixed     $value          The value to store.
- * @param string    $group          The group value appended to the $key.
- * @param int       $expiration     The expiration time, defaults to 0.
- * @return bool                     Returns TRUE on success or FALSE on failure.
+ * @param string $server_key The key identifying the server to store the value on.
+ * @param string $key        The key under which to store the value.
+ * @param mixed  $value      The value to store.
+ * @param string $group      The group value appended to the $key.
+ * @param int    $expiration The expiration time, defaults to 0.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_set_by_key($server_key, $key, $value, $group = '', $expiration = 0)
 {
 }
 /**
- * Set multiple values to cache at once.
+ * Sets multiple values to cache at once.
  *
  * By sending an array of $items to this function, all values are saved at once to
  * memcached, reducing the need for multiple requests to memcached. The $items array
@@ -3975,16 +4101,16 @@ function wp_cache_set_by_key($server_key, $key, $value, $group = '', $expiration
  * are merged with the $groups array/string value via buildKeys to determine the
  * final key for the object.
  *
- * @param array         $items      An array of key/value pairs to store on the server.
- * @param string|array  $groups     Group(s) to merge with key(s) in $items.
- * @param int           $expiration The expiration time, defaults to 0.
- * @return bool                     Returns TRUE on success or FALSE on failure.
+ * @param array        $items      An array of key/value pairs to store on the server.
+ * @param string|array $groups     Group(s) to merge with key(s) in $items.
+ * @param int          $expiration The expiration time, defaults to 0.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_set_multi($items, $groups = '', $expiration = 0)
 {
 }
 /**
- * Set multiple values to cache at once on specified server.
+ * Sets multiple values to cache at once on specified server.
  *
  * By sending an array of $items to this function, all values are saved at once to
  * memcached, reducing the need for multiple requests to memcached. The $items array
@@ -3992,31 +4118,31 @@ function wp_cache_set_multi($items, $groups = '', $expiration = 0)
  * are merged with the $groups array/string value via buildKeys to determine the
  * final key for the object.
  *
- * @param string        $server_key The key identifying the server to store the value on.
- * @param array         $items      An array of key/value pairs to store on the server.
- * @param string|array  $groups     Group(s) to merge with key(s) in $items.
- * @param int           $expiration The expiration time, defaults to 0.
- * @return bool                     Returns TRUE on success or FALSE on failure.
+ * @param string       $server_key The key identifying the server to store the value on.
+ * @param array        $items      An array of key/value pairs to store on the server.
+ * @param string|array $groups     Group(s) to merge with key(s) in $items.
+ * @param int          $expiration The expiration time, defaults to 0.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_set_multi_by_key($server_key, $items, $groups = 'default', $expiration = 0)
 {
 }
 /**
- * Set a Memcached option.
+ * Sets a Memcached option.
  *
- * @link http://www.php.net/manual/en/memcached.setoption.php
+ * @link https://www.php.net/manual/en/memcached.setoption.php
  *
- * @param int       $option Option name.
- * @param mixed     $value  Option value.
- * @return bool             Returns TRUE on success or FALSE on failure.
+ * @param int   $option Option name.
+ * @param mixed $value  Option value.
+ * @return bool True on success, false on failure.
  */
 function wp_cache_set_option($option, $value)
 {
 }
 /**
- * Switch blog prefix, which changes the cache that is accessed.
+ * Switches blog prefix, which changes the cache that is accessed.
  *
- * @param  int     $blog_id    Blog to switch to.
+ * @param int $blog_id Blog to switch to.
  * @return void
  */
 function wp_cache_switch_to_blog($blog_id)
@@ -4025,8 +4151,8 @@ function wp_cache_switch_to_blog($blog_id)
 /**
  * Sets up Object Cache Global and assigns it.
  *
- * @global  WP_Object_Cache     $wp_object_cache    WordPress Object Cache
- * @return  void
+ * @global WP_Object_Cache $wp_object_cache WordPress Object Cache
+ * @return void
  */
 function wp_cache_init()
 {
@@ -4034,8 +4160,8 @@ function wp_cache_init()
 /**
  * Adds a group or set of groups to the list of non-persistent groups.
  *
- * @param   string|array    $groups     A group or an array of groups to add.
- * @return  void
+ * @param string|array $groups A group or an array of groups to add.
+ * @return void
  */
 function wp_cache_add_global_groups($groups)
 {
@@ -4043,8 +4169,8 @@ function wp_cache_add_global_groups($groups)
 /**
  * Adds a group or set of groups to the list of non-Memcached groups.
  *
- * @param   string|array    $groups     A group or an array of groups to add.
- * @return  void
+ * @param string|array $groups A group or an array of groups to add.
+ * @return void
  */
 function wp_cache_add_non_persistent_groups($groups)
 {
@@ -4058,14 +4184,14 @@ function wp_cache_add_non_persistent_groups($groups)
 function tests_make_plural_form_function($nplurals, $expression)
 {
 }
-// misc help functions and utilities
+// Misc help functions and utilities.
 function rand_str($len = 32)
 {
 }
 function rand_long_str($length)
 {
 }
-// strip leading and trailing whitespace from each line in the string
+// Strip leading and trailing whitespace from each line in the string.
 function strip_ws($txt)
 {
 }
@@ -4090,7 +4216,7 @@ function dmp_filter($a)
 function get_echo($callable, $args = array())
 {
 }
-// recursively generate some quick assertEquals tests based on an array
+// Recursively generate some quick assertEquals() tests based on an array.
 function gen_tests_array($name, $array)
 {
 }
@@ -4103,7 +4229,7 @@ function drop_tables()
 function print_backtrace()
 {
 }
-// mask out any input fields matching the given name
+// Mask out any input fields matching the given name.
 function mask_input_value($in, $name = '_wpnonce')
 {
 }
