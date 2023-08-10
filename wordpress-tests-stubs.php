@@ -130,6 +130,12 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     {
     }
     /**
+     * Reset the lazy load meta queue.
+     */
+    protected function reset_lazyload_queue()
+    {
+    }
+    /**
      * Unregisters existing post types and register defaults.
      *
      * Run before each test in order to clean up the global scope, in case
@@ -2281,6 +2287,18 @@ class WP_Object_Cache
      */
     public $blog_prefix = '';
     /**
+     * Thirty days in seconds.
+     *
+     * @var int
+     */
+    public $thirty_days;
+    /**
+     * Current unix time stamp.
+     *
+     * @var int
+     */
+    public $now;
+    /**
      * Instantiates the Memcached class.
      *
      * Instantiates the Memcached class and returns adds the servers specified
@@ -2563,6 +2581,14 @@ class WP_Object_Cache
      * @return bool True on success, false on failure.
      */
     public function flush($delay = 0)
+    {
+    }
+    /**
+     * Clears the in-memory cache of all data leaving the external cache untouched.
+     *
+     * @return bool Always returns true.
+     */
+    public function flush_runtime()
     {
     }
     /**
@@ -4254,6 +4280,14 @@ function wp_cache_fetch_all()
  * @return bool True on success, false on failure.
  */
 function wp_cache_flush($delay = 0)
+{
+}
+/**
+ * Removes all cache items from the in-memory runtime cache.
+ *
+ * @return bool True on success, false on failure.
+ */
+function wp_cache_flush_runtime()
 {
 }
 /**
