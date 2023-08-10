@@ -81,8 +81,8 @@ namespace {
         /**
          * Allow tests to be skipped on some automated runs.
          *
-         * For test runs on Travis/GitHub Actions for something other than trunk/master, we want to skip tests that
-         * only need to run for master.
+         * For test runs on Travis/GitHub Actions for something other than trunk/master,
+         * we want to skip tests that only need to run for master.
          */
         public function skipOnAutomatedBranches()
         {
@@ -1315,7 +1315,7 @@ namespace {
          *
          * @param array $args Array with elements for the post.
          *
-         * @return int|WP_Error The post ID on success. The value 0 or WP_Error on failure.
+         * @return int The post ID on success. The value 0 on failure.
          */
         public function create_object($args)
         {
@@ -1326,7 +1326,7 @@ namespace {
          * @param int   $post_id ID of the post to update.
          * @param array $fields  Post data.
          *
-         * @return int|WP_Error The post ID on success. The value 0 or WP_Error on failure.
+         * @return int The post ID on success. The value 0 on failure.
          */
         public function update_object($post_id, $fields)
         {
@@ -1663,43 +1663,63 @@ namespace {
     class WP_UnitTest_Factory
     {
         /**
+         * Generates post fixtures for use in tests.
+         *
          * @var WP_UnitTest_Factory_For_Post
          */
         public $post;
         /**
+         * Generates attachment fixtures for use in tests.
+         *
          * @var WP_UnitTest_Factory_For_Attachment
          */
         public $attachment;
         /**
+         * Generates comment fixtures for use in tests.
+         *
          * @var WP_UnitTest_Factory_For_Comment
          */
         public $comment;
         /**
+         * Generates user fixtures for use in tests.
+         *
          * @var WP_UnitTest_Factory_For_User
          */
         public $user;
         /**
+         * Generates taxonomy term fixtures for use in tests.
+         *
          * @var WP_UnitTest_Factory_For_Term
          */
         public $term;
         /**
+         * Generates category fixtures for use in tests.
+         *
          * @var WP_UnitTest_Factory_For_Term
          */
         public $category;
         /**
+         * Generates tag fixtures for use in tests.
+         *
          * @var WP_UnitTest_Factory_For_Term
          */
         public $tag;
         /**
+         * Generates bookmark (link) fixtures for use in tests.
+         *
          * @since 4.6.0
          * @var WP_UnitTest_Factory_For_Bookmark
          */
         public $bookmark;
         /**
+         * Generates blog (site) fixtures for use in Multisite tests.
+         *
          * @var WP_UnitTest_Factory_For_Blog
          */
         public $blog;
         /**
+         * Generates network fixtures for use in Multisite tests.
+         *
          * @var WP_UnitTest_Factory_For_Network
          */
         public $network;
@@ -3837,9 +3857,11 @@ namespace {
     }
     /*
      * Helper class for testing code that involves actions and filters.
+     *
      * Typical use:
-     * $ma = new MockAction();
-     * add_action( 'foo', array( &$ma, 'action' ) );
+     *
+     *     $ma = new MockAction();
+     *     add_action( 'foo', array( &$ma, 'action' ) );
      */
     class MockAction
     {
@@ -4170,7 +4192,7 @@ namespace {
      *
      * @since 4.4.0
      *
-     * @return object|bool
+     * @return MockPHPMailer|false
      */
     function tests_retrieve_phpmailer_instance()
     {
@@ -4857,19 +4879,57 @@ namespace {
     {
     }
     // Misc help functions and utilities.
+    /**
+     * Returns a string of the required length containing random characters. Note that
+     * the maximum possible string length is 32.
+     *
+     * @param int $len Optional. The required length. Default 32.
+     * @return string The string.
+     */
     function rand_str($len = 32)
     {
     }
+    /**
+     * Returns a string of the required length containing random characters.
+     *
+     * @param int $len The required length.
+     * @return string The string.
+     */
     function rand_long_str($length)
     {
     }
-    // Strip leading and trailing whitespace from each line in the string.
+    /**
+     * Strips leading and trailing whitespace from each line in the string.
+     *
+     * @param string $txt The text.
+     * @return string Text with line-leading and line-trailing whitespace stripped.
+     */
     function strip_ws($txt)
     {
     }
+    /**
+     * Converts an XML string into an array tree structure.
+     *
+     * The output of this function can be passed to xml_find() to find nodes by their path.
+     *
+     * @param string $in The XML string.
+     * @return array XML as an array.
+     */
     function xml_to_array($in)
     {
     }
+    /**
+     * Finds XML nodes by a given "path".
+     *
+     * Example usage:
+     *
+     *     $tree = xml_to_array( $rss );
+     *     $items = xml_find( $tree, 'rss', 'channel', 'item' );
+     *
+     * @param array     $tree     An array tree structure of XML, typically from xml_to_array().
+     * @param string ...$elements Names of XML nodes to create a "path" to find within the XML.
+     * @return array Array of matching XML node information.
+     */
     function xml_find($tree, ...$elements)
     {
     }
