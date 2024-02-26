@@ -162,25 +162,27 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     {
     }
     /**
-     * Saves the action and filter-related globals so they can be restored later.
+     * Saves the hook-related globals so they can be restored later.
      *
-     * Stores $wp_actions, $wp_current_filter, and $wp_filter on a class variable
-     * so they can be restored on tearDown() using _restore_hooks().
+     * Stores $wp_filter, $wp_actions, $wp_filters, and $wp_current_filter
+     * on a class variable so they can be restored on tear_down() using _restore_hooks().
      *
-     * @global array $wp_actions
-     * @global array $wp_current_filter
      * @global array $wp_filter
+     * @global array $wp_actions
+     * @global array $wp_filters
+     * @global array $wp_current_filter
      */
     protected function _backup_hooks()
     {
     }
     /**
-     * Restores the hook-related globals to their state at setUp()
+     * Restores the hook-related globals to their state at set_up()
      * so that future tests aren't affected by hooks set during this last test.
      *
-     * @global array $wp_actions
-     * @global array $wp_current_filter
      * @global array $wp_filter
+     * @global array $wp_actions
+     * @global array $wp_filters
+     * @global array $wp_current_filter
      */
     protected function _restore_hooks()
     {
@@ -331,12 +333,12 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      * @since 3.7.0
      * @since 6.1.0 Added the `$replacement`, `$version`, and `$message` parameters.
      *
-     * @param string $function    The deprecated function.
-     * @param string $replacement The function that should have been called.
-     * @param string $version     The version of WordPress that deprecated the function.
-     * @param string $message     Optional. A message regarding the change.
+     * @param string $function_name The deprecated function.
+     * @param string $replacement   The function that should have been called.
+     * @param string $version       The version of WordPress that deprecated the function.
+     * @param string $message       Optional. A message regarding the change.
      */
-    public function deprecated_function_run($function, $replacement, $version, $message = '')
+    public function deprecated_function_run($function_name, $replacement, $version, $message = '')
     {
     }
     /**
@@ -345,11 +347,11 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      * @since 3.7.0
      * @since 6.1.0 Added the `$message` and `$version` parameters.
      *
-     * @param string $function The function to add.
-     * @param string $message  A message explaining what has been done incorrectly.
-     * @param string $version  The version of WordPress where the message was added.
+     * @param string $function_name The function to add.
+     * @param string $message       A message explaining what has been done incorrectly.
+     * @param string $version       The version of WordPress where the message was added.
      */
-    public function doing_it_wrong_run($function, $message, $version)
+    public function doing_it_wrong_run($function_name, $message, $version)
     {
     }
     /**
@@ -394,11 +396,11 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      * @since UT (3.7.0)
      * @since 5.9.0 Added the `$message` parameter.
      *
-     * @param object $object  The object to check.
+     * @param object $actual  The object to check.
      * @param array  $fields  The fields to check.
      * @param string $message Optional. Message to display when the assertion fails.
      */
-    public function assertEqualFields($object, $fields, $message = '')
+    public function assertEqualFields($actual, $fields, $message = '')
     {
     }
     /**
@@ -500,10 +502,10 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      * @since 4.8.0
      * @since 5.9.0 Added the `$message` parameter.
      *
-     * @param array  $array   Array to check.
+     * @param array  $actual  Array to check.
      * @param string $message Optional. Message to display when the assertion fails.
      */
-    public function assertNonEmptyMultidimensionalArray($array, $message = '')
+    public function assertNonEmptyMultidimensionalArray($actual, $message = '')
     {
     }
     /**
@@ -672,11 +674,12 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     /**
      * Deletes files added to the `uploads` directory during tests.
      *
-     * This method works in tandem with the `setUp()` and `rmdir()` methods:
-     * - `setUp()` scans the `uploads` directory before every test, and stores its contents inside of the
-     *   `$ignore_files` property.
-     * - `rmdir()` and its helper methods only delete files that are not listed in the `$ignore_files` property. If
-     *   called during `tearDown()` in tests, this will only delete files added during the previously run test.
+     * This method works in tandem with the `set_up()` and `rmdir()` methods:
+     * - `set_up()` scans the `uploads` directory before every test, and stores
+     *   its contents inside of the `$ignore_files` property.
+     * - `rmdir()` and its helper methods only delete files that are not listed
+     *   in the `$ignore_files` property. If called during `tear_down()` in tests,
+     *   this will only delete files added during the previously run test.
      */
     public function remove_added_uploads()
     {
@@ -766,10 +769,11 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      * Creates an attachment post from an uploaded file.
      *
      * @since 4.4.0
+     * @since 6.2.0 Returns a WP_Error object on failure.
      *
      * @param array $upload         Array of information about the uploaded file, provided by wp_upload_bits().
      * @param int   $parent_post_id Optional. Parent post ID.
-     * @return int|WP_Error The attachment ID on success. The value 0 or WP_Error on failure.
+     * @return int|WP_Error The attachment ID on success, WP_Error object on failure.
      */
     public function _make_attachment($upload, $parent_post_id = 0)
     {
@@ -1199,7 +1203,7 @@ class WP_Test_Stream
      *
      * @see streamWrapper::stream_metadata
      */
-    public function stream_metadata($path, $option, $var)
+    public function stream_metadata($path, $option, $value)
     {
     }
     /**
@@ -1279,6 +1283,8 @@ class WP_UnitTest_Factory_Callback_After_Create
     /**
      * WP_UnitTest_Factory_Callback_After_Create constructor.
      *
+     * @since UT (3.7.0)
+     *
      * @param callable $callback A callback function.
      */
     public function __construct($callback)
@@ -1287,11 +1293,13 @@ class WP_UnitTest_Factory_Callback_After_Create
     /**
      * Calls the set callback on a given object.
      *
-     * @param mixed $object The object to apply the callback on.
+     * @since UT (3.7.0)
      *
-     * @return mixed The possibly altered object.
+     * @param int $object_id ID of the object to apply the callback on.
+     *
+     * @return mixed Updated object field.
      */
-    public function call($object)
+    public function call($object_id)
     {
     }
 }
@@ -1303,57 +1311,78 @@ abstract class WP_UnitTest_Factory_For_Thing
     public $default_generation_definitions;
     public $factory;
     /**
-     * Creates a new factory, which will create objects of a specific Thing
+     * Creates a new factory, which will create objects of a specific Thing.
      *
-     * @param object $factory Global factory that can be used to create other objects on the system
-     * @param array $default_generation_definitions Defines what default values should the properties of the object have. The default values
-     * can be generators -- an object with next() method. There are some default generators: {@link WP_UnitTest_Generator_Sequence},
-     * {@link WP_UnitTest_Generator_Locale_Name}, {@link WP_UnitTest_Factory_Callback_After_Create}.
+     * @since UT (3.7.0)
+     *
+     * @param object $factory                       Global factory that can be used to create other objects
+     *                                              on the system.
+     * @param array $default_generation_definitions Defines what default values should the properties
+     *                                              of the object have. The default values can be generators --
+     *                                              an object with the next() method.
+     *                                              There are some default generators:
+     *                                               - {@link WP_UnitTest_Generator_Sequence}
+     *                                               - {@link WP_UnitTest_Generator_Locale_Name}
+     *                                               - {@link WP_UnitTest_Factory_Callback_After_Create}
      */
     public function __construct($factory, $default_generation_definitions = array())
     {
     }
     /**
-     * Creates an object.
+     * Creates an object and returns its ID.
+     *
+     * @since UT (3.7.0)
      *
      * @param array $args The arguments.
      *
-     * @return mixed The result. Can be anything.
+     * @return int|WP_Error The object ID on success, WP_Error object on failure.
      */
     public abstract function create_object($args);
     /**
      * Updates an existing object.
      *
-     * @param int   $object The object ID.
-     * @param array $fields The values to update.
+     * @since UT (3.7.0)
      *
-     * @return mixed The result. Can be anything.
+     * @param int   $object_id The object ID.
+     * @param array $fields    The values to update.
+     *
+     * @return int|WP_Error The object ID on success, WP_Error object on failure.
      */
-    public abstract function update_object($object, $fields);
+    public abstract function update_object($object_id, $fields);
     /**
-     * Creates an object.
+     * Creates an object and returns its ID.
      *
-     * @param array $args                   Optional. The arguments for the object to create. Default is empty array.
-     * @param null  $generation_definitions Optional. The default values for the object. Default is null.
+     * @since UT (3.7.0)
      *
-     * @return mixed The result. Can be anything.
+     * @param array $args                   Optional. The arguments for the object to create.
+     *                                      Default empty array.
+     * @param null  $generation_definitions Optional. The default values for the object.
+     *                                      Default null.
+     *
+     * @return int|WP_Error The object ID on success, WP_Error object on failure.
      */
     public function create($args = array(), $generation_definitions = \null)
     {
     }
     /**
-     * Creates an object and returns its object.
+     * Creates and returns an object.
      *
-     * @param array $args                   Optional. The arguments for the object to create. Default is empty array.
-     * @param null  $generation_definitions Optional. The default values for the object. Default is null.
+     * @since UT (3.7.0)
      *
-     * @return mixed The created object. Can be anything.
+     * @param array $args                   Optional. The arguments for the object to create.
+     *                                      Default empty array.
+     * @param null  $generation_definitions Optional. The default values for the object.
+     *                                      Default null.
+     *
+     * @return mixed The created object. Can be anything. WP_Error object on failure.
      */
     public function create_and_get($args = array(), $generation_definitions = \null)
     {
     }
     /**
      * Retrieves an object by ID.
+     *
+     * @since UT (3.7.0)
      *
      * @param int $object_id The object ID.
      *
@@ -1363,9 +1392,13 @@ abstract class WP_UnitTest_Factory_For_Thing
     /**
      * Creates multiple objects.
      *
+     * @since UT (3.7.0)
+     *
      * @param int   $count                  Amount of objects to create.
-     * @param array $args                   Optional. The arguments for the object to create. Default is empty array.
-     * @param null  $generation_definitions Optional. The default values for the object. Default is null.
+     * @param array $args                   Optional. The arguments for the object to create.
+     *                                      Default empty array.
+     * @param null  $generation_definitions Optional. The default values for the object.
+     *                                      Default null.
      *
      * @return array
      */
@@ -1376,9 +1409,13 @@ abstract class WP_UnitTest_Factory_For_Thing
      * Combines the given arguments with the generation_definitions (defaults) and applies
      * possibly set callbacks on it.
      *
-     * @param array       $args                   Optional. The arguments to combine with defaults. Default is empty array.
-     * @param array|null  $generation_definitions Optional. The defaults. Default is null.
-     * @param array|null  $callbacks              Optional. Array with callbacks to apply on the fields. Default is null.
+     * @since UT (3.7.0)
+     *
+     * @param array       $args                   Optional. The arguments to combine with defaults.
+     *                                            Default empty array.
+     * @param array|null  $generation_definitions Optional. The defaults. Default null.
+     * @param array|null  $callbacks              Optional. Array with callbacks to apply on the fields.
+     *                                            Default null.
      *
      * @return array|WP_Error Combined array on success. WP_Error when default value is incorrent.
      */
@@ -1388,26 +1425,32 @@ abstract class WP_UnitTest_Factory_For_Thing
     /**
      * Applies the callbacks on the created object.
      *
+     * @since UT (3.7.0)
+     *
      * @param WP_UnitTest_Factory_Callback_After_Create[] $callbacks Array with callback functions.
-     * @param mixed                                       $created   The object to apply callbacks for.
+     * @param int                                         $object_id ID of the object to apply callbacks for.
      *
      * @return array The altered fields.
      */
-    public function apply_callbacks($callbacks, $created)
+    public function apply_callbacks($callbacks, $object_id)
     {
     }
     /**
-     * Instantiates a callback objects for the given function name.
+     * Instantiates a callback object for the given function name.
      *
-     * @param string $function The callback function.
+     * @since UT (3.7.0)
+     *
+     * @param callable $callback The callback function.
      *
      * @return WP_UnitTest_Factory_Callback_After_Create
      */
-    public function callback($function)
+    public function callback($callback)
     {
     }
     /**
      * Adds slashes to the given value.
+     *
+     * @since UT (3.7.0)
      *
      * @param array|object|string|mixed $value The value to add slashes to.
      *
@@ -1423,9 +1466,9 @@ abstract class WP_UnitTest_Factory_For_Thing
  * Note: The below @method notations are defined solely for the benefit of IDEs,
  * as a way to indicate expected return values from the given factory methods.
  *
- * @method int create( $args = array(), $generation_definitions = null )
- * @method WP_Post create_and_get( $args = array(), $generation_definitions = null )
- * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
+ * @method int|WP_Error     create( $args = array(), $generation_definitions = null )
+ * @method WP_Post|WP_Error create_and_get( $args = array(), $generation_definitions = null )
+ * @method (int|WP_Error)[] create_many( $count, $args = array(), $generation_definitions = null )
  */
 class WP_UnitTest_Factory_For_Post extends \WP_UnitTest_Factory_For_Thing
 {
@@ -1435,9 +1478,12 @@ class WP_UnitTest_Factory_For_Post extends \WP_UnitTest_Factory_For_Thing
     /**
      * Creates a post object.
      *
+     * @since UT (3.7.0)
+     * @since 6.2.0 Returns a WP_Error object on failure.
+     *
      * @param array $args Array with elements for the post.
      *
-     * @return int The post ID on success. The value 0 on failure.
+     * @return int|WP_Error The post ID on success, WP_Error object on failure.
      */
     public function create_object($args)
     {
@@ -1445,16 +1491,21 @@ class WP_UnitTest_Factory_For_Post extends \WP_UnitTest_Factory_For_Thing
     /**
      * Updates an existing post object.
      *
+     * @since UT (3.7.0)
+     * @since 6.2.0 Returns a WP_Error object on failure.
+     *
      * @param int   $post_id ID of the post to update.
      * @param array $fields  Post data.
      *
-     * @return int The post ID on success. The value 0 on failure.
+     * @return int|WP_Error The post ID on success, WP_Error object on failure.
      */
     public function update_object($post_id, $fields)
     {
     }
     /**
      * Retrieves a post by a given ID.
+     *
+     * @since UT (3.7.0)
      *
      * @param int $post_id ID of the post to retrieve.
      *
@@ -1464,10 +1515,23 @@ class WP_UnitTest_Factory_For_Post extends \WP_UnitTest_Factory_For_Thing
     {
     }
 }
+/**
+ * Unit test factory for attachments.
+ *
+ * Note: The below @method notations are defined solely for the benefit of IDEs,
+ * as a way to indicate expected return values from the given factory methods.
+ *
+ * @method int|WP_Error     create( $args = array(), $generation_definitions = null )
+ * @method WP_Post|WP_Error create_and_get( $args = array(), $generation_definitions = null )
+ * @method (int|WP_Error)[] create_many( $count, $args = array(), $generation_definitions = null )
+ */
 class WP_UnitTest_Factory_For_Attachment extends \WP_UnitTest_Factory_For_Post
 {
     /**
      * Create an attachment fixture.
+     *
+     * @since UT (3.7.0)
+     * @since 6.2.0 Returns a WP_Error object on failure.
      *
      * @param array $args {
      *     Array of arguments. Accepts all arguments that can be passed to
@@ -1478,7 +1542,7 @@ class WP_UnitTest_Factory_For_Attachment extends \WP_UnitTest_Factory_For_Post
      * @param int   $legacy_parent Deprecated.
      * @param array $legacy_args   Deprecated.
      *
-     * @return int|WP_Error The attachment ID on success. The value 0 or WP_Error on failure.
+     * @return int|WP_Error The attachment ID on success, WP_Error object on failure.
      */
     public function create_object($args, $legacy_parent = 0, $legacy_args = array())
     {
@@ -1486,12 +1550,15 @@ class WP_UnitTest_Factory_For_Attachment extends \WP_UnitTest_Factory_For_Post
     /**
      * Saves an attachment.
      *
-     * @param string $file   The file name to create attachment object for.
-     * @param int    $parent ID of the post to attach the file to.
+     * @since 4.4.0
+     * @since 6.2.0 Returns a WP_Error object on failure.
      *
-     * @return int|WP_Error The attachment ID on success. The value 0 or WP_Error on failure.
+     * @param string $file           The file name to create attachment object for.
+     * @param int    $parent_post_id ID of the post to attach the file to.
+     *
+     * @return int|WP_Error The attachment ID on success, WP_Error object on failure.
      */
-    public function create_upload_object($file, $parent = 0)
+    public function create_upload_object($file, $parent_post_id = 0)
     {
     }
 }
@@ -1501,9 +1568,9 @@ class WP_UnitTest_Factory_For_Attachment extends \WP_UnitTest_Factory_For_Post
  * Note: The below @method notations are defined solely for the benefit of IDEs,
  * as a way to indicate expected return values from the given factory methods.
  *
- * @method int create( $args = array(), $generation_definitions = null )
- * @method WP_Site create_and_get( $args = array(), $generation_definitions = null )
- * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
+ * @method int|WP_Error     create( $args = array(), $generation_definitions = null )
+ * @method WP_Site|WP_Error create_and_get( $args = array(), $generation_definitions = null )
+ * @method (int|WP_Error)[] create_many( $count, $args = array(), $generation_definitions = null )
  */
 class WP_UnitTest_Factory_For_Blog extends \WP_UnitTest_Factory_For_Thing
 {
@@ -1550,21 +1617,51 @@ class WP_UnitTest_Factory_For_Blog extends \WP_UnitTest_Factory_For_Thing
  *
  * @since 4.6.0
  *
- * @method int create( $args = array(), $generation_definitions = null )
- * @method object create_and_get( $args = array(), $generation_definitions = null )
- * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
+ * @method int|WP_Error     create( $args = array(), $generation_definitions = null )
+ * @method object|WP_Error  create_and_get( $args = array(), $generation_definitions = null )
+ * @method (int|WP_Error)[] create_many( $count, $args = array(), $generation_definitions = null )
  */
 class WP_UnitTest_Factory_For_Bookmark extends \WP_UnitTest_Factory_For_Thing
 {
     public function __construct($factory = \null)
     {
     }
+    /**
+     * Creates a link object.
+     *
+     * @since 4.6.0
+     * @since 6.2.0 Returns a WP_Error object on failure.
+     *
+     * @param array $args Arguments for the link object.
+     *
+     * @return int|WP_Error The link ID on success, WP_Error object on failure.
+     */
     public function create_object($args)
     {
     }
+    /**
+     * Updates a link object.
+     *
+     * @since 4.6.0
+     * @since 6.2.0 Returns a WP_Error object on failure.
+     *
+     * @param int   $link_id ID of the link to update.
+     * @param array $fields  The fields to update.
+     *
+     * @return int|WP_Error The link ID on success, WP_Error object on failure.
+     */
     public function update_object($link_id, $fields)
     {
     }
+    /**
+     * Retrieves a link by a given ID.
+     *
+     * @since 4.6.0
+     *
+     * @param int $link_id ID of the link to retrieve.
+     *
+     * @return object|null The link object on success, null on failure.
+     */
     public function get_object_by_id($link_id)
     {
     }
@@ -1575,9 +1672,9 @@ class WP_UnitTest_Factory_For_Bookmark extends \WP_UnitTest_Factory_For_Thing
  * Note: The below @method notations are defined solely for the benefit of IDEs,
  * as a way to indicate expected return values from the given factory methods.
  *
- * @method int create( $args = array(), $generation_definitions = null )
- * @method WP_Comment create_and_get( $args = array(), $generation_definitions = null )
- * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
+ * @method int|WP_Error        create( $args = array(), $generation_definitions = null )
+ * @method WP_Comment|WP_Error create_and_get( $args = array(), $generation_definitions = null )
+ * @method (int|WP_Error)[]    create_many( $count, $args = array(), $generation_definitions = null )
  */
 class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
 {
@@ -1587,9 +1684,14 @@ class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
     /**
      * Inserts a comment.
      *
+     * @since UT (3.7.0)
+     * @since 6.2.0 Returns a WP_Error object on failure.
+     *
+     * @global wpdb $wpdb WordPress database abstraction object.
+     *
      * @param array $args The comment details.
      *
-     * @return int|false The comment's ID on success, false on failure.
+     * @return int|WP_Error The comment ID on success, WP_Error object on failure.
      */
     public function create_object($args)
     {
@@ -1597,16 +1699,22 @@ class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
     /**
      * Updates a comment.
      *
+     * @since UT (3.7.0)
+     * @since 6.2.0 Returns a WP_Error object on failure.
+     *
      * @param int   $comment_id The comment ID.
      * @param array $fields     The comment details.
      *
-     * @return int The value 1 if the comment was updated, 0 if not updated.
+     * @return int|WP_Error The value 1 if the comment was updated, 0 if not updated.
+     *                      WP_Error object on failure.
      */
     public function update_object($comment_id, $fields)
     {
     }
     /**
      * Creates multiple comments on a given post.
+     *
+     * @since UT (3.7.0)
      *
      * @param int   $post_id                ID of the post to create comments for.
      * @param int   $count                  Total amount of comments to create.
@@ -1620,6 +1728,8 @@ class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
     }
     /**
      * Retrieves a comment by a given ID.
+     *
+     * @since UT (3.7.0)
      *
      * @param int $comment_id ID of the comment to retrieve.
      *
@@ -1635,21 +1745,50 @@ class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
  * Note: The below @method notations are defined solely for the benefit of IDEs,
  * as a way to indicate expected return values from the given factory methods.
  *
- * @method int create( $args = array(), $generation_definitions = null )
- * @method WP_Network create_and_get( $args = array(), $generation_definitions = null )
- * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
+ * @method int|WP_Error        create( $args = array(), $generation_definitions = null )
+ * @method WP_Network|WP_Error create_and_get( $args = array(), $generation_definitions = null )
+ * @method (int|WP_Error)[]    create_many( $count, $args = array(), $generation_definitions = null )
  */
 class WP_UnitTest_Factory_For_Network extends \WP_UnitTest_Factory_For_Thing
 {
     public function __construct($factory = \null)
     {
     }
+    /**
+     * Creates a network object.
+     *
+     * @since 3.9.0
+     * @since 6.2.0 Returns a WP_Error object on failure.
+     *
+     * @param array $args Arguments for the network object.
+     *
+     * @return int|WP_Error The network ID on success, WP_Error object on failure.
+     */
     public function create_object($args)
     {
     }
+    /**
+     * Updates a network object. Not implemented.
+     *
+     * @since 3.9.0
+     *
+     * @param int   $network_id ID of the network to update.
+     * @param array $fields  The fields to update.
+     *
+     * @return void
+     */
     public function update_object($network_id, $fields)
     {
     }
+    /**
+     * Retrieves a network by a given ID.
+     *
+     * @since 3.9.0
+     *
+     * @param int $network_id ID of the network to retrieve.
+     *
+     * @return WP_Network|null The network object on success, null on failure.
+     */
     public function get_object_by_id($network_id)
     {
     }
@@ -1660,9 +1799,9 @@ class WP_UnitTest_Factory_For_Network extends \WP_UnitTest_Factory_For_Thing
  * Note: The below @method notations are defined solely for the benefit of IDEs,
  * as a way to indicate expected return values from the given factory methods.
  *
- * @method int create( $args = array(), $generation_definitions = null )
- * @method WP_Term create_and_get( $args = array(), $generation_definitions = null )
- * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
+ * @method int|WP_Error          create( $args = array(), $generation_definitions = null )
+ * @method WP_Term|WP_Error|null create_and_get( $args = array(), $generation_definitions = null )
+ * @method (int|WP_Error)[]      create_many( $count, $args = array(), $generation_definitions = null )
  */
 class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
 {
@@ -1673,9 +1812,11 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
     /**
      * Creates a term object.
      *
-     * @param array $args Array or string of arguments for inserting a term.
+     * @since UT (3.7.0)
      *
-     * @return array|WP_Error
+     * @param array $args Array of arguments for inserting a term.
+     *
+     * @return int|WP_Error The term ID on success, WP_Error object on failure.
      */
     public function create_object($args)
     {
@@ -1683,16 +1824,21 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
     /**
      * Updates the term.
      *
-     * @param int|object   $term   The term to update.
-     * @param array|string $fields The context in which to relate the term to the object.
+     * @since UT (3.7.0)
+     * @since 6.2.0 Returns a WP_Error object on failure.
      *
-     * @return int The term ID.
+     * @param int|object $term   The term to update.
+     * @param array      $fields Array of arguments for updating a term.
+     *
+     * @return int|WP_Error The term ID on success, WP_Error object on failure.
      */
     public function update_object($term, $fields)
     {
     }
     /**
      * Attach terms to the given post.
+     *
+     * @since UT (3.7.0)
      *
      * @param int          $post_id  The post ID.
      * @param string|array $terms    An array of terms to set for the post, or a string of terms
@@ -1711,6 +1857,8 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
     /**
      * Create a term and returns it as an object.
      *
+     * @since 4.3.0
+     *
      * @param array $args                   Array or string of arguments for inserting a term.
      * @param null  $generation_definitions The default values.
      *
@@ -1721,6 +1869,8 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
     }
     /**
      * Retrieves the term by a given ID.
+     *
+     * @since UT (3.7.0)
      *
      * @param int $term_id ID of the term to retrieve.
      *
@@ -1736,9 +1886,9 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
  * Note: The below @method notations are defined solely for the benefit of IDEs,
  * as a way to indicate expected return values from the given factory methods.
  *
- * @method int create( $args = array(), $generation_definitions = null )
- * @method WP_User create_and_get( $args = array(), $generation_definitions = null )
- * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
+ * @method int|WP_Error     create( $args = array(), $generation_definitions = null )
+ * @method WP_User|WP_Error create_and_get( $args = array(), $generation_definitions = null )
+ * @method (int|WP_Error)[] create_many( $count, $args = array(), $generation_definitions = null )
  */
 class WP_UnitTest_Factory_For_User extends \WP_UnitTest_Factory_For_Thing
 {
@@ -1747,6 +1897,8 @@ class WP_UnitTest_Factory_For_User extends \WP_UnitTest_Factory_For_Thing
     }
     /**
      * Inserts an user.
+     *
+     * @since UT (3.7.0)
      *
      * @param array $args The user data to insert.
      *
@@ -1758,6 +1910,8 @@ class WP_UnitTest_Factory_For_User extends \WP_UnitTest_Factory_For_Thing
     /**
      * Updates the user data.
      *
+     * @since UT (3.7.0)
+     *
      * @param int   $user_id ID of the user to update.
      * @param array $fields  The user data to update.
      *
@@ -1768,6 +1922,8 @@ class WP_UnitTest_Factory_For_User extends \WP_UnitTest_Factory_For_Thing
     }
     /**
      * Retrieves the user for a given ID.
+     *
+     * @since UT (3.7.0)
      *
      * @param int $user_id ID of the user ID to retrieve.
      *
@@ -3018,14 +3174,14 @@ class Spy_REST_Server extends \WP_REST_Server
     /**
      * Overrides the register_route method so we can re-register routes internally if needed.
      *
-     * @param string $namespace  Namespace.
-     * @param string $route      The REST route.
-     * @param array  $route_args Route arguments.
-     * @param bool   $override   Optional. Whether the route should be overridden if it already exists.
-     *                           Default false. Also set `$GLOBALS['wp_rest_server']->override_by_default = true`
-     *                           to set overrides when you don't have access to the caller context.
+     * @param string $route_namespace Namespace.
+     * @param string $route           The REST route.
+     * @param array  $route_args      Route arguments.
+     * @param bool   $override        Optional. Whether the route should be overridden if it already exists.
+     *                                Default false. Also set `$GLOBALS['wp_rest_server']->override_by_default = true`
+     *                                to set overrides when you don't have access to the caller context.
      */
-    public function register_route($namespace, $route, $route_args, $override = \false)
+    public function register_route($route_namespace, $route, $route_args, $override = \false)
     {
     }
     /**
@@ -3189,7 +3345,7 @@ abstract class WP_Canonical_UnitTestCase extends \WP_UnitTestCase
     /**
      * Generate fixtures to be shared between canonical tests.
      *
-     * Abstracted here because it's invoked by setUpBeforeClass() in more than one class.
+     * Abstracted here because it's invoked by wpSetUpBeforeClass() in more than one class.
      *
      * @since 4.1.0
      */
@@ -3533,7 +3689,7 @@ class TestXMLParser
     }
 }
 /**
- * Use to create objects by yourself
+ * Use to create objects by yourself.
  */
 class MockClass extends \stdClass
 {
@@ -3635,33 +3791,39 @@ function tests_reset__SERVER()
 /**
  * Adds hooks before loading WP.
  *
- * @see add_filter()
+ * @since UT (3.7.0)
  *
- * @param string   $tag             The name of the filter to hook the $function_to_add callback to.
- * @param callable $function_to_add The callback to be run when the filter is applied.
- * @param int      $priority        Optional. Used to specify the order in which the functions
- *                                  associated with a particular action are executed.
- *                                  Lower numbers correspond with earlier execution,
- *                                  and functions with the same priority are executed
- *                                  in the order in which they were added to the action. Default 10.
- * @param int      $accepted_args   Optional. The number of arguments the function accepts. Default 1.
- * @return true
+ * @see add_filter()
+ * @global WP_Hook[] $wp_filter A multidimensional array of all hooks and the callbacks hooked to them.
+ *
+ * @param string   $hook_name     The name of the filter to add the callback to.
+ * @param callable $callback      The callback to be run when the filter is applied.
+ * @param int      $priority      Optional. Used to specify the order in which the functions
+ *                                associated with a particular action are executed.
+ *                                Lower numbers correspond with earlier execution,
+ *                                and functions with the same priority are executed
+ *                                in the order in which they were added to the action. Default 10.
+ * @param int      $accepted_args Optional. The number of arguments the function accepts. Default 1.
+ * @return true Always returns true.
  */
-function tests_add_filter($tag, $function_to_add, $priority = 10, $accepted_args = 1)
+function tests_add_filter($hook_name, $callback, $priority = 10, $accepted_args = 1)
 {
 }
 /**
  * Generates a unique function ID based on the given arguments.
  *
+ * @since UT (3.7.0)
+ *
  * @see _wp_filter_build_unique_id()
  *
- * @param string   $tag      Unused. The name of the filter to build ID for.
- * @param callable $function The function to generate ID for.
- * @param int      $priority Unused. The order in which the functions
- *                           associated with a particular action are executed.
+ * @param string                $hook_name Unused. The name of the filter to build ID for.
+ * @param callable|string|array $callback  The callback to generate ID for. The callback may
+ *                                         or may not exist.
+ * @param int                   $priority  Unused. The order in which the functions
+ *                                         associated with a particular action are executed.
  * @return string Unique function ID for usage as array key.
  */
-function _test_filter_build_unique_id($tag, $function, $priority)
+function _test_filter_build_unique_id($hook_name, $callback, $priority)
 {
 }
 /**
@@ -4618,15 +4780,15 @@ function dmp(...$args)
 function dmp_filter($a)
 {
 }
-function get_echo($callable, $args = array())
+function get_echo($callback, $args = array())
 {
 }
 // Recursively generate some quick assertEquals() tests based on an array.
-function gen_tests_array($name, $array)
+function gen_tests_array($name, $expected_data)
 {
 }
 /**
- * Drops all tables from the WordPress database
+ * Drops all tables from the WordPress database.
  */
 function drop_tables()
 {
