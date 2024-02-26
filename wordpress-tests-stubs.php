@@ -67,7 +67,7 @@ namespace {
         {
         }
         /**
-         * After a test method runs, reset any state in WordPress the test method might have changed.
+         * After a test method runs, resets any state in WordPress the test method might have changed.
          */
         public function tearDown()
         {
@@ -79,16 +79,16 @@ namespace {
         {
         }
         /**
-         * Allow tests to be skipped on some automated runs.
+         * Allows tests to be skipped on some automated runs.
          *
-         * For test runs on Travis/GitHub Actions for something other than trunk/master,
+         * For test runs on GitHub Actions for something other than trunk/master,
          * we want to skip tests that only need to run for master.
          */
         public function skipOnAutomatedBranches()
         {
         }
         /**
-         * Allow tests to be skipped when Multisite is not in use.
+         * Allows tests to be skipped when Multisite is not in use.
          *
          * Use in conjunction with the ms-required group.
          */
@@ -96,7 +96,7 @@ namespace {
         {
         }
         /**
-         * Allow tests to be skipped when Multisite is in use.
+         * Allows tests to be skipped when Multisite is in use.
          *
          * Use in conjunction with the ms-excluded group.
          */
@@ -104,7 +104,7 @@ namespace {
         {
         }
         /**
-         * Allow tests to be skipped if the HTTP request times out.
+         * Allows tests to be skipped if the HTTP request times out.
          *
          * @param array|WP_Error $response HTTP response.
          */
@@ -112,7 +112,7 @@ namespace {
         {
         }
         /**
-         * Unregister existing post types and register defaults.
+         * Unregisters existing post types and register defaults.
          *
          * Run before each test in order to clean up the global scope, in case
          * a test forgets to unregister a post type on its own, or fails before
@@ -122,7 +122,7 @@ namespace {
         {
         }
         /**
-         * Unregister existing taxonomies and register defaults.
+         * Unregisters existing taxonomies and register defaults.
          *
          * Run before each test in order to clean up the global scope, in case
          * a test forgets to unregister a taxonomy on its own, or fails before
@@ -132,13 +132,13 @@ namespace {
         {
         }
         /**
-         * Unregister non-built-in post statuses.
+         * Unregisters non-built-in post statuses.
          */
         protected function reset_post_statuses()
         {
         }
         /**
-         * Reset `$_SERVER` variables
+         * Resets `$_SERVER` variables
          */
         protected function reset__SERVER()
         {
@@ -174,7 +174,7 @@ namespace {
         {
         }
         /**
-         * Clean up any registered meta keys.
+         * Cleans up any registered meta keys.
          *
          * @since 5.1.0
          *
@@ -190,7 +190,7 @@ namespace {
         {
         }
         /**
-         * Commit the queries in a transaction.
+         * Commits the queries in a transaction.
          *
          * @since 4.1.0
          */
@@ -249,7 +249,7 @@ namespace {
         {
         }
         /**
-         * Detect post-test failure conditions.
+         * Detects post-test failure conditions.
          *
          * We use this method to detect expectedDeprecated and expectedIncorrectUsage annotations.
          *
@@ -259,7 +259,7 @@ namespace {
         {
         }
         /**
-         * Declare an expected `_deprecated_function()` or `_deprecated_argument()` call from within a test.
+         * Declares an expected `_deprecated_function()` or `_deprecated_argument()` call from within a test.
          *
          * @since 4.2.0
          *
@@ -270,7 +270,7 @@ namespace {
         {
         }
         /**
-         * Declare an expected `_doing_it_wrong()` call from within a test.
+         * Declares an expected `_doing_it_wrong()` call from within a test.
          *
          * @since 4.2.0
          *
@@ -364,9 +364,10 @@ namespace {
          * Asserts that two values have the same type and value, with EOL differences discarded.
          *
          * @since 5.6.0
+         * @since 5.8.0 Added support for nested arrays.
          *
-         * @param string $expected The expected value.
-         * @param string $actual   The actual value.
+         * @param string|array $expected The expected value.
+         * @param string|array $actual   The actual value.
          */
         public function assertSameIgnoreEOL($expected, $actual)
         {
@@ -614,8 +615,8 @@ namespace {
         {
         }
         /**
-         * Retrieves all directories contained inside a directory and stores them in the `$matched_dirs` property. Hidden
-         * directories are ignored.
+         * Retrieves all directories contained inside a directory and stores them in the `$matched_dirs` property.
+         * Hidden directories are ignored.
          *
          * This is a helper for the `delete_folders()` method.
          *
@@ -1014,8 +1015,7 @@ namespace {
      * 'DIRECTORY' to the static variable WP_Test_Stream::$data['bucket']['/foo/']
      * (note the trailing slash).
      *
-     * This class can be used to test that code works with basic read/write streams,
-     * as such, operations such as seeking are not supported.
+     * This class can be used to test that code works with basic read/write streams.
      *
      * This class does not register itself as a stream handler: test fixtures
      * should make the appropriate call to stream_wrapper_register().
@@ -1027,17 +1027,17 @@ namespace {
         /**
          * In-memory storage for files and directories simulated by this wrapper.
          */
-        static $data = array();
-        var $position;
-        var $file;
-        var $bucket;
-        var $data_ref;
+        public static $data = array();
+        public $position;
+        public $file;
+        public $bucket;
+        public $data_ref;
         /**
          * Opens a URL.
          *
          * @see streamWrapper::stream_open
          */
-        function stream_open($path, $mode, $options, &$opened_path)
+        public function stream_open($path, $mode, $options, &$opened_path)
         {
         }
         /**
@@ -1045,7 +1045,7 @@ namespace {
          *
          * @see streamWrapper::stream_read
          */
-        function stream_read($count)
+        public function stream_read($count)
         {
         }
         /**
@@ -1053,7 +1053,19 @@ namespace {
          *
          * @see streamWrapper::stream_write
          */
-        function stream_write($data)
+        public function stream_write($data)
+        {
+        }
+        /**
+         * Seeks to specific location in a stream.
+         *
+         * @see streamWrapper::stream_seek
+         *
+         * @param int $offset The stream offset to seek to.
+         * @param int $whence Optional. Seek position.
+         * @return bool Returns true when position is updated, else false.
+         */
+        public function stream_seek($offset, $whence = \SEEK_SET)
         {
         }
         /**
@@ -1061,7 +1073,7 @@ namespace {
          *
          * @see streamWrapper::stream_tell
          */
-        function stream_tell()
+        public function stream_tell()
         {
         }
         /**
@@ -1069,7 +1081,7 @@ namespace {
          *
          * @see streamWrapper::stream_eof
          */
-        function stream_eof()
+        public function stream_eof()
         {
         }
         /**
@@ -1077,7 +1089,7 @@ namespace {
          *
          * @see streamWrapper::stream_metadata
          */
-        function stream_metadata($path, $option, $var)
+        public function stream_metadata($path, $option, $var)
         {
         }
         /**
@@ -1085,7 +1097,7 @@ namespace {
          *
          * @see streamWrapper::mkdir
          */
-        function mkdir($path, $mode, $options)
+        public function mkdir($path, $mode, $options)
         {
         }
         /**
@@ -3466,12 +3478,6 @@ namespace {
      */
     class Block_Supported_Styles_Test extends \WP_UnitTestCase
     {
-        /**
-         * Sets up each test method.
-         */
-        public function setUp()
-        {
-        }
         /**
          * Tear down each test method.
          */
