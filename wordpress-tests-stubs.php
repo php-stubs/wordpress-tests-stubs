@@ -1216,6 +1216,11 @@ class WP_Test_Stream
      * Creates a directory.
      *
      * @see streamWrapper::mkdir
+     *
+     * @param string $path    Directory which should be created.
+     * @param int    $mode    The value passed to mkdir().
+     * @param int    $options A bitwise mask of values, such as STREAM_MKDIR_RECURSIVE.
+     * @return bool True on success, false on failure.
      */
     public function mkdir($path, $mode, $options)
     {
@@ -3568,7 +3573,7 @@ class TracTickets
     {
     }
 }
-/*
+/**
  * Helper class for testing code that involves actions and filters.
  *
  * Typical use:
@@ -3725,7 +3730,7 @@ class WpdbExposedMethodsForTesting extends \wpdb
     {
     }
 }
-/*
+/**
  * A simple manually-instrumented profiler for WordPress.
  *
  * This records basic execution time, and a summary of the actions and SQL queries run within each block.
@@ -3974,6 +3979,15 @@ function _wp_rest_server_class_filter()
  * @since 5.0.0
  */
 function _unhook_block_registration()
+{
+}
+/**
+ * After the init action has been run once, trying to re-register font collections can cause
+ * errors. To avoid this, unhook the font registration functions.
+ *
+ * @since 6.5.0
+ */
+function _unhook_font_registration()
 {
 }
 /**
@@ -4741,16 +4755,16 @@ function tests_make_plural_form_function($nplurals, $expression)
  * Returns a string of the required length containing random characters. Note that
  * the maximum possible string length is 32.
  *
- * @param int $len Optional. The required length. Default 32.
+ * @param int $length Optional. The required length. Default 32.
  * @return string The string.
  */
-function rand_str($len = 32)
+function rand_str($length = 32)
 {
 }
 /**
  * Returns a string of the required length containing random characters.
  *
- * @param int $len The required length.
+ * @param int $length The required length.
  * @return string The string.
  */
 function rand_long_str($length)
