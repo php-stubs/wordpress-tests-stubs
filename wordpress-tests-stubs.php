@@ -9,7 +9,7 @@
  * PHPUnit adapter layer.
  *
  * This class enhances the PHPUnit native `TestCase` with polyfills
- * for assertions and expectation methods added between PHPUnit 4.8 - 9.5.
+ * for assertions and expectation methods added between PHPUnit 4.8 - 9.6.
  *
  * Additionally, the Polyfill TestCase offers a workaround for the addition
  * of the `void` return type to PHPUnit fixture methods by providing
@@ -1598,8 +1598,6 @@ class WP_UnitTest_Factory_For_Blog extends \WP_UnitTest_Factory_For_Thing
      *
      * @param int   $blog_id ID of the site to update.
      * @param array $fields  The fields to update.
-     *
-     * @return void
      */
     public function update_object($blog_id, $fields)
     {
@@ -1780,8 +1778,6 @@ class WP_UnitTest_Factory_For_Network extends \WP_UnitTest_Factory_For_Thing
      *
      * @param int   $network_id ID of the network to update.
      * @param array $fields  The fields to update.
-     *
-     * @return void
      */
     public function update_object($network_id, $fields)
     {
