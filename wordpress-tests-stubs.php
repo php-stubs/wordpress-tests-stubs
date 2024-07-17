@@ -801,7 +801,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     /**
      * Touches the given file and its directory if it doesn't already exist.
      *
-     * This can be used to ensure a file that is implictly relied on in a test exists
+     * This can be used to ensure a file that is implicitly relied on in a test exists
      * without it having to be built.
      *
      * @param string $file The file name.
@@ -1428,7 +1428,7 @@ abstract class WP_UnitTest_Factory_For_Thing
      * @param array|null  $callbacks              Optional. Array with callbacks to apply on the fields.
      *                                            Default null.
      *
-     * @return array|WP_Error Combined array on success. WP_Error when default value is incorrent.
+     * @return array|WP_Error Combined array on success. WP_Error when default value is incorrect.
      */
     public function generate_args($args = array(), $generation_definitions = \null, &$callbacks = \null)
     {
@@ -2372,7 +2372,7 @@ abstract class WP_Ajax_UnitTestCase extends \WP_UnitTestCase
     /**
      * Sets up the test fixture.
      *
-     * Overrides wp_die(), pretends to be Ajax, and suppresses E_WARNINGs.
+     * Overrides wp_die(), pretends to be Ajax, and suppresses warnings.
      */
     public function set_up()
     {
@@ -2517,7 +2517,18 @@ abstract class WP_Canonical_UnitTestCase extends \WP_UnitTestCase
 }
 abstract class WP_Test_REST_TestCase extends \WP_UnitTestCase
 {
-    protected function assertErrorResponse($code, $response, $status = \null)
+    /**
+     * Asserts that the REST API response has the specified error.
+     *
+     * @since 4.4.0
+     * @since 6.6.0 Added the `$message` parameter.
+     *
+     * @param string|int                $code     Expected error code.
+     * @param WP_REST_Response|WP_Error $response REST API response.
+     * @param int                       $status   Optional. Status code.
+     * @param string                    $message  Optional. Message to display when the assertion fails.
+     */
+    protected function assertErrorResponse($code, $response, $status = \null, $message = '')
     {
     }
 }
