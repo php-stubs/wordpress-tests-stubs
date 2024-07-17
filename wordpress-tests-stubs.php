@@ -130,6 +130,12 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     {
     }
     /**
+     * Reset the lazy load meta queue.
+     */
+    protected function reset_lazyload_queue()
+    {
+    }
+    /**
      * Unregisters existing post types and register defaults.
      *
      * Run before each test in order to clean up the global scope, in case
