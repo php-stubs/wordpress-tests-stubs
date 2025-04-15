@@ -721,7 +721,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      * @since 4.0.0
      *
      * @param string $dir Path to the directory to scan.
-     * @return array List of file paths.
+     * @return string[] List of file paths.
      */
     public function files_in_dir($dir)
     {
@@ -731,7 +731,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      *
      * @since 4.0.0
      *
-     * @return array List of file paths.
+     * @return string[] List of file paths.
      */
     public function scan_user_uploads()
     {
@@ -834,6 +834,86 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     public static function touch($file)
     {
     }
+    /**
+     * Wrapper for `wp_safe_remote_request()` that retries on error and skips the test on timeout.
+     *
+     * @param string $url  URL to retrieve.
+     * @param array  $args Optional. Request arguments. Default empty array.
+     * @return array|WP_Error The response or WP_Error on failure.
+     */
+    protected function wp_safe_remote_request($url, $args = array())
+    {
+    }
+    /**
+     * Wrapper for `wp_safe_remote_get()` that retries on error and skips the test on timeout.
+     *
+     * @param string $url  URL to retrieve.
+     * @param array  $args Optional. Request arguments. Default empty array.
+     * @return array|WP_Error The response or WP_Error on failure.
+     */
+    protected function wp_safe_remote_get($url, $args = array())
+    {
+    }
+    /**
+     * Wrapper for `wp_safe_remote_post()` that retries on error and skips the test on timeout.
+     *
+     * @param string $url  URL to retrieve.
+     * @param array  $args Optional. Request arguments. Default empty array.
+     * @return array|WP_Error The response or WP_Error on failure.
+     */
+    protected function wp_safe_remote_post($url, $args = array())
+    {
+    }
+    /**
+     * Wrapper for `wp_safe_remote_head()` that retries on error and skips the test on timeout.
+     *
+     * @param string $url  URL to retrieve.
+     * @param array  $args Optional. Request arguments. Default empty array.
+     * @return array|WP_Error The response or WP_Error on failure.
+     */
+    protected function wp_safe_remote_head($url, $args = array())
+    {
+    }
+    /**
+     * Wrapper for `wp_remote_request()` that retries on error and skips the test on timeout.
+     *
+     * @param string $url  URL to retrieve.
+     * @param array  $args Optional. Request arguments. Default empty array.
+     * @return array|WP_Error The response or WP_Error on failure.
+     */
+    protected function wp_remote_request($url, $args = array())
+    {
+    }
+    /**
+     * Wrapper for `wp_remote_get()` that retries on error and skips the test on timeout.
+     *
+     * @param string $url  URL to retrieve.
+     * @param array  $args Optional. Request arguments. Default empty array.
+     * @return array|WP_Error The response or WP_Error on failure.
+     */
+    protected function wp_remote_get($url, $args = array())
+    {
+    }
+    /**
+     * Wrapper for `wp_remote_post()` that retries on error and skips the test on timeout.
+     *
+     * @param string $url  URL to retrieve.
+     * @param array  $args Optional. Request arguments. Default empty array.
+     * @return array|WP_Error The response or WP_Error on failure.
+     */
+    protected function wp_remote_post($url, $args = array())
+    {
+    }
+    /**
+     * Wrapper for `wp_remote_head()` that retries on error and skips the test on timeout.
+     *
+     * @param string $url  URL to retrieve.
+     * @param array  $args Optional. Request arguments. Default empty array.
+     * @return array|WP_Error The response or WP_Error on failure.
+     */
+    protected function wp_remote_head($url, $args = array())
+    {
+    }
 }
 /**
  * A class to handle additional command line arguments passed to the script.
@@ -928,6 +1008,42 @@ class WP_Fake_Block_Type extends \WP_Block_Type
      * @return string Rendered block HTML.
      */
     public function render($attributes = array(), $content = '')
+    {
+    }
+}
+/**
+ * WP_Fake_Hasher for testing
+ *
+ * @package WordPress
+ * @since 6.8.0
+ */
+/**
+ * Test class.
+ *
+ * @since 6.8.0
+ */
+class WP_Fake_Hasher
+{
+    public function __construct()
+    {
+    }
+    /**
+     * Hashes a password.
+     *
+     * @param string $password Password to hash.
+     * @return string Hashed password.
+     */
+    public function HashPassword(string $password)
+    {
+    }
+    /**
+     * Checks the password hash.
+     *
+     * @param string $password Password to check.
+     * @param string $hash     Hash to check against.
+     * @return bool Whether the password hash is valid.
+     */
+    public function CheckPassword(string $password, string $hash)
     {
     }
 }
@@ -2230,7 +2346,12 @@ class Mock_Invokable
     {
     }
 }
-class MockPHPMailer extends \PHPMailer\PHPMailer\PHPMailer
+/**
+ * Test class extending WP_PHPMailer.
+ *
+ * @since 4.5.0
+ */
+class MockPHPMailer extends \WP_PHPMailer
 {
     public $mock_sent = array();
     public function preSend()
