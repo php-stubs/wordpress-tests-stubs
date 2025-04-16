@@ -14,6 +14,7 @@ namespace {
     class WP_REST_Server {}
     class WP_Sitemaps_Provider {}
 
+    class WP_PHPMailer extends \PHPMailer\PHPMailer\PHPMailer {}
 }
 
 namespace PHPMailer\PHPMailer {
