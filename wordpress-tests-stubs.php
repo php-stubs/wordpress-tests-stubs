@@ -2435,9 +2435,9 @@ class TracTickets
      */
     protected static $trac_ticket_cache = array();
     /**
-     * Checks if track ticket #$ticket_id is resolved
+     * Checks if Trac ticket #$ticket_id is resolved.
      *
-     * @return bool|null true if the ticket is resolved, false if not resolved, null on error
+     * @return bool|null True if the ticket is resolved, false if not resolved, null on error.
      */
     public static function isTracTicketClosed($trac_url, $ticket_id)
     {
