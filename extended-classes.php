@@ -7,6 +7,7 @@ namespace {
 
     class WP_Block_Type {}
     class wpdb {}
+    class WP_Ability {}
     class WP_Filesystem_Base {}
     class WP_Image_Editor {}
     class WP_REST_Controller {}
@@ -28,4 +29,16 @@ namespace Yoast\PHPUnitPolyfills\TestCases {
 
     class TestCase {}
 
+}
+
+// Needed since WordPress 7.0.
+namespace WordPress\AiClient\Providers {
+    
+    abstract class AbstractProvider {}
+}
+
+namespace WordPress\AiClient\Providers\Contracts {
+
+    interface ModelMetadataDirectoryInterface {}
+    interface ProviderAvailabilityInterface {}
 }
