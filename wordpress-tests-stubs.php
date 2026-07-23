@@ -37,6 +37,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     protected $expected_deprecated = array();
     protected $caught_deprecated = array();
     protected $expected_doing_it_wrong = array();
+    /** @var non-empty-string[] */
     protected $caught_doing_it_wrong = array();
     protected static $hooks_saved = array();
     protected static $ignore_files;
@@ -68,6 +69,8 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     }
     /**
      * Runs the routine before setting up all tests.
+     *
+     * @global wpdb $wpdb WordPress database abstraction object.
      */
     public static function set_up_before_class()
     {
@@ -80,6 +83,8 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     }
     /**
      * Runs the routine before each test is executed.
+     *
+     * @global WP_Rewrite $wp_rewrite WordPress rewrite rules object.
      */
     public function set_up()
     {
@@ -87,14 +92,19 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     /**
      * Sets the bcrypt cost option for password hashing during tests.
      *
-     * @param array      $options   The options for password hashing.
-     * @param string|int $algorithm The algorithm to use for hashing. This is a string in PHP 7.4+ and an integer in PHP 7.3 and earlier.
+     * @param array  $options   The options for password hashing.
+     * @param string $algorithm The algorithm to use for hashing.
      */
-    public function wp_hash_password_options(array $options, $algorithm): array
+    public function wp_hash_password_options(array $options, string $algorithm): array
     {
     }
     /**
      * After a test method runs, resets any state in WordPress the test method might have changed.
+     *
+     * @global wpdb     $wpdb         WordPress database abstraction object.
+     * @global WP_Query $wp_the_query Main WordPress query object.
+     * @global WP_Query $wp_query     WordPress query object.
+     * @global WP       $wp           WordPress environment object.
      */
     public function tear_down()
     {
@@ -182,10 +192,10 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      * Stores $wp_filter, $wp_actions, $wp_filters, and $wp_current_filter
      * on a class variable so they can be restored on tear_down() using _restore_hooks().
      *
-     * @global array $wp_filter
-     * @global array $wp_actions
-     * @global array $wp_filters
-     * @global array $wp_current_filter
+     * @global array $wp_filter         All of the filters and actions.
+     * @global array $wp_actions        The number of times each action was triggered.
+     * @global array $wp_filters        The number of times each filter was triggered.
+     * @global array $wp_current_filter The list of current filters with the current one last.
      */
     protected function _backup_hooks()
     {
@@ -194,16 +204,18 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      * Restores the hook-related globals to their state at set_up()
      * so that future tests aren't affected by hooks set during this last test.
      *
-     * @global array $wp_filter
-     * @global array $wp_actions
-     * @global array $wp_filters
-     * @global array $wp_current_filter
+     * @global array $wp_filter         All of the filters and actions.
+     * @global array $wp_actions        The number of times each action was triggered.
+     * @global array $wp_filters        The number of times each filter was triggered.
+     * @global array $wp_current_filter The list of current filters with the current one last.
      */
     protected function _restore_hooks()
     {
     }
     /**
      * Flushes the WordPress object cache.
+     *
+     * @global WP_Object_Cache $wp_object_cache WordPress Object Cache object.
      */
     public static function flush_cache()
     {
@@ -213,13 +225,15 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      *
      * @since 5.1.0
      *
-     * @global array $wp_meta_keys
+     * @global array $wp_meta_keys Global registry for meta keys.
      */
     public function unregister_all_meta_keys()
     {
     }
     /**
      * Starts a database transaction.
+     *
+     * @global wpdb $wpdb WordPress database abstraction object.
      */
     public function start_transaction()
     {
@@ -228,6 +242,8 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      * Commits the queries in a transaction.
      *
      * @since 4.1.0
+     *
+     * @global wpdb $wpdb WordPress database abstraction object.
      */
     public static function commit_transaction()
     {
@@ -560,6 +576,8 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      * @since 5.3.0 Formalized the existing `...$prop` parameter by adding it
      *              to the function signature.
      *
+     * @global WP_Query $wp_query WordPress Query object.
+     *
      * @param string ...$prop Any number of WP_Query properties that are expected to be true for the current request.
      */
     public function assertQueryTrue(...$prop)
@@ -820,7 +838,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      *
      * @since 4.4.0
      *
-     * @global WP_Rewrite $wp_rewrite
+     * @global WP_Rewrite $wp_rewrite WordPress rewrite rules object.
      *
      * @param string $structure Optional. Permalink structure to set. Default empty.
      */
@@ -1014,6 +1032,33 @@ class JsonSerializable_Object implements \JsonSerializable
     }
     #[\ReturnTypeWillChange]
     public function jsonSerialize()
+    {
+    }
+}
+/**
+ * Test custom ability class that extends WP_Ability.
+ *
+ * This class overrides do_execute() and check_permissions() directly,
+ * allowing registration without execute_callback or permission_callback.
+ */
+class Tests_Custom_Ability_Class extends \WP_Ability
+{
+    /**
+     * Custom execute implementation that multiplies instead of adds.
+     *
+     * @param mixed $input The input data.
+     * @return int The result of multiplying a and b.
+     */
+    protected function do_execute($input = \null)
+    {
+    }
+    /**
+     * Custom permission check that always returns true.
+     *
+     * @param mixed $input The input data.
+     * @return bool Always true.
+     */
+    public function check_permissions($input = \null)
     {
     }
 }
@@ -3026,6 +3071,317 @@ class WpdbExposedMethodsForTesting extends \wpdb
     }
 }
 /**
+ * Mock Event for testing.
+ *
+ * @package WordPress
+ * @subpackage AI
+ */
+/**
+ * Mock event class for testing the WP_AI_Client_Event_Dispatcher.
+ *
+ * The class name ends with 'Event' to test the suffix stripping behavior.
+ *
+ * @since 7.0.0
+ */
+class WP_AI_Client_Mock_Event
+{
+}
+/**
+ * Trait providing shared mock model creation methods for testing.
+ *
+ * @since 7.0.0
+ */
+trait WP_AI_Client_Mock_Model_Creation_Trait
+{
+    /**
+     * Creates a test GenerativeAiResult for testing purposes.
+     *
+     * @param string $content Optional content for the response.
+     * @return GenerativeAiResult
+     */
+    protected function create_test_result(string $content = 'Test response'): \WordPress\AiClient\Results\DTO\GenerativeAiResult
+    {
+    }
+    /**
+     * Creates a test model metadata instance for text generation.
+     *
+     * @param string $id   Optional model ID.
+     * @param string $name Optional model name.
+     * @return ModelMetadata
+     */
+    protected function create_test_text_model_metadata(string $id = 'test-text-model', string $name = 'Test Text Model'): \WordPress\AiClient\Providers\Models\DTO\ModelMetadata
+    {
+    }
+    /**
+     * Creates a test model metadata instance for image generation.
+     *
+     * @param string $id   Optional model ID.
+     * @param string $name Optional model name.
+     * @return ModelMetadata
+     */
+    protected function create_test_image_model_metadata(string $id = 'test-image-model', string $name = 'Test Image Model'): \WordPress\AiClient\Providers\Models\DTO\ModelMetadata
+    {
+    }
+    /**
+     * Creates a test model metadata instance for speech generation.
+     *
+     * @param string $id   Optional model ID.
+     * @param string $name Optional model name.
+     * @return ModelMetadata
+     */
+    protected function create_test_speech_model_metadata(string $id = 'test-speech-model', string $name = 'Test Speech Model'): \WordPress\AiClient\Providers\Models\DTO\ModelMetadata
+    {
+    }
+    /**
+     * Creates a test model metadata instance for text-to-speech conversion.
+     *
+     * @param string $id   Optional model ID.
+     * @param string $name Optional model name.
+     * @return ModelMetadata
+     */
+    protected function create_test_text_to_speech_model_metadata(string $id = 'test-text-to-speech-model', string $name = 'Test Text-to-Speech Model'): \WordPress\AiClient\Providers\Models\DTO\ModelMetadata
+    {
+    }
+    /**
+     * Creates a test model metadata instance for video generation.
+     *
+     * @param string $id   Optional model ID.
+     * @param string $name Optional model name.
+     * @return ModelMetadata
+     */
+    protected function create_test_video_model_metadata(string $id = 'test-video-model', string $name = 'Test Video Model'): \WordPress\AiClient\Providers\Models\DTO\ModelMetadata
+    {
+    }
+    /**
+     * Creates a mock text generation model using anonymous class.
+     *
+     * @param GenerativeAiResult $result   The result to return from generation.
+     * @param ModelMetadata|null $metadata Optional metadata.
+     * @return ModelInterface&TextGenerationModelInterface The mock model.
+     */
+    protected function create_mock_text_generation_model(\WordPress\AiClient\Results\DTO\GenerativeAiResult $result, ?\WordPress\AiClient\Providers\Models\DTO\ModelMetadata $metadata = \null): \WordPress\AiClient\Providers\Models\Contracts\ModelInterface
+    {
+    }
+    /**
+     * Creates a mock image generation model using anonymous class.
+     *
+     * @param GenerativeAiResult $result   The result to return from generation.
+     * @param ModelMetadata|null $metadata Optional metadata.
+     * @return ModelInterface&ImageGenerationModelInterface The mock model.
+     */
+    protected function create_mock_image_generation_model(\WordPress\AiClient\Results\DTO\GenerativeAiResult $result, ?\WordPress\AiClient\Providers\Models\DTO\ModelMetadata $metadata = \null): \WordPress\AiClient\Providers\Models\Contracts\ModelInterface
+    {
+    }
+    /**
+     * Creates a mock speech generation model using anonymous class.
+     *
+     * @param GenerativeAiResult $result   The result to return from generation.
+     * @param ModelMetadata|null $metadata Optional metadata.
+     * @return ModelInterface&SpeechGenerationModelInterface The mock model.
+     */
+    protected function create_mock_speech_generation_model(\WordPress\AiClient\Results\DTO\GenerativeAiResult $result, ?\WordPress\AiClient\Providers\Models\DTO\ModelMetadata $metadata = \null): \WordPress\AiClient\Providers\Models\Contracts\ModelInterface
+    {
+    }
+    /**
+     * Creates a mock text-to-speech conversion model using anonymous class.
+     *
+     * @param GenerativeAiResult $result   The result to return from conversion.
+     * @param ModelMetadata|null $metadata Optional metadata.
+     * @return ModelInterface&TextToSpeechConversionModelInterface The mock model.
+     */
+    protected function create_mock_text_to_speech_model(\WordPress\AiClient\Results\DTO\GenerativeAiResult $result, ?\WordPress\AiClient\Providers\Models\DTO\ModelMetadata $metadata = \null): \WordPress\AiClient\Providers\Models\Contracts\ModelInterface
+    {
+    }
+    /**
+     * Creates a mock video generation model using anonymous class.
+     *
+     * @param GenerativeAiResult $result   The result to return from generation.
+     * @param ModelMetadata|null $metadata Optional metadata.
+     * @return ModelInterface&VideoGenerationModelInterface The mock model.
+     */
+    protected function create_mock_video_generation_model(\WordPress\AiClient\Results\DTO\GenerativeAiResult $result, ?\WordPress\AiClient\Providers\Models\DTO\ModelMetadata $metadata = \null): \WordPress\AiClient\Providers\Models\Contracts\ModelInterface
+    {
+    }
+    /**
+     * Creates a mock text generation model that throws an exception.
+     *
+     * @param Exception          $exception The exception to throw from generation.
+     * @param ModelMetadata|null $metadata  Optional metadata.
+     * @return ModelInterface&TextGenerationModelInterface The mock model.
+     */
+    protected function create_mock_text_generation_model_with_exception(\Exception $exception, ?\WordPress\AiClient\Providers\Models\DTO\ModelMetadata $metadata = \null): \WordPress\AiClient\Providers\Models\Contracts\ModelInterface
+    {
+    }
+}
+/**
+ * Mock provider availability with a controllable flag.
+ *
+ * @since 7.0.0
+ */
+class Mock_Connectors_Test_Provider_Availability implements \WordPress\AiClient\Providers\Contracts\ProviderAvailabilityInterface
+{
+    /**
+     * Whether the provider should report as configured.
+     *
+     * @var bool
+     */
+    public static bool $is_configured = \true;
+    /**
+     * Checks if the provider is configured.
+     *
+     * @return bool
+     */
+    public function isConfigured(): bool
+    {
+    }
+}
+/**
+ * Mock model metadata directory that returns an empty list.
+ *
+ * @since 7.0.0
+ */
+class Mock_Connectors_Test_Model_Metadata_Directory implements \WordPress\AiClient\Providers\Contracts\ModelMetadataDirectoryInterface
+{
+    /**
+     * Lists model metadata.
+     *
+     * @return array Empty array.
+     */
+    public function listModelMetadata(): array
+    {
+    }
+    /**
+     * Checks if a model exists.
+     *
+     * @param string $model_id The model ID.
+     * @return bool Always false.
+     */
+    public function hasModelMetadata(string $model_id): bool
+    {
+    }
+    /**
+     * Gets model metadata.
+     *
+     * @param string $model_id The model ID.
+     * @throws \InvalidArgumentException Always, as no models are available.
+     */
+    public function getModelMetadata(string $model_id): \WordPress\AiClient\Providers\Models\DTO\ModelMetadata
+    {
+    }
+}
+/**
+ * Minimal mock provider for testing connector functions that interact
+ * with the AI Client registry.
+ *
+ * Uses API key authentication and delegates availability to
+ * Mock_Connectors_Test_Provider_Availability so tests can toggle
+ * the configured state.
+ *
+ * @since 7.0.0
+ */
+class Mock_Connectors_Test_Provider extends \WordPress\AiClient\Providers\AbstractProvider
+{
+    /**
+     * Creates the provider metadata.
+     *
+     * @return ProviderMetadata
+     */
+    protected static function createProviderMetadata(): \WordPress\AiClient\Providers\DTO\ProviderMetadata
+    {
+    }
+    /**
+     * Creates the provider availability checker.
+     *
+     * @return ProviderAvailabilityInterface
+     */
+    protected static function createProviderAvailability(): \WordPress\AiClient\Providers\Contracts\ProviderAvailabilityInterface
+    {
+    }
+    /**
+     * Creates the model metadata directory.
+     *
+     * @return ModelMetadataDirectoryInterface
+     */
+    protected static function createModelMetadataDirectory(): \WordPress\AiClient\Providers\Contracts\ModelMetadataDirectoryInterface
+    {
+    }
+    /**
+     * Creates a model instance.
+     *
+     * @param ModelMetadata    $model_metadata    The model metadata.
+     * @param ProviderMetadata $provider_metadata The provider metadata.
+     * @throws \RuntimeException Always, as model creation is not needed for these tests.
+     */
+    protected static function createModel(\WordPress\AiClient\Providers\Models\DTO\ModelMetadata $model_metadata, \WordPress\AiClient\Providers\DTO\ProviderMetadata $provider_metadata): \WordPress\AiClient\Providers\Models\Contracts\ModelInterface
+    {
+    }
+}
+/**
+ * Trait providing a mock AI provider for testing connector functions.
+ *
+ * Registers a mock provider in the AI Client singleton registry with
+ * controllable availability. Tests can toggle the configured state via
+ * set_mock_provider_configured().
+ *
+ * @since 7.0.0
+ */
+trait WP_AI_Client_Mock_Provider_Trait
+{
+    /**
+     * Registers the mock provider in the AI Client registry.
+     *
+     * Safe to call multiple times; skips registration if already done.
+     * Must be called from set_up_before_class() after parent::set_up_before_class().
+     */
+    private static function register_mock_connectors_provider(): void
+    {
+    }
+    /**
+     * Sets whether the mock provider reports as configured.
+     *
+     * @param bool $is_configured Whether the provider should be configured.
+     */
+    private static function set_mock_provider_configured(bool $is_configured): void
+    {
+    }
+    /**
+     * Unregisters the mock provider's connector setting.
+     *
+     * Reverses the side effect of _wp_register_default_connector_settings()
+     * for the mock provider so that subsequent test classes start with a clean slate.
+     * Must be called from tear_down_after_class() after running tests.
+     */
+    private static function unregister_mock_connector_setting(): void
+    {
+    }
+}
+/**
+ * Trait for registering test abilities used across AI Client test classes.
+ *
+ * @package WordPress\Tests
+ */
+trait WP_AI_Client_Test_Abilities_Trait
+{
+    /**
+     * Registers test ability category and abilities.
+     *
+     * Safe to call multiple times; skips registration if already done.
+     * Must be called from set_up_before_class() after parent::set_up_before_class().
+     */
+    private static function register_test_abilities()
+    {
+    }
+    /**
+     * Unregisters test ability category and abilities.
+     *
+     * Safe to call multiple times; skips unregistration if already done.
+     * Must be called from tear_down_after_class() before parent::tear_down_after_class().
+     */
+    private static function unregister_test_abilities()
+    {
+    }
+}
+/**
  * A simple manually-instrumented profiler for WordPress.
  *
  * This records basic execution time, and a summary of the actions and SQL queries run within each block.
@@ -3093,7 +3449,6 @@ class WPProfiler
 function wp_tests_options($value)
 {
 }
-/* phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped */
 /**
  * Generates representation of the semantic HTML tree structure.
  *
@@ -3334,6 +3689,15 @@ function _unhook_font_registration()
 {
 }
 /**
+ * After the init action has been run once, trying to re-register connector settings can cause
+ * duplicate registrations. To avoid this, unhook the connector registration functions.
+ *
+ * @since 7.0.0
+ */
+function _unhook_connector_registration()
+{
+}
+/**
  * Before the abilities API categories init action runs, unhook the core ability
  * categories registration function to prevent core categories from being registered
  * during tests.
@@ -3448,7 +3812,14 @@ function dmp(...$args)
 function dmp_filter($a)
 {
 }
-function get_echo($callback, $args = array())
+/**
+ * Gets the output buffer for invoking the provided callback.
+ *
+ * @param callable $callback Callback.
+ * @param mixed[]  $args     Arguments.
+ * @return string Captured output.
+ */
+function get_echo(callable $callback, array $args = array()): string
 {
 }
 // Recursively generate some quick assertEquals() tests based on an array.
