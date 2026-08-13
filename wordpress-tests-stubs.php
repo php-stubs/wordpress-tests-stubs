@@ -9,7 +9,7 @@
  * PHPUnit adapter layer.
  *
  * This class enhances the PHPUnit native `TestCase` with polyfills
- * for assertions and expectation methods added between PHPUnit 4.8 - 9.6.
+ * for assertions and expectation methods added between PHPUnit 4.8 - 9.5.
  *
  * Additionally, the Polyfill TestCase offers a workaround for the addition
  * of the `void` return type to PHPUnit fixture methods by providing
@@ -37,18 +37,15 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     protected $expected_deprecated = array();
     protected $caught_deprecated = array();
     protected $expected_doing_it_wrong = array();
-    /** @var non-empty-string[] */
     protected $caught_doing_it_wrong = array();
     protected static $hooks_saved = array();
     protected static $ignore_files;
-    /**
-     * Fixture factory.
-     *
-     * @deprecated 6.1.0 Use the WP_UnitTestCase_Base::factory() method instead.
-     *
-     * @var WP_UnitTest_Factory
-     */
-    protected $factory;
+    public function __isset($name)
+    {
+    }
+    public function __get($name)
+    {
+    }
     /**
      * Fetches the factory object for generating WordPress fixtures.
      *
@@ -69,8 +66,6 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     }
     /**
      * Runs the routine before setting up all tests.
-     *
-     * @global wpdb $wpdb WordPress database abstraction object.
      */
     public static function set_up_before_class()
     {
@@ -83,28 +78,12 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     }
     /**
      * Runs the routine before each test is executed.
-     *
-     * @global WP_Rewrite $wp_rewrite WordPress rewrite rules object.
      */
     public function set_up()
     {
     }
     /**
-     * Sets the bcrypt cost option for password hashing during tests.
-     *
-     * @param array  $options   The options for password hashing.
-     * @param string $algorithm The algorithm to use for hashing.
-     */
-    public function wp_hash_password_options(array $options, string $algorithm): array
-    {
-    }
-    /**
      * After a test method runs, resets any state in WordPress the test method might have changed.
-     *
-     * @global wpdb     $wpdb         WordPress database abstraction object.
-     * @global WP_Query $wp_the_query Main WordPress query object.
-     * @global WP_Query $wp_query     WordPress query object.
-     * @global WP       $wp           WordPress environment object.
      */
     public function tear_down()
     {
@@ -149,12 +128,6 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     {
     }
     /**
-     * Reset the lazy load meta queue.
-     */
-    protected function reset_lazyload_queue()
-    {
-    }
-    /**
      * Unregisters existing post types and register defaults.
      *
      * Run before each test in order to clean up the global scope, in case
@@ -187,35 +160,31 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     {
     }
     /**
-     * Saves the hook-related globals so they can be restored later.
+     * Saves the action and filter-related globals so they can be restored later.
      *
-     * Stores $wp_filter, $wp_actions, $wp_filters, and $wp_current_filter
-     * on a class variable so they can be restored on tear_down() using _restore_hooks().
+     * Stores $wp_actions, $wp_current_filter, and $wp_filter on a class variable
+     * so they can be restored on tearDown() using _restore_hooks().
      *
-     * @global array $wp_filter         All of the filters and actions.
-     * @global array $wp_actions        The number of times each action was triggered.
-     * @global array $wp_filters        The number of times each filter was triggered.
-     * @global array $wp_current_filter The list of current filters with the current one last.
+     * @global array $wp_actions
+     * @global array $wp_current_filter
+     * @global array $wp_filter
      */
     protected function _backup_hooks()
     {
     }
     /**
-     * Restores the hook-related globals to their state at set_up()
+     * Restores the hook-related globals to their state at setUp()
      * so that future tests aren't affected by hooks set during this last test.
      *
-     * @global array $wp_filter         All of the filters and actions.
-     * @global array $wp_actions        The number of times each action was triggered.
-     * @global array $wp_filters        The number of times each filter was triggered.
-     * @global array $wp_current_filter The list of current filters with the current one last.
+     * @global array $wp_actions
+     * @global array $wp_current_filter
+     * @global array $wp_filter
      */
     protected function _restore_hooks()
     {
     }
     /**
      * Flushes the WordPress object cache.
-     *
-     * @global WP_Object_Cache $wp_object_cache WordPress Object Cache object.
      */
     public static function flush_cache()
     {
@@ -225,15 +194,13 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      *
      * @since 5.1.0
      *
-     * @global array $wp_meta_keys Global registry for meta keys.
+     * @global array $wp_meta_keys
      */
     public function unregister_all_meta_keys()
     {
     }
     /**
      * Starts a database transaction.
-     *
-     * @global wpdb $wpdb WordPress database abstraction object.
      */
     public function start_transaction()
     {
@@ -242,8 +209,6 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      * Commits the queries in a transaction.
      *
      * @since 4.1.0
-     *
-     * @global wpdb $wpdb WordPress database abstraction object.
      */
     public static function commit_transaction()
     {
@@ -292,8 +257,6 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     }
     /**
      * Sets up the expectations for testing a deprecated call.
-     *
-     * @since 3.7.0
      */
     public function expectDeprecated()
     {
@@ -302,10 +265,6 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      * Handles a deprecated expectation.
      *
      * The DocBlock should contain `@expectedDeprecated` to trigger this.
-     *
-     * @since 3.7.0
-     * @since 6.1.0 Includes the actual unexpected `_doing_it_wrong()` message
-     *              or deprecation notice in the output if one is encountered.
      */
     public function expectedDeprecated()
     {
@@ -325,9 +284,8 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      *
      * @since 4.2.0
      *
-     * @param string $deprecated Name of the function, method, class, or argument that is deprecated.
-     *                           Must match the first parameter of the `_deprecated_function()`
-     *                           or `_deprecated_argument()` call.
+     * @param string $deprecated Name of the function, method, class, or argument that is deprecated. Must match
+     *                           the first parameter of the `_deprecated_function()` or `_deprecated_argument()` call.
      */
     public function setExpectedDeprecated($deprecated)
     {
@@ -337,8 +295,8 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      *
      * @since 4.2.0
      *
-     * @param string $doing_it_wrong Name of the function, method, or class that appears in
-     *                               the first argument of the source `_doing_it_wrong()` call.
+     * @param string $doing_it_wrong Name of the function, method, or class that appears in the first argument
+     *                               of the source `_doing_it_wrong()` call.
      */
     public function setExpectedIncorrectUsage($doing_it_wrong)
     {
@@ -348,7 +306,6 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      *
      * This method is only left in place for backward compatibility reasons.
      *
-     * @since 4.8.0
      * @deprecated 5.9.0 Use the PHPUnit native expectException*() methods directly.
      *
      * @param mixed      $exception
@@ -361,28 +318,17 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     /**
      * Adds a deprecated function to the list of caught deprecated calls.
      *
-     * @since 3.7.0
-     * @since 6.1.0 Added the `$replacement`, `$version`, and `$message` parameters.
-     *
-     * @param string $function_name The deprecated function.
-     * @param string $replacement   The function that should have been called.
-     * @param string $version       The version of WordPress that deprecated the function.
-     * @param string $message       Optional. A message regarding the change.
+     * @param string $function The deprecated function.
      */
-    public function deprecated_function_run($function_name, $replacement, $version, $message = '')
+    public function deprecated_function_run($function)
     {
     }
     /**
      * Adds a function called in a wrong way to the list of `_doing_it_wrong()` calls.
      *
-     * @since 3.7.0
-     * @since 6.1.0 Added the `$message` and `$version` parameters.
-     *
-     * @param string $function_name The function to add.
-     * @param string $message       A message explaining what has been done incorrectly.
-     * @param string $version       The version of WordPress where the message was added.
+     * @param string $function The function to add.
      */
-    public function doing_it_wrong_run($function_name, $message, $version)
+    public function doing_it_wrong_run($function)
     {
     }
     /**
@@ -427,11 +373,11 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      * @since UT (3.7.0)
      * @since 5.9.0 Added the `$message` parameter.
      *
-     * @param object $actual  The object to check.
+     * @param object $object  The object to check.
      * @param array  $fields  The fields to check.
      * @param string $message Optional. Message to display when the assertion fails.
      */
-    public function assertEqualFields($actual, $fields, $message = '')
+    public function assertEqualFields($object, $fields, $message = '')
     {
     }
     /**
@@ -533,107 +479,10 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      * @since 4.8.0
      * @since 5.9.0 Added the `$message` parameter.
      *
-     * @param array  $actual  Array to check.
+     * @param array  $array   Array to check.
      * @param string $message Optional. Message to display when the assertion fails.
      */
-    public function assertNonEmptyMultidimensionalArray($actual, $message = '')
-    {
-    }
-    /**
-     * Assert that two text strings representing file paths are the same, while ignoring
-     * OS-specific differences in the directory separators.
-     *
-     * This allows for tests to be compatible for running on both *nix based as well as Windows OS.
-     *
-     * @since 6.7.0
-     *
-     * @param string $path_a File or directory path.
-     * @param string $path_b File or directory path.
-     */
-    public function assertSamePathIgnoringDirectorySeparators($path_a, $path_b)
-    {
-    }
-    /**
-     * Normalize directory separators in a file path to be a forward slash.
-     *
-     * @since 6.7.0
-     *
-     * @param string $path File or directory path.
-     * @return string The normalized file or directory path.
-     */
-    public function normalizeDirectorySeparatorsInPath($path)
-    {
-    }
-    /**
-     * Checks each of the WP_Query is_* functions/properties against expected boolean value.
-     *
-     * Any properties that are listed by name as parameters will be expected to be true; all others are
-     * expected to be false. For example, assertQueryTrue( 'is_single', 'is_feed' ) means is_single()
-     * and is_feed() must be true and everything else must be false to pass.
-     *
-     * @since 2.5.0
-     * @since 3.8.0 Moved from `Tests_Query_Conditionals` to `WP_UnitTestCase`.
-     * @since 5.3.0 Formalized the existing `...$prop` parameter by adding it
-     *              to the function signature.
-     *
-     * @global WP_Query $wp_query WordPress Query object.
-     *
-     * @param string ...$prop Any number of WP_Query properties that are expected to be true for the current request.
-     */
-    public function assertQueryTrue(...$prop)
-    {
-    }
-    /**
-     * Check HTML markup (including blocks) for semantic equivalence.
-     *
-     * Given two markup strings, assert that they translate to the same semantic HTML tree,
-     * normalizing tag names, attribute names, and attribute order. Furthermore, attributes
-     * and class names are sorted and deduplicated, and whitespace in style attributes
-     * is normalized. Finally, block delimiter comments are recognized and normalized,
-     * applying the same principles.
-     *
-     * @since 6.9.0
-     *
-     * @param string      $expected         The expected HTML.
-     * @param string      $actual           The actual HTML.
-     * @param string|null $fragment_context Optional. The fragment context, for example "<td>" expected HTML
-     *                                      must occur within "<table><tr>" fragment context. Default "<body>".
-     *                                      Only "<body>" or `null` are supported at this time.
-     *                                      Set to `null` to parse a full HTML document.
-     * @param string|null $message          Optional. The assertion error message.
-     */
-    public function assertEqualHTML(string $expected, string $actual, ?string $fragment_context = '<body>', $message = 'HTML markup was not equivalent.'): void
-    {
-    }
-    /**
-     * Helper function to convert a single-level array containing text strings to a named data provider.
-     *
-     * The value of the data set will also be used as the name of the data set.
-     *
-     * Typical usage of this method:
-     *
-     *     public function data_provider_for_test_name() {
-     *         $array = array(
-     *             'value1',
-     *             'value2',
-     *         );
-     *
-     *         return $this->text_array_to_dataprovider( $array );
-     *     }
-     *
-     * The returned result will look like:
-     *
-     *     array(
-     *         'value1' => array( 'value1' ),
-     *         'value2' => array( 'value2' ),
-     *     )
-     *
-     * @since 6.1.0
-     *
-     * @param array $input Input array.
-     * @return array Array which is usable as a test data provider with named data sets.
-     */
-    public static function text_array_to_dataprovider($input)
+    public function assertNonEmptyMultidimensionalArray($array, $message = '')
     {
     }
     /**
@@ -730,6 +579,23 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     {
     }
     /**
+     * Checks each of the WP_Query is_* functions/properties against expected boolean value.
+     *
+     * Any properties that are listed by name as parameters will be expected to be true; all others are
+     * expected to be false. For example, assertQueryTrue( 'is_single', 'is_feed' ) means is_single()
+     * and is_feed() must be true and everything else must be false to pass.
+     *
+     * @since 2.5.0
+     * @since 3.8.0 Moved from `Tests_Query_Conditionals` to `WP_UnitTestCase`.
+     * @since 5.3.0 Formalized the existing `...$prop` parameter by adding it
+     *              to the function signature.
+     *
+     * @param string ...$prop Any number of WP_Query properties that are expected to be true for the current request.
+     */
+    public function assertQueryTrue(...$prop)
+    {
+    }
+    /**
      * Selectively deletes a file.
      *
      * Does not delete a file if its path is set in the `$ignore_files` property.
@@ -744,8 +610,6 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      *
      * Does not delete files if their paths are set in the `$ignore_files` property.
      *
-     * @since 4.0.0
-     *
      * @param string $path Directory path.
      */
     public function rmdir($path)
@@ -754,12 +618,11 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     /**
      * Deletes files added to the `uploads` directory during tests.
      *
-     * This method works in tandem with the `set_up()` and `rmdir()` methods:
-     * - `set_up()` scans the `uploads` directory before every test, and stores
-     *   its contents inside of the `$ignore_files` property.
-     * - `rmdir()` and its helper methods only delete files that are not listed
-     *   in the `$ignore_files` property. If called during `tear_down()` in tests,
-     *   this will only delete files added during the previously run test.
+     * This method works in tandem with the `setUp()` and `rmdir()` methods:
+     * - `setUp()` scans the `uploads` directory before every test, and stores its contents inside of the
+     *   `$ignore_files` property.
+     * - `rmdir()` and its helper methods only delete files that are not listed in the `$ignore_files` property. If
+     *   called during `tearDown()` in tests, this will only delete files added during the previously run test.
      */
     public function remove_added_uploads()
     {
@@ -770,7 +633,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      * @since 4.0.0
      *
      * @param string $dir Path to the directory to scan.
-     * @return string[] List of file paths.
+     * @return array List of file paths.
      */
     public function files_in_dir($dir)
     {
@@ -780,7 +643,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      *
      * @since 4.0.0
      *
-     * @return string[] List of file paths.
+     * @return array List of file paths.
      */
     public function scan_user_uploads()
     {
@@ -796,17 +659,14 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     {
     }
     /**
-     * Retrieves all directories contained inside a directory.
+     * Retrieves all directories contained inside a directory and stores them in the `$matched_dirs` property.
      * Hidden directories are ignored.
      *
      * This is a helper for the `delete_folders()` method.
      *
      * @since 4.1.0
-     * @since 6.1.0 No longer sets a (dynamic) property to keep track of the directories,
-     *              but returns an array of the directories instead.
      *
      * @param string $dir Path to the directory to scan.
-     * @return string[] List of directories.
      */
     public function scandir($dir)
     {
@@ -838,7 +698,7 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      *
      * @since 4.4.0
      *
-     * @global WP_Rewrite $wp_rewrite WordPress rewrite rules object.
+     * @global WP_Rewrite $wp_rewrite
      *
      * @param string $structure Optional. Permalink structure to set. Default empty.
      */
@@ -849,11 +709,10 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      * Creates an attachment post from an uploaded file.
      *
      * @since 4.4.0
-     * @since 6.2.0 Returns a WP_Error object on failure.
      *
      * @param array $upload         Array of information about the uploaded file, provided by wp_upload_bits().
      * @param int   $parent_post_id Optional. Parent post ID.
-     * @return int|WP_Error The attachment ID on success, WP_Error object on failure.
+     * @return int|WP_Error The attachment ID on success. The value 0 or WP_Error on failure.
      */
     public function _make_attachment($upload, $parent_post_id = 0)
     {
@@ -875,92 +734,12 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     /**
      * Touches the given file and its directory if it doesn't already exist.
      *
-     * This can be used to ensure a file that is implicitly relied on in a test exists
+     * This can be used to ensure a file that is implictly relied on in a test exists
      * without it having to be built.
      *
      * @param string $file The file name.
      */
     public static function touch($file)
-    {
-    }
-    /**
-     * Wrapper for `wp_safe_remote_request()` that retries on error and skips the test on timeout.
-     *
-     * @param string $url  URL to retrieve.
-     * @param array  $args Optional. Request arguments. Default empty array.
-     * @return array|WP_Error The response or WP_Error on failure.
-     */
-    protected function wp_safe_remote_request($url, $args = array())
-    {
-    }
-    /**
-     * Wrapper for `wp_safe_remote_get()` that retries on error and skips the test on timeout.
-     *
-     * @param string $url  URL to retrieve.
-     * @param array  $args Optional. Request arguments. Default empty array.
-     * @return array|WP_Error The response or WP_Error on failure.
-     */
-    protected function wp_safe_remote_get($url, $args = array())
-    {
-    }
-    /**
-     * Wrapper for `wp_safe_remote_post()` that retries on error and skips the test on timeout.
-     *
-     * @param string $url  URL to retrieve.
-     * @param array  $args Optional. Request arguments. Default empty array.
-     * @return array|WP_Error The response or WP_Error on failure.
-     */
-    protected function wp_safe_remote_post($url, $args = array())
-    {
-    }
-    /**
-     * Wrapper for `wp_safe_remote_head()` that retries on error and skips the test on timeout.
-     *
-     * @param string $url  URL to retrieve.
-     * @param array  $args Optional. Request arguments. Default empty array.
-     * @return array|WP_Error The response or WP_Error on failure.
-     */
-    protected function wp_safe_remote_head($url, $args = array())
-    {
-    }
-    /**
-     * Wrapper for `wp_remote_request()` that retries on error and skips the test on timeout.
-     *
-     * @param string $url  URL to retrieve.
-     * @param array  $args Optional. Request arguments. Default empty array.
-     * @return array|WP_Error The response or WP_Error on failure.
-     */
-    protected function wp_remote_request($url, $args = array())
-    {
-    }
-    /**
-     * Wrapper for `wp_remote_get()` that retries on error and skips the test on timeout.
-     *
-     * @param string $url  URL to retrieve.
-     * @param array  $args Optional. Request arguments. Default empty array.
-     * @return array|WP_Error The response or WP_Error on failure.
-     */
-    protected function wp_remote_get($url, $args = array())
-    {
-    }
-    /**
-     * Wrapper for `wp_remote_post()` that retries on error and skips the test on timeout.
-     *
-     * @param string $url  URL to retrieve.
-     * @param array  $args Optional. Request arguments. Default empty array.
-     * @return array|WP_Error The response or WP_Error on failure.
-     */
-    protected function wp_remote_post($url, $args = array())
-    {
-    }
-    /**
-     * Wrapper for `wp_remote_head()` that retries on error and skips the test on timeout.
-     *
-     * @param string $url  URL to retrieve.
-     * @param array  $args Optional. Request arguments. Default empty array.
-     * @return array|WP_Error The response or WP_Error on failure.
-     */
-    protected function wp_remote_head($url, $args = array())
     {
     }
 }
@@ -1036,33 +815,6 @@ class JsonSerializable_Object implements \JsonSerializable
     }
 }
 /**
- * Test custom ability class that extends WP_Ability.
- *
- * This class overrides do_execute() and check_permissions() directly,
- * allowing registration without execute_callback or permission_callback.
- */
-class Tests_Custom_Ability_Class extends \WP_Ability
-{
-    /**
-     * Custom execute implementation that multiplies instead of adds.
-     *
-     * @param mixed $input The input data.
-     * @return int The result of multiplying a and b.
-     */
-    protected function do_execute($input = \null)
-    {
-    }
-    /**
-     * Custom permission check that always returns true.
-     *
-     * @param mixed $input The input data.
-     * @return bool Always true.
-     */
-    public function check_permissions($input = \null)
-    {
-    }
-}
-/**
  * WP_Fake_Block_Type for testing
  *
  * @package WordPress
@@ -1084,42 +836,6 @@ class WP_Fake_Block_Type extends \WP_Block_Type
      * @return string Rendered block HTML.
      */
     public function render($attributes = array(), $content = '')
-    {
-    }
-}
-/**
- * WP_Fake_Hasher for testing
- *
- * @package WordPress
- * @since 6.8.0
- */
-/**
- * Test class.
- *
- * @since 6.8.0
- */
-class WP_Fake_Hasher
-{
-    public function __construct()
-    {
-    }
-    /**
-     * Hashes a password.
-     *
-     * @param string $password Password to hash.
-     * @return string Hashed password.
-     */
-    public function HashPassword(string $password)
-    {
-    }
-    /**
-     * Checks the password hash.
-     *
-     * @param string $password Password to check.
-     * @param string $hash     Hash to check against.
-     * @return bool Whether the password hash is valid.
-     */
-    public function CheckPassword(string $password, string $hash)
     {
     }
 }
@@ -1362,14 +1078,6 @@ class WP_Test_Stream
     public $bucket;
     public $data_ref;
     /**
-     * The current context.
-     *
-     * @link https://www.php.net/manual/en/class.streamwrapper.php
-     *
-     * @var resource|null
-     */
-    public $context;
-    /**
      * Opens a URL.
      *
      * @see streamWrapper::stream_open
@@ -1426,18 +1134,13 @@ class WP_Test_Stream
      *
      * @see streamWrapper::stream_metadata
      */
-    public function stream_metadata($path, $option, $value)
+    public function stream_metadata($path, $option, $var)
     {
     }
     /**
      * Creates a directory.
      *
      * @see streamWrapper::mkdir
-     *
-     * @param string $path    Directory which should be created.
-     * @param int    $mode    The value passed to mkdir().
-     * @param int    $options A bitwise mask of values, such as STREAM_MKDIR_RECURSIVE.
-     * @return bool True on success, false on failure.
      */
     public function mkdir($path, $mode, $options)
     {
@@ -1511,8 +1214,6 @@ class WP_UnitTest_Factory_Callback_After_Create
     /**
      * WP_UnitTest_Factory_Callback_After_Create constructor.
      *
-     * @since UT (3.7.0)
-     *
      * @param callable $callback A callback function.
      */
     public function __construct($callback)
@@ -1521,13 +1222,11 @@ class WP_UnitTest_Factory_Callback_After_Create
     /**
      * Calls the set callback on a given object.
      *
-     * @since UT (3.7.0)
+     * @param mixed $object The object to apply the callback on.
      *
-     * @param int $object_id ID of the object to apply the callback on.
-     *
-     * @return mixed Updated object field.
+     * @return mixed The possibly altered object.
      */
-    public function call($object_id)
+    public function call($object)
     {
     }
 }
@@ -1539,78 +1238,57 @@ abstract class WP_UnitTest_Factory_For_Thing
     public $default_generation_definitions;
     public $factory;
     /**
-     * Creates a new factory, which will create objects of a specific Thing.
+     * Creates a new factory, which will create objects of a specific Thing
      *
-     * @since UT (3.7.0)
-     *
-     * @param object $factory                       Global factory that can be used to create other objects
-     *                                              on the system.
-     * @param array $default_generation_definitions Defines what default values should the properties
-     *                                              of the object have. The default values can be generators --
-     *                                              an object with the next() method.
-     *                                              There are some default generators:
-     *                                               - {@link WP_UnitTest_Generator_Sequence}
-     *                                               - {@link WP_UnitTest_Generator_Locale_Name}
-     *                                               - {@link WP_UnitTest_Factory_Callback_After_Create}
+     * @param object $factory Global factory that can be used to create other objects on the system
+     * @param array $default_generation_definitions Defines what default values should the properties of the object have. The default values
+     * can be generators -- an object with next() method. There are some default generators: {@link WP_UnitTest_Generator_Sequence},
+     * {@link WP_UnitTest_Generator_Locale_Name}, {@link WP_UnitTest_Factory_Callback_After_Create}.
      */
     public function __construct($factory, $default_generation_definitions = array())
     {
     }
     /**
-     * Creates an object and returns its ID.
-     *
-     * @since UT (3.7.0)
+     * Creates an object.
      *
      * @param array $args The arguments.
      *
-     * @return int|WP_Error The object ID on success, WP_Error object on failure.
+     * @return mixed The result. Can be anything.
      */
     abstract public function create_object($args);
     /**
      * Updates an existing object.
      *
-     * @since UT (3.7.0)
+     * @param int   $object The object ID.
+     * @param array $fields The values to update.
      *
-     * @param int   $object_id The object ID.
-     * @param array $fields    The values to update.
-     *
-     * @return int|WP_Error The object ID on success, WP_Error object on failure.
+     * @return mixed The result. Can be anything.
      */
-    abstract public function update_object($object_id, $fields);
+    abstract public function update_object($object, $fields);
     /**
-     * Creates an object and returns its ID.
+     * Creates an object.
      *
-     * @since UT (3.7.0)
+     * @param array $args                   Optional. The arguments for the object to create. Default is empty array.
+     * @param null  $generation_definitions Optional. The default values for the object. Default is null.
      *
-     * @param array $args                   Optional. The arguments for the object to create.
-     *                                      Default empty array.
-     * @param null  $generation_definitions Optional. The default values for the object.
-     *                                      Default null.
-     *
-     * @return int|WP_Error The object ID on success, WP_Error object on failure.
+     * @return mixed The result. Can be anything.
      */
     public function create($args = array(), $generation_definitions = \null)
     {
     }
     /**
-     * Creates and returns an object.
+     * Creates an object and returns its object.
      *
-     * @since UT (3.7.0)
+     * @param array $args                   Optional. The arguments for the object to create. Default is empty array.
+     * @param null  $generation_definitions Optional. The default values for the object. Default is null.
      *
-     * @param array $args                   Optional. The arguments for the object to create.
-     *                                      Default empty array.
-     * @param null  $generation_definitions Optional. The default values for the object.
-     *                                      Default null.
-     *
-     * @return mixed The created object. Can be anything. WP_Error object on failure.
+     * @return mixed The created object. Can be anything.
      */
     public function create_and_get($args = array(), $generation_definitions = \null)
     {
     }
     /**
      * Retrieves an object by ID.
-     *
-     * @since UT (3.7.0)
      *
      * @param int $object_id The object ID.
      *
@@ -1620,13 +1298,9 @@ abstract class WP_UnitTest_Factory_For_Thing
     /**
      * Creates multiple objects.
      *
-     * @since UT (3.7.0)
-     *
      * @param int   $count                  Amount of objects to create.
-     * @param array $args                   Optional. The arguments for the object to create.
-     *                                      Default empty array.
-     * @param null  $generation_definitions Optional. The default values for the object.
-     *                                      Default null.
+     * @param array $args                   Optional. The arguments for the object to create. Default is empty array.
+     * @param null  $generation_definitions Optional. The default values for the object. Default is null.
      *
      * @return array
      */
@@ -1637,15 +1311,11 @@ abstract class WP_UnitTest_Factory_For_Thing
      * Combines the given arguments with the generation_definitions (defaults) and applies
      * possibly set callbacks on it.
      *
-     * @since UT (3.7.0)
+     * @param array       $args                   Optional. The arguments to combine with defaults. Default is empty array.
+     * @param array|null  $generation_definitions Optional. The defaults. Default is null.
+     * @param array|null  $callbacks              Optional. Array with callbacks to apply on the fields. Default is null.
      *
-     * @param array       $args                   Optional. The arguments to combine with defaults.
-     *                                            Default empty array.
-     * @param array|null  $generation_definitions Optional. The defaults. Default null.
-     * @param array|null  $callbacks              Optional. Array with callbacks to apply on the fields.
-     *                                            Default null.
-     *
-     * @return array|WP_Error Combined array on success. WP_Error when default value is incorrect.
+     * @return array|WP_Error Combined array on success. WP_Error when default value is incorrent.
      */
     public function generate_args($args = array(), $generation_definitions = \null, &$callbacks = \null)
     {
@@ -1653,32 +1323,26 @@ abstract class WP_UnitTest_Factory_For_Thing
     /**
      * Applies the callbacks on the created object.
      *
-     * @since UT (3.7.0)
-     *
      * @param WP_UnitTest_Factory_Callback_After_Create[] $callbacks Array with callback functions.
-     * @param int                                         $object_id ID of the object to apply callbacks for.
+     * @param mixed                                       $created   The object to apply callbacks for.
      *
      * @return array The altered fields.
      */
-    public function apply_callbacks($callbacks, $object_id)
+    public function apply_callbacks($callbacks, $created)
     {
     }
     /**
-     * Instantiates a callback object for the given function name.
+     * Instantiates a callback objects for the given function name.
      *
-     * @since UT (3.7.0)
-     *
-     * @param callable $callback The callback function.
+     * @param string $function The callback function.
      *
      * @return WP_UnitTest_Factory_Callback_After_Create
      */
-    public function callback($callback)
+    public function callback($function)
     {
     }
     /**
      * Adds slashes to the given value.
-     *
-     * @since UT (3.7.0)
      *
      * @param array|object|string|mixed $value The value to add slashes to.
      *
@@ -1694,9 +1358,9 @@ abstract class WP_UnitTest_Factory_For_Thing
  * Note: The below @method notations are defined solely for the benefit of IDEs,
  * as a way to indicate expected return values from the given factory methods.
  *
- * @method int|WP_Error     create( $args = array(), $generation_definitions = null )
- * @method WP_Post|WP_Error create_and_get( $args = array(), $generation_definitions = null )
- * @method (int|WP_Error)[] create_many( $count, $args = array(), $generation_definitions = null )
+ * @method int create( $args = array(), $generation_definitions = null )
+ * @method WP_Post create_and_get( $args = array(), $generation_definitions = null )
+ * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
  */
 class WP_UnitTest_Factory_For_Post extends \WP_UnitTest_Factory_For_Thing
 {
@@ -1706,12 +1370,9 @@ class WP_UnitTest_Factory_For_Post extends \WP_UnitTest_Factory_For_Thing
     /**
      * Creates a post object.
      *
-     * @since UT (3.7.0)
-     * @since 6.2.0 Returns a WP_Error object on failure.
-     *
      * @param array $args Array with elements for the post.
      *
-     * @return int|WP_Error The post ID on success, WP_Error object on failure.
+     * @return int The post ID on success. The value 0 on failure.
      */
     public function create_object($args)
     {
@@ -1719,21 +1380,16 @@ class WP_UnitTest_Factory_For_Post extends \WP_UnitTest_Factory_For_Thing
     /**
      * Updates an existing post object.
      *
-     * @since UT (3.7.0)
-     * @since 6.2.0 Returns a WP_Error object on failure.
-     *
      * @param int   $post_id ID of the post to update.
      * @param array $fields  Post data.
      *
-     * @return int|WP_Error The post ID on success, WP_Error object on failure.
+     * @return int The post ID on success. The value 0 on failure.
      */
     public function update_object($post_id, $fields)
     {
     }
     /**
      * Retrieves a post by a given ID.
-     *
-     * @since UT (3.7.0)
      *
      * @param int $post_id ID of the post to retrieve.
      *
@@ -1743,23 +1399,10 @@ class WP_UnitTest_Factory_For_Post extends \WP_UnitTest_Factory_For_Thing
     {
     }
 }
-/**
- * Unit test factory for attachments.
- *
- * Note: The below @method notations are defined solely for the benefit of IDEs,
- * as a way to indicate expected return values from the given factory methods.
- *
- * @method int|WP_Error     create( $args = array(), $generation_definitions = null )
- * @method WP_Post|WP_Error create_and_get( $args = array(), $generation_definitions = null )
- * @method (int|WP_Error)[] create_many( $count, $args = array(), $generation_definitions = null )
- */
 class WP_UnitTest_Factory_For_Attachment extends \WP_UnitTest_Factory_For_Post
 {
     /**
      * Create an attachment fixture.
-     *
-     * @since UT (3.7.0)
-     * @since 6.2.0 Returns a WP_Error object on failure.
      *
      * @param array $args {
      *     Array of arguments. Accepts all arguments that can be passed to
@@ -1770,24 +1413,20 @@ class WP_UnitTest_Factory_For_Attachment extends \WP_UnitTest_Factory_For_Post
      * @param int   $legacy_parent Deprecated.
      * @param array $legacy_args   Deprecated.
      *
-     * @return int|WP_Error The attachment ID on success, WP_Error object on failure.
+     * @return int|WP_Error The attachment ID on success. The value 0 or WP_Error on failure.
      */
     public function create_object($args, $legacy_parent = 0, $legacy_args = array())
     {
     }
     /**
-     * Saves a file as an attachment.
+     * Saves an attachment.
      *
-     * @since 4.4.0
-     * @since 6.2.0 Returns a WP_Error object on failure.
+     * @param string $file   The file name to create attachment object for.
+     * @param int    $parent ID of the post to attach the file to.
      *
-     * @param string $file           Full path to the file to create an attachment object for.
-     *                               The name of the file will be used as the attachment name.
-     * @param int    $parent_post_id ID of the post to attach the file to.
-     *
-     * @return int|WP_Error The attachment ID on success, WP_Error object on failure.
+     * @return int|WP_Error The attachment ID on success. The value 0 or WP_Error on failure.
      */
-    public function create_upload_object($file, $parent_post_id = 0)
+    public function create_upload_object($file, $parent = 0)
     {
     }
 }
@@ -1797,9 +1436,9 @@ class WP_UnitTest_Factory_For_Attachment extends \WP_UnitTest_Factory_For_Post
  * Note: The below @method notations are defined solely for the benefit of IDEs,
  * as a way to indicate expected return values from the given factory methods.
  *
- * @method int|WP_Error     create( $args = array(), $generation_definitions = null )
- * @method WP_Site|WP_Error create_and_get( $args = array(), $generation_definitions = null )
- * @method (int|WP_Error)[] create_many( $count, $args = array(), $generation_definitions = null )
+ * @method int create( $args = array(), $generation_definitions = null )
+ * @method WP_Site create_and_get( $args = array(), $generation_definitions = null )
+ * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
  */
 class WP_UnitTest_Factory_For_Blog extends \WP_UnitTest_Factory_For_Thing
 {
@@ -1821,6 +1460,8 @@ class WP_UnitTest_Factory_For_Blog extends \WP_UnitTest_Factory_For_Thing
      *
      * @param int   $blog_id ID of the site to update.
      * @param array $fields  The fields to update.
+     *
+     * @return void
      */
     public function update_object($blog_id, $fields)
     {
@@ -1844,51 +1485,21 @@ class WP_UnitTest_Factory_For_Blog extends \WP_UnitTest_Factory_For_Thing
  *
  * @since 4.6.0
  *
- * @method int|WP_Error     create( $args = array(), $generation_definitions = null )
- * @method object|WP_Error  create_and_get( $args = array(), $generation_definitions = null )
- * @method (int|WP_Error)[] create_many( $count, $args = array(), $generation_definitions = null )
+ * @method int create( $args = array(), $generation_definitions = null )
+ * @method object create_and_get( $args = array(), $generation_definitions = null )
+ * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
  */
 class WP_UnitTest_Factory_For_Bookmark extends \WP_UnitTest_Factory_For_Thing
 {
     public function __construct($factory = \null)
     {
     }
-    /**
-     * Creates a link object.
-     *
-     * @since 4.6.0
-     * @since 6.2.0 Returns a WP_Error object on failure.
-     *
-     * @param array $args Arguments for the link object.
-     *
-     * @return int|WP_Error The link ID on success, WP_Error object on failure.
-     */
     public function create_object($args)
     {
     }
-    /**
-     * Updates a link object.
-     *
-     * @since 4.6.0
-     * @since 6.2.0 Returns a WP_Error object on failure.
-     *
-     * @param int   $link_id ID of the link to update.
-     * @param array $fields  The fields to update.
-     *
-     * @return int|WP_Error The link ID on success, WP_Error object on failure.
-     */
     public function update_object($link_id, $fields)
     {
     }
-    /**
-     * Retrieves a link by a given ID.
-     *
-     * @since 4.6.0
-     *
-     * @param int $link_id ID of the link to retrieve.
-     *
-     * @return object|null The link object on success, null on failure.
-     */
     public function get_object_by_id($link_id)
     {
     }
@@ -1899,9 +1510,9 @@ class WP_UnitTest_Factory_For_Bookmark extends \WP_UnitTest_Factory_For_Thing
  * Note: The below @method notations are defined solely for the benefit of IDEs,
  * as a way to indicate expected return values from the given factory methods.
  *
- * @method int|WP_Error        create( $args = array(), $generation_definitions = null )
- * @method WP_Comment|WP_Error create_and_get( $args = array(), $generation_definitions = null )
- * @method (int|WP_Error)[]    create_many( $count, $args = array(), $generation_definitions = null )
+ * @method int create( $args = array(), $generation_definitions = null )
+ * @method WP_Comment create_and_get( $args = array(), $generation_definitions = null )
+ * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
  */
 class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
 {
@@ -1911,14 +1522,9 @@ class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
     /**
      * Inserts a comment.
      *
-     * @since UT (3.7.0)
-     * @since 6.2.0 Returns a WP_Error object on failure.
-     *
-     * @global wpdb $wpdb WordPress database abstraction object.
-     *
      * @param array $args The comment details.
      *
-     * @return int|WP_Error The comment ID on success, WP_Error object on failure.
+     * @return int|false The comment's ID on success, false on failure.
      */
     public function create_object($args)
     {
@@ -1926,22 +1532,16 @@ class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
     /**
      * Updates a comment.
      *
-     * @since UT (3.7.0)
-     * @since 6.2.0 Returns a WP_Error object on failure.
-     *
      * @param int   $comment_id The comment ID.
      * @param array $fields     The comment details.
      *
-     * @return int|WP_Error The value 1 if the comment was updated, 0 if not updated.
-     *                      WP_Error object on failure.
+     * @return int The value 1 if the comment was updated, 0 if not updated.
      */
     public function update_object($comment_id, $fields)
     {
     }
     /**
      * Creates multiple comments on a given post.
-     *
-     * @since UT (3.7.0)
      *
      * @param int   $post_id                ID of the post to create comments for.
      * @param int   $count                  Total amount of comments to create.
@@ -1955,8 +1555,6 @@ class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
     }
     /**
      * Retrieves a comment by a given ID.
-     *
-     * @since UT (3.7.0)
      *
      * @param int $comment_id ID of the comment to retrieve.
      *
@@ -1972,48 +1570,21 @@ class WP_UnitTest_Factory_For_Comment extends \WP_UnitTest_Factory_For_Thing
  * Note: The below @method notations are defined solely for the benefit of IDEs,
  * as a way to indicate expected return values from the given factory methods.
  *
- * @method int|WP_Error        create( $args = array(), $generation_definitions = null )
- * @method WP_Network|WP_Error create_and_get( $args = array(), $generation_definitions = null )
- * @method (int|WP_Error)[]    create_many( $count, $args = array(), $generation_definitions = null )
+ * @method int create( $args = array(), $generation_definitions = null )
+ * @method WP_Network create_and_get( $args = array(), $generation_definitions = null )
+ * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
  */
 class WP_UnitTest_Factory_For_Network extends \WP_UnitTest_Factory_For_Thing
 {
     public function __construct($factory = \null)
     {
     }
-    /**
-     * Creates a network object.
-     *
-     * @since 3.9.0
-     * @since 6.2.0 Returns a WP_Error object on failure.
-     *
-     * @param array $args Arguments for the network object.
-     *
-     * @return int|WP_Error The network ID on success, WP_Error object on failure.
-     */
     public function create_object($args)
     {
     }
-    /**
-     * Updates a network object. Not implemented.
-     *
-     * @since 3.9.0
-     *
-     * @param int   $network_id ID of the network to update.
-     * @param array $fields  The fields to update.
-     */
     public function update_object($network_id, $fields)
     {
     }
-    /**
-     * Retrieves a network by a given ID.
-     *
-     * @since 3.9.0
-     *
-     * @param int $network_id ID of the network to retrieve.
-     *
-     * @return WP_Network|null The network object on success, null on failure.
-     */
     public function get_object_by_id($network_id)
     {
     }
@@ -2024,9 +1595,9 @@ class WP_UnitTest_Factory_For_Network extends \WP_UnitTest_Factory_For_Thing
  * Note: The below @method notations are defined solely for the benefit of IDEs,
  * as a way to indicate expected return values from the given factory methods.
  *
- * @method int|WP_Error          create( $args = array(), $generation_definitions = null )
- * @method WP_Term|WP_Error|null create_and_get( $args = array(), $generation_definitions = null )
- * @method (int|WP_Error)[]      create_many( $count, $args = array(), $generation_definitions = null )
+ * @method int create( $args = array(), $generation_definitions = null )
+ * @method WP_Term create_and_get( $args = array(), $generation_definitions = null )
+ * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
  */
 class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
 {
@@ -2037,11 +1608,9 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
     /**
      * Creates a term object.
      *
-     * @since UT (3.7.0)
+     * @param array $args Array or string of arguments for inserting a term.
      *
-     * @param array $args Array of arguments for inserting a term.
-     *
-     * @return int|WP_Error The term ID on success, WP_Error object on failure.
+     * @return array|WP_Error
      */
     public function create_object($args)
     {
@@ -2049,21 +1618,16 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
     /**
      * Updates the term.
      *
-     * @since UT (3.7.0)
-     * @since 6.2.0 Returns a WP_Error object on failure.
+     * @param int|object   $term   The term to update.
+     * @param array|string $fields The context in which to relate the term to the object.
      *
-     * @param int|object $term   The term to update.
-     * @param array      $fields Array of arguments for updating a term.
-     *
-     * @return int|WP_Error The term ID on success, WP_Error object on failure.
+     * @return int The term ID.
      */
     public function update_object($term, $fields)
     {
     }
     /**
      * Attach terms to the given post.
-     *
-     * @since UT (3.7.0)
      *
      * @param int          $post_id  The post ID.
      * @param string|array $terms    An array of terms to set for the post, or a string of terms
@@ -2082,8 +1646,6 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
     /**
      * Create a term and returns it as an object.
      *
-     * @since 4.3.0
-     *
      * @param array $args                   Array or string of arguments for inserting a term.
      * @param null  $generation_definitions The default values.
      *
@@ -2094,8 +1656,6 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
     }
     /**
      * Retrieves the term by a given ID.
-     *
-     * @since UT (3.7.0)
      *
      * @param int $term_id ID of the term to retrieve.
      *
@@ -2111,9 +1671,9 @@ class WP_UnitTest_Factory_For_Term extends \WP_UnitTest_Factory_For_Thing
  * Note: The below @method notations are defined solely for the benefit of IDEs,
  * as a way to indicate expected return values from the given factory methods.
  *
- * @method int|WP_Error     create( $args = array(), $generation_definitions = null )
- * @method WP_User|WP_Error create_and_get( $args = array(), $generation_definitions = null )
- * @method (int|WP_Error)[] create_many( $count, $args = array(), $generation_definitions = null )
+ * @method int create( $args = array(), $generation_definitions = null )
+ * @method WP_User create_and_get( $args = array(), $generation_definitions = null )
+ * @method int[] create_many( $count, $args = array(), $generation_definitions = null )
  */
 class WP_UnitTest_Factory_For_User extends \WP_UnitTest_Factory_For_Thing
 {
@@ -2122,8 +1682,6 @@ class WP_UnitTest_Factory_For_User extends \WP_UnitTest_Factory_For_Thing
     }
     /**
      * Inserts an user.
-     *
-     * @since UT (3.7.0)
      *
      * @param array $args The user data to insert.
      *
@@ -2135,8 +1693,6 @@ class WP_UnitTest_Factory_For_User extends \WP_UnitTest_Factory_For_Thing
     /**
      * Updates the user data.
      *
-     * @since UT (3.7.0)
-     *
      * @param int   $user_id ID of the user to update.
      * @param array $fields  The user data to update.
      *
@@ -2147,8 +1703,6 @@ class WP_UnitTest_Factory_For_User extends \WP_UnitTest_Factory_For_Thing
     }
     /**
      * Retrieves the user for a given ID.
-     *
-     * @since UT (3.7.0)
      *
      * @param int $user_id ID of the user ID to retrieve.
      *
@@ -2423,12 +1977,7 @@ class Mock_Invokable
     {
     }
 }
-/**
- * Test class extending WP_PHPMailer.
- *
- * @since 4.5.0
- */
-class MockPHPMailer extends \WP_PHPMailer
+class MockPHPMailer extends \PHPMailer\PHPMailer\PHPMailer
 {
     public $mock_sent = array();
     public function preSend()
@@ -2510,7 +2059,7 @@ class Spy_REST_Server extends \WP_REST_Server
     /**
      * Stores last set status.
      *
-     * @param int $status HTTP status.
+     * @param int $code HTTP status.
      */
     public function set_status($status)
     {
@@ -2527,14 +2076,14 @@ class Spy_REST_Server extends \WP_REST_Server
     /**
      * Overrides the register_route method so we can re-register routes internally if needed.
      *
-     * @param string $route_namespace Namespace.
-     * @param string $route           The REST route.
-     * @param array  $route_args      Route arguments.
-     * @param bool   $override        Optional. Whether the route should be overridden if it already exists.
-     *                                Default false. Also set `$GLOBALS['wp_rest_server']->override_by_default = true`
-     *                                to set overrides when you don't have access to the caller context.
+     * @param string $namespace  Namespace.
+     * @param string $route      The REST route.
+     * @param array  $route_args Route arguments.
+     * @param bool   $override   Optional. Whether the route should be overridden if it already exists.
+     *                           Default false. Also set `$GLOBALS['wp_rest_server']->override_by_default = true`
+     *                           to set overrides when you don't have access to the caller context.
      */
-    public function register_route($route_namespace, $route, $route_args, $override = \false)
+    public function register_route($namespace, $route, $route_args, $override = \false)
     {
     }
     /**
@@ -2595,7 +2144,7 @@ abstract class WP_Ajax_UnitTestCase extends \WP_UnitTestCase
     /**
      * Sets up the test fixture.
      *
-     * Overrides wp_die(), pretends to be Ajax, and suppresses warnings.
+     * Overrides wp_die(), pretends to be Ajax, and suppresses E_WARNINGs.
      */
     public function set_up()
     {
@@ -2698,7 +2247,7 @@ abstract class WP_Canonical_UnitTestCase extends \WP_UnitTestCase
     /**
      * Generate fixtures to be shared between canonical tests.
      *
-     * Abstracted here because it's invoked by wpSetUpBeforeClass() in more than one class.
+     * Abstracted here because it's invoked by setUpBeforeClass() in more than one class.
      *
      * @since 4.1.0
      */
@@ -2740,18 +2289,7 @@ abstract class WP_Canonical_UnitTestCase extends \WP_UnitTestCase
 }
 abstract class WP_Test_REST_TestCase extends \WP_UnitTestCase
 {
-    /**
-     * Asserts that the REST API response has the specified error.
-     *
-     * @since 4.4.0
-     * @since 6.6.0 Added the `$message` parameter.
-     *
-     * @param string|int                $code     Expected error code.
-     * @param WP_REST_Response|WP_Error $response REST API response.
-     * @param int                       $status   Optional. Status code.
-     * @param string                    $message  Optional. Message to display when the assertion fails.
-     */
-    protected function assertErrorResponse($code, $response, $status = \null, $message = '')
+    protected function assertErrorResponse($code, $response, $status = \null)
     {
     }
 }
@@ -2913,15 +2451,13 @@ class TracTickets
     {
     }
 }
-/**
+/*
  * Helper class for testing code that involves actions and filters.
  *
  * Typical use:
  *
  *     $ma = new MockAction();
  *     add_action( 'foo', array( &$ma, 'action' ) );
- *
- * @since UT (3.7.0)
  */
 class MockAction
 {
@@ -2929,100 +2465,47 @@ class MockAction
     public $debug;
     /**
      * PHP5 constructor.
-     *
-     * @since UT (3.7.0)
      */
     public function __construct($debug = 0)
     {
     }
-    /**
-     * @since UT (3.7.0)
-     */
     public function reset()
     {
     }
-    /**
-     * @since UT (3.7.0)
-     */
     public function current_filter()
     {
     }
-    /**
-     * @since UT (3.7.0)
-     */
     public function action($arg)
     {
     }
-    /**
-     * @since UT (3.7.0)
-     */
     public function action2($arg)
     {
     }
-    /**
-     * @since UT (3.7.0)
-     */
     public function filter($arg)
     {
     }
-    /**
-     * @since UT (3.7.0)
-     */
     public function filter2($arg)
     {
     }
-    /**
-     * @since UT (3.7.0)
-     */
     public function filter_append($arg)
     {
     }
-    /**
-     * Does not return the result, so it's safe to use with the 'all' filter.
-     *
-     * @since UT (3.7.0)
-     */
-    public function filterall($hook_name, ...$args)
+    public function filterall($tag, ...$args)
     {
     }
-    /**
-     * Returns a list of all the actions, hook names and args.
-     *
-     * @since UT (3.7.0)
-     */
+    // Return a list of all the actions, tags and args.
     public function get_events()
     {
     }
-    /**
-     * Returns a count of the number of times the action was called since the last reset.
-     *
-     * @since UT (3.7.0)
-     */
-    public function get_call_count($hook_name = '')
+    // Return a count of the number of times the action was called since the last reset.
+    public function get_call_count($tag = '')
     {
     }
-    /**
-     * Returns an array of the hook names that triggered calls to this action.
-     *
-     * @since 6.1.0
-     */
-    public function get_hook_names()
-    {
-    }
-    /**
-     * Returns an array of the hook names that triggered calls to this action.
-     *
-     * @since UT (3.7.0)
-     * @since 6.1.0 Turned into an alias for ::get_hook_names().
-     */
+    // Return an array of the tags that triggered calls to this action.
     public function get_tags()
     {
     }
-    /**
-     * Returns an array of args passed in calls to this action.
-     *
-     * @since UT (3.7.0)
-     */
+    // Return an array of args passed in calls to this action.
     public function get_args()
     {
     }
@@ -3053,9 +2536,9 @@ class TestXMLParser
     }
 }
 /**
- * Use to create objects by yourself.
+ * Use to create objects by yourself
  */
-class MockClass extends \stdClass
+class MockClass
 {
 }
 /**
@@ -3070,318 +2553,7 @@ class WpdbExposedMethodsForTesting extends \wpdb
     {
     }
 }
-/**
- * Mock Event for testing.
- *
- * @package WordPress
- * @subpackage AI
- */
-/**
- * Mock event class for testing the WP_AI_Client_Event_Dispatcher.
- *
- * The class name ends with 'Event' to test the suffix stripping behavior.
- *
- * @since 7.0.0
- */
-class WP_AI_Client_Mock_Event
-{
-}
-/**
- * Trait providing shared mock model creation methods for testing.
- *
- * @since 7.0.0
- */
-trait WP_AI_Client_Mock_Model_Creation_Trait
-{
-    /**
-     * Creates a test GenerativeAiResult for testing purposes.
-     *
-     * @param string $content Optional content for the response.
-     * @return GenerativeAiResult
-     */
-    protected function create_test_result(string $content = 'Test response'): \WordPress\AiClient\Results\DTO\GenerativeAiResult
-    {
-    }
-    /**
-     * Creates a test model metadata instance for text generation.
-     *
-     * @param string $id   Optional model ID.
-     * @param string $name Optional model name.
-     * @return ModelMetadata
-     */
-    protected function create_test_text_model_metadata(string $id = 'test-text-model', string $name = 'Test Text Model'): \WordPress\AiClient\Providers\Models\DTO\ModelMetadata
-    {
-    }
-    /**
-     * Creates a test model metadata instance for image generation.
-     *
-     * @param string $id   Optional model ID.
-     * @param string $name Optional model name.
-     * @return ModelMetadata
-     */
-    protected function create_test_image_model_metadata(string $id = 'test-image-model', string $name = 'Test Image Model'): \WordPress\AiClient\Providers\Models\DTO\ModelMetadata
-    {
-    }
-    /**
-     * Creates a test model metadata instance for speech generation.
-     *
-     * @param string $id   Optional model ID.
-     * @param string $name Optional model name.
-     * @return ModelMetadata
-     */
-    protected function create_test_speech_model_metadata(string $id = 'test-speech-model', string $name = 'Test Speech Model'): \WordPress\AiClient\Providers\Models\DTO\ModelMetadata
-    {
-    }
-    /**
-     * Creates a test model metadata instance for text-to-speech conversion.
-     *
-     * @param string $id   Optional model ID.
-     * @param string $name Optional model name.
-     * @return ModelMetadata
-     */
-    protected function create_test_text_to_speech_model_metadata(string $id = 'test-text-to-speech-model', string $name = 'Test Text-to-Speech Model'): \WordPress\AiClient\Providers\Models\DTO\ModelMetadata
-    {
-    }
-    /**
-     * Creates a test model metadata instance for video generation.
-     *
-     * @param string $id   Optional model ID.
-     * @param string $name Optional model name.
-     * @return ModelMetadata
-     */
-    protected function create_test_video_model_metadata(string $id = 'test-video-model', string $name = 'Test Video Model'): \WordPress\AiClient\Providers\Models\DTO\ModelMetadata
-    {
-    }
-    /**
-     * Creates a mock text generation model using anonymous class.
-     *
-     * @param GenerativeAiResult $result   The result to return from generation.
-     * @param ModelMetadata|null $metadata Optional metadata.
-     * @return ModelInterface&TextGenerationModelInterface The mock model.
-     */
-    protected function create_mock_text_generation_model(\WordPress\AiClient\Results\DTO\GenerativeAiResult $result, ?\WordPress\AiClient\Providers\Models\DTO\ModelMetadata $metadata = \null): \WordPress\AiClient\Providers\Models\Contracts\ModelInterface
-    {
-    }
-    /**
-     * Creates a mock image generation model using anonymous class.
-     *
-     * @param GenerativeAiResult $result   The result to return from generation.
-     * @param ModelMetadata|null $metadata Optional metadata.
-     * @return ModelInterface&ImageGenerationModelInterface The mock model.
-     */
-    protected function create_mock_image_generation_model(\WordPress\AiClient\Results\DTO\GenerativeAiResult $result, ?\WordPress\AiClient\Providers\Models\DTO\ModelMetadata $metadata = \null): \WordPress\AiClient\Providers\Models\Contracts\ModelInterface
-    {
-    }
-    /**
-     * Creates a mock speech generation model using anonymous class.
-     *
-     * @param GenerativeAiResult $result   The result to return from generation.
-     * @param ModelMetadata|null $metadata Optional metadata.
-     * @return ModelInterface&SpeechGenerationModelInterface The mock model.
-     */
-    protected function create_mock_speech_generation_model(\WordPress\AiClient\Results\DTO\GenerativeAiResult $result, ?\WordPress\AiClient\Providers\Models\DTO\ModelMetadata $metadata = \null): \WordPress\AiClient\Providers\Models\Contracts\ModelInterface
-    {
-    }
-    /**
-     * Creates a mock text-to-speech conversion model using anonymous class.
-     *
-     * @param GenerativeAiResult $result   The result to return from conversion.
-     * @param ModelMetadata|null $metadata Optional metadata.
-     * @return ModelInterface&TextToSpeechConversionModelInterface The mock model.
-     */
-    protected function create_mock_text_to_speech_model(\WordPress\AiClient\Results\DTO\GenerativeAiResult $result, ?\WordPress\AiClient\Providers\Models\DTO\ModelMetadata $metadata = \null): \WordPress\AiClient\Providers\Models\Contracts\ModelInterface
-    {
-    }
-    /**
-     * Creates a mock video generation model using anonymous class.
-     *
-     * @param GenerativeAiResult $result   The result to return from generation.
-     * @param ModelMetadata|null $metadata Optional metadata.
-     * @return ModelInterface&VideoGenerationModelInterface The mock model.
-     */
-    protected function create_mock_video_generation_model(\WordPress\AiClient\Results\DTO\GenerativeAiResult $result, ?\WordPress\AiClient\Providers\Models\DTO\ModelMetadata $metadata = \null): \WordPress\AiClient\Providers\Models\Contracts\ModelInterface
-    {
-    }
-    /**
-     * Creates a mock text generation model that throws an exception.
-     *
-     * @param Exception          $exception The exception to throw from generation.
-     * @param ModelMetadata|null $metadata  Optional metadata.
-     * @return ModelInterface&TextGenerationModelInterface The mock model.
-     */
-    protected function create_mock_text_generation_model_with_exception(\Exception $exception, ?\WordPress\AiClient\Providers\Models\DTO\ModelMetadata $metadata = \null): \WordPress\AiClient\Providers\Models\Contracts\ModelInterface
-    {
-    }
-}
-/**
- * Mock provider availability with a controllable flag.
- *
- * @since 7.0.0
- */
-class Mock_Connectors_Test_Provider_Availability implements \WordPress\AiClient\Providers\Contracts\ProviderAvailabilityInterface
-{
-    /**
-     * Whether the provider should report as configured.
-     *
-     * @var bool
-     */
-    public static bool $is_configured = \true;
-    /**
-     * Checks if the provider is configured.
-     *
-     * @return bool
-     */
-    public function isConfigured(): bool
-    {
-    }
-}
-/**
- * Mock model metadata directory that returns an empty list.
- *
- * @since 7.0.0
- */
-class Mock_Connectors_Test_Model_Metadata_Directory implements \WordPress\AiClient\Providers\Contracts\ModelMetadataDirectoryInterface
-{
-    /**
-     * Lists model metadata.
-     *
-     * @return array Empty array.
-     */
-    public function listModelMetadata(): array
-    {
-    }
-    /**
-     * Checks if a model exists.
-     *
-     * @param string $model_id The model ID.
-     * @return bool Always false.
-     */
-    public function hasModelMetadata(string $model_id): bool
-    {
-    }
-    /**
-     * Gets model metadata.
-     *
-     * @param string $model_id The model ID.
-     * @throws \InvalidArgumentException Always, as no models are available.
-     */
-    public function getModelMetadata(string $model_id): \WordPress\AiClient\Providers\Models\DTO\ModelMetadata
-    {
-    }
-}
-/**
- * Minimal mock provider for testing connector functions that interact
- * with the AI Client registry.
- *
- * Uses API key authentication and delegates availability to
- * Mock_Connectors_Test_Provider_Availability so tests can toggle
- * the configured state.
- *
- * @since 7.0.0
- */
-class Mock_Connectors_Test_Provider extends \WordPress\AiClient\Providers\AbstractProvider
-{
-    /**
-     * Creates the provider metadata.
-     *
-     * @return ProviderMetadata
-     */
-    protected static function createProviderMetadata(): \WordPress\AiClient\Providers\DTO\ProviderMetadata
-    {
-    }
-    /**
-     * Creates the provider availability checker.
-     *
-     * @return ProviderAvailabilityInterface
-     */
-    protected static function createProviderAvailability(): \WordPress\AiClient\Providers\Contracts\ProviderAvailabilityInterface
-    {
-    }
-    /**
-     * Creates the model metadata directory.
-     *
-     * @return ModelMetadataDirectoryInterface
-     */
-    protected static function createModelMetadataDirectory(): \WordPress\AiClient\Providers\Contracts\ModelMetadataDirectoryInterface
-    {
-    }
-    /**
-     * Creates a model instance.
-     *
-     * @param ModelMetadata    $model_metadata    The model metadata.
-     * @param ProviderMetadata $provider_metadata The provider metadata.
-     * @throws \RuntimeException Always, as model creation is not needed for these tests.
-     */
-    protected static function createModel(\WordPress\AiClient\Providers\Models\DTO\ModelMetadata $model_metadata, \WordPress\AiClient\Providers\DTO\ProviderMetadata $provider_metadata): \WordPress\AiClient\Providers\Models\Contracts\ModelInterface
-    {
-    }
-}
-/**
- * Trait providing a mock AI provider for testing connector functions.
- *
- * Registers a mock provider in the AI Client singleton registry with
- * controllable availability. Tests can toggle the configured state via
- * set_mock_provider_configured().
- *
- * @since 7.0.0
- */
-trait WP_AI_Client_Mock_Provider_Trait
-{
-    /**
-     * Registers the mock provider in the AI Client registry.
-     *
-     * Safe to call multiple times; skips registration if already done.
-     * Must be called from set_up_before_class() after parent::set_up_before_class().
-     */
-    private static function register_mock_connectors_provider(): void
-    {
-    }
-    /**
-     * Sets whether the mock provider reports as configured.
-     *
-     * @param bool $is_configured Whether the provider should be configured.
-     */
-    private static function set_mock_provider_configured(bool $is_configured): void
-    {
-    }
-    /**
-     * Unregisters the mock provider's connector setting.
-     *
-     * Reverses the side effect of _wp_register_default_connector_settings()
-     * for the mock provider so that subsequent test classes start with a clean slate.
-     * Must be called from tear_down_after_class() after running tests.
-     */
-    private static function unregister_mock_connector_setting(): void
-    {
-    }
-}
-/**
- * Trait for registering test abilities used across AI Client test classes.
- *
- * @package WordPress\Tests
- */
-trait WP_AI_Client_Test_Abilities_Trait
-{
-    /**
-     * Registers test ability category and abilities.
-     *
-     * Safe to call multiple times; skips registration if already done.
-     * Must be called from set_up_before_class() after parent::set_up_before_class().
-     */
-    private static function register_test_abilities()
-    {
-    }
-    /**
-     * Unregisters test ability category and abilities.
-     *
-     * Safe to call multiple times; skips unregistration if already done.
-     * Must be called from tear_down_after_class() before parent::tear_down_after_class().
-     */
-    private static function unregister_test_abilities()
-    {
-    }
-}
-/**
+/*
  * A simple manually-instrumented profiler for WordPress.
  *
  * This records basic execution time, and a summary of the actions and SQL queries run within each block.
@@ -3450,53 +2622,6 @@ function wp_tests_options($value)
 {
 }
 /**
- * Generates representation of the semantic HTML tree structure.
- *
- * This is inspired by the representation used by the HTML5lib tests. It's been extended here for
- * blocks to render the semantic structure of blocks and their attributes.
- * The order of attributes and class names is normalized both for HTML tags and blocks,
- * as is the whitespace in HTML tags' style attribute.
- *
- * For example, consider the following block markup:
- *
- *     <!-- wp:separator {"className":"is-style-default has-custom-classname","style":{"spacing":{"margin":{"top":"50px","bottom":"50px"}}},"backgroundColor":"accent-1"} -->
- *         <hr class="wp-block-separator is-style-default has-custom-classname" style="margin-top: 50px; margin-bottom: 50px" />
- *     <!-- /wp:separator -->
- *
- * This will be represented as:
- *
- *     BLOCK["core/separator"]
- *       {
- *         "backgroundColor": "accent-1",
- *         "className": "has-custom-classname is-style-default",
- *         "style": {
- *           "spacing": {
- *             "margin": {
- *               "top": "50px",
- *               "bottom": "50px"
- *             }
- *           }
- *         }
- *       }
- *       <hr>
- *         class="has-custom-classname is-style-default wp-block-separator"
- *         style="margin-top:50px;margin-bottom:50px;"
- *
- *
- * @see https://github.com/WordPress/wordpress-develop/blob/trunk/tests/phpunit/data/html5lib-tests/tree-construction/README.md
- *
- * @since 6.9.0
- *
- * @throws WP_HTML_Unsupported_Exception|Exception If the markup could not be parsed.
- *
- * @param string      $html             Given test HTML.
- * @param string|null $fragment_context Context element in which to parse HTML, such as BODY or SVG.
- * @return string Tree structure of parsed HTML, if supported.
- */
-function build_visual_html_tree(string $html, ?string $fragment_context): string
-{
-}
-/**
  * Retrieves PHPUnit runner version.
  *
  * @return double The version number.
@@ -3513,39 +2638,33 @@ function tests_reset__SERVER()
 /**
  * Adds hooks before loading WP.
  *
- * @since UT (3.7.0)
- *
  * @see add_filter()
- * @global WP_Hook[] $wp_filter A multidimensional array of all hooks and the callbacks hooked to them.
  *
- * @param string   $hook_name     The name of the filter to add the callback to.
- * @param callable $callback      The callback to be run when the filter is applied.
- * @param int      $priority      Optional. Used to specify the order in which the functions
- *                                associated with a particular action are executed.
- *                                Lower numbers correspond with earlier execution,
- *                                and functions with the same priority are executed
- *                                in the order in which they were added to the action. Default 10.
- * @param int      $accepted_args Optional. The number of arguments the function accepts. Default 1.
- * @return true Always returns true.
+ * @param string   $tag             The name of the filter to hook the $function_to_add callback to.
+ * @param callable $function_to_add The callback to be run when the filter is applied.
+ * @param int      $priority        Optional. Used to specify the order in which the functions
+ *                                  associated with a particular action are executed.
+ *                                  Lower numbers correspond with earlier execution,
+ *                                  and functions with the same priority are executed
+ *                                  in the order in which they were added to the action. Default 10.
+ * @param int      $accepted_args   Optional. The number of arguments the function accepts. Default 1.
+ * @return true
  */
-function tests_add_filter($hook_name, $callback, $priority = 10, $accepted_args = 1)
+function tests_add_filter($tag, $function_to_add, $priority = 10, $accepted_args = 1)
 {
 }
 /**
  * Generates a unique function ID based on the given arguments.
  *
- * @since UT (3.7.0)
- *
  * @see _wp_filter_build_unique_id()
  *
- * @param string                $hook_name Unused. The name of the filter to build ID for.
- * @param callable|string|array $callback  The callback to generate ID for. The callback may
- *                                         or may not exist.
- * @param int                   $priority  Unused. The order in which the functions
- *                                         associated with a particular action are executed.
+ * @param string   $tag      Unused. The name of the filter to build ID for.
+ * @param callable $function The function to generate ID for.
+ * @param int      $priority Unused. The order in which the functions
+ *                           associated with a particular action are executed.
  * @return string Unique function ID for usage as array key.
  */
-function _test_filter_build_unique_id($hook_name, $callback, $priority)
+function _test_filter_build_unique_id($tag, $function, $priority)
 {
 }
 /**
@@ -3563,36 +2682,27 @@ function _delete_all_posts()
 /**
  * Handles the WP die handler by outputting the given values as text.
  *
- * @since UT (3.7.0)
- * @since 6.1.0 The `$message` parameter can accept a `WP_Error` object.
- *
- * @param string|WP_Error $message Error message or WP_Error object.
- * @param string          $title   Error title.
- * @param array           $args    Arguments passed to wp_die().
+ * @param string $message The message.
+ * @param string $title   The title.
+ * @param array  $args    Array with arguments.
  */
 function _wp_die_handler($message, $title = '', $args = array())
 {
 }
 /**
  * Disables the WP die handler.
- *
- * @since UT (3.7.0)
  */
 function _disable_wp_die()
 {
 }
 /**
  * Enables the WP die handler.
- *
- * @since UT (3.7.0)
  */
 function _enable_wp_die()
 {
 }
 /**
  * Returns the die handler.
- *
- * @since UT (3.7.0)
  *
  * @return string The die handler.
  */
@@ -3602,8 +2712,6 @@ function _wp_die_handler_filter()
 /**
  * Returns the die handler.
  *
- * @since 4.9.0
- *
  * @return string The die handler.
  */
 function _wp_die_handler_filter_exit()
@@ -3612,12 +2720,9 @@ function _wp_die_handler_filter_exit()
 /**
  * Dies without an exit.
  *
- * @since 4.0.0
- * @since 6.1.0 The `$message` parameter can accept a `WP_Error` object.
- *
- * @param string|WP_Error $message Error message or WP_Error object.
- * @param string          $title   Error title.
- * @param array           $args    Arguments passed to wp_die().
+ * @param string $message The message.
+ * @param string $title   The title.
+ * @param array  $args    Array with arguments.
  */
 function _wp_die_handler_txt($message, $title, $args)
 {
@@ -3625,12 +2730,9 @@ function _wp_die_handler_txt($message, $title, $args)
 /**
  * Dies with an exit.
  *
- * @since 4.9.0
- * @since 6.1.0 The `$message` parameter can accept a `WP_Error` object.
- *
- * @param string|WP_Error $message Error message or WP_Error object.
- * @param string          $title   Error title.
- * @param array           $args    Arguments passed to wp_die().
+ * @param string $message The message.
+ * @param string $title   The title.
+ * @param array  $args    Array with arguments.
  */
 function _wp_die_handler_exit($message, $title, $args)
 {
@@ -3680,43 +2782,6 @@ function _unhook_block_registration()
 {
 }
 /**
- * After the init action has been run once, trying to re-register font collections can cause
- * errors. To avoid this, unhook the font registration functions.
- *
- * @since 6.5.0
- */
-function _unhook_font_registration()
-{
-}
-/**
- * After the init action has been run once, trying to re-register connector settings can cause
- * duplicate registrations. To avoid this, unhook the connector registration functions.
- *
- * @since 7.0.0
- */
-function _unhook_connector_registration()
-{
-}
-/**
- * Before the abilities API categories init action runs, unhook the core ability
- * categories registration function to prevent core categories from being registered
- * during tests.
- *
- * @since 6.9.0
- */
-function _unhook_core_ability_categories_registration()
-{
-}
-/**
- * Before the abilities API init action runs, unhook the core abilities
- * registration function to prevent core abilities from being registered during tests.
- *
- * @since 6.9.0
- */
-function _unhook_core_abilities_registration()
-{
-}
-/**
  * Helper method to return the global phpmailer instance defined in the bootstrap
  *
  * @since 4.4.0
@@ -3750,16 +2815,16 @@ function tests_make_plural_form_function($nplurals, $expression)
  * Returns a string of the required length containing random characters. Note that
  * the maximum possible string length is 32.
  *
- * @param int $length Optional. The required length. Default 32.
+ * @param int $len Optional. The required length. Default 32.
  * @return string The string.
  */
-function rand_str($length = 32)
+function rand_str($len = 32)
 {
 }
 /**
  * Returns a string of the required length containing random characters.
  *
- * @param int $length The required length.
+ * @param int $len The required length.
  * @return string The string.
  */
 function rand_long_str($length)
@@ -3812,22 +2877,15 @@ function dmp(...$args)
 function dmp_filter($a)
 {
 }
-/**
- * Gets the output buffer for invoking the provided callback.
- *
- * @param callable $callback Callback.
- * @param mixed[]  $args     Arguments.
- * @return string Captured output.
- */
-function get_echo(callable $callback, array $args = array()): string
+function get_echo($callable, $args = array())
 {
 }
 // Recursively generate some quick assertEquals() tests based on an array.
-function gen_tests_array($name, $expected_data)
+function gen_tests_array($name, $array)
 {
 }
 /**
- * Drops all tables from the WordPress database.
+ * Drops all tables from the WordPress database
  */
 function drop_tables()
 {
