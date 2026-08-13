@@ -85,6 +85,15 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
     {
     }
     /**
+     * Sets the bcrypt cost option for password hashing during tests.
+     *
+     * @param array      $options   The options for password hashing.
+     * @param string|int $algorithm The algorithm to use for hashing. This is a string in PHP 7.4+ and an integer in PHP 7.3 and earlier.
+     */
+    public function wp_hash_password_options(array $options, $algorithm): array
+    {
+    }
+    /**
      * After a test method runs, resets any state in WordPress the test method might have changed.
      */
     public function tear_down()
@@ -554,6 +563,28 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      * @param string ...$prop Any number of WP_Query properties that are expected to be true for the current request.
      */
     public function assertQueryTrue(...$prop)
+    {
+    }
+    /**
+     * Check HTML markup (including blocks) for semantic equivalence.
+     *
+     * Given two markup strings, assert that they translate to the same semantic HTML tree,
+     * normalizing tag names, attribute names, and attribute order. Furthermore, attributes
+     * and class names are sorted and deduplicated, and whitespace in style attributes
+     * is normalized. Finally, block delimiter comments are recognized and normalized,
+     * applying the same principles.
+     *
+     * @since 6.9.0
+     *
+     * @param string      $expected         The expected HTML.
+     * @param string      $actual           The actual HTML.
+     * @param string|null $fragment_context Optional. The fragment context, for example "<td>" expected HTML
+     *                                      must occur within "<table><tr>" fragment context. Default "<body>".
+     *                                      Only "<body>" or `null` are supported at this time.
+     *                                      Set to `null` to parse a full HTML document.
+     * @param string|null $message          Optional. The assertion error message.
+     */
+    public function assertEqualHTML(string $expected, string $actual, ?string $fragment_context = '<body>', $message = 'HTML markup was not equivalent.'): void
     {
     }
     /**
@@ -1700,12 +1731,13 @@ class WP_UnitTest_Factory_For_Attachment extends \WP_UnitTest_Factory_For_Post
     {
     }
     /**
-     * Saves an attachment.
+     * Saves a file as an attachment.
      *
      * @since 4.4.0
      * @since 6.2.0 Returns a WP_Error object on failure.
      *
-     * @param string $file           The file name to create attachment object for.
+     * @param string $file           Full path to the file to create an attachment object for.
+     *                               The name of the file will be used as the attachment name.
      * @param int    $parent_post_id ID of the post to attach the file to.
      *
      * @return int|WP_Error The attachment ID on success, WP_Error object on failure.
@@ -2433,7 +2465,7 @@ class Spy_REST_Server extends \WP_REST_Server
     /**
      * Stores last set status.
      *
-     * @param int $code HTTP status.
+     * @param int $status HTTP status.
      */
     public function set_status($status)
     {
@@ -3061,6 +3093,54 @@ class WPProfiler
 function wp_tests_options($value)
 {
 }
+/* phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped */
+/**
+ * Generates representation of the semantic HTML tree structure.
+ *
+ * This is inspired by the representation used by the HTML5lib tests. It's been extended here for
+ * blocks to render the semantic structure of blocks and their attributes.
+ * The order of attributes and class names is normalized both for HTML tags and blocks,
+ * as is the whitespace in HTML tags' style attribute.
+ *
+ * For example, consider the following block markup:
+ *
+ *     <!-- wp:separator {"className":"is-style-default has-custom-classname","style":{"spacing":{"margin":{"top":"50px","bottom":"50px"}}},"backgroundColor":"accent-1"} -->
+ *         <hr class="wp-block-separator is-style-default has-custom-classname" style="margin-top: 50px; margin-bottom: 50px" />
+ *     <!-- /wp:separator -->
+ *
+ * This will be represented as:
+ *
+ *     BLOCK["core/separator"]
+ *       {
+ *         "backgroundColor": "accent-1",
+ *         "className": "has-custom-classname is-style-default",
+ *         "style": {
+ *           "spacing": {
+ *             "margin": {
+ *               "top": "50px",
+ *               "bottom": "50px"
+ *             }
+ *           }
+ *         }
+ *       }
+ *       <hr>
+ *         class="has-custom-classname is-style-default wp-block-separator"
+ *         style="margin-top:50px;margin-bottom:50px;"
+ *
+ *
+ * @see https://github.com/WordPress/wordpress-develop/blob/trunk/tests/phpunit/data/html5lib-tests/tree-construction/README.md
+ *
+ * @since 6.9.0
+ *
+ * @throws WP_HTML_Unsupported_Exception|Exception If the markup could not be parsed.
+ *
+ * @param string      $html             Given test HTML.
+ * @param string|null $fragment_context Context element in which to parse HTML, such as BODY or SVG.
+ * @return string Tree structure of parsed HTML, if supported.
+ */
+function build_visual_html_tree(string $html, ?string $fragment_context): string
+{
+}
 /**
  * Retrieves PHPUnit runner version.
  *
@@ -3251,6 +3331,25 @@ function _unhook_block_registration()
  * @since 6.5.0
  */
 function _unhook_font_registration()
+{
+}
+/**
+ * Before the abilities API categories init action runs, unhook the core ability
+ * categories registration function to prevent core categories from being registered
+ * during tests.
+ *
+ * @since 6.9.0
+ */
+function _unhook_core_ability_categories_registration()
+{
+}
+/**
+ * Before the abilities API init action runs, unhook the core abilities
+ * registration function to prevent core abilities from being registered during tests.
+ *
+ * @since 6.9.0
+ */
+function _unhook_core_abilities_registration()
 {
 }
 /**
