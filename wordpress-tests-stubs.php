@@ -408,6 +408,8 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      *
      * @param mixed  $actual  The value to check.
      * @param string $message Optional. Message to display when the assertion fails.
+     *
+     * @phpstan-assert IXR_Error $actual
      */
     public function assertIXRError($actual, $message = '')
     {
@@ -417,6 +419,8 @@ abstract class WP_UnitTestCase_Base extends \PHPUnit_Adapter_TestCase
      *
      * @param mixed  $actual  The value to check.
      * @param string $message Optional. Message to display when the assertion fails.
+     *
+     * @phpstan-assert !IXR_Error $actual
      */
     public function assertNotIXRError($actual, $message = '')
     {
@@ -1254,7 +1258,7 @@ class WP_Sitemaps_Large_Test_Provider extends \WP_Sitemaps_Provider
     /**
      * WP_Sitemaps_Large_Test_Provider constructor.
      *
-     * @param int $num_entries Optional. Number of entries in in the sitemap.
+     * @param int $num_entries Optional. Number of entries in the sitemap.
      */
     public function __construct($num_entries = 50001)
     {
@@ -2922,15 +2926,31 @@ class TracTickets
  *     add_action( 'foo', array( &$ma, 'action' ) );
  *
  * @since UT (3.7.0)
+ *
+ * @phpstan-type Hook_Event array{
+ *     action?: non-empty-string,
+ *     filter?: non-empty-string,
+ *     hook_name: string|false,
+ *     tag: string|false,
+ *     args: list<mixed>,
+ * }
  */
 class MockAction
 {
+    /**
+     * @var list<Hook_Event>
+     */
     public $events;
+    /**
+     * @var bool
+     */
     public $debug;
     /**
      * PHP5 constructor.
      *
      * @since UT (3.7.0)
+     *
+     * @param bool|int $debug
      */
     public function __construct($debug = 0)
     {
@@ -2938,75 +2958,109 @@ class MockAction
     /**
      * @since UT (3.7.0)
      */
-    public function reset()
+    public function reset(): void
     {
     }
     /**
      * @since UT (3.7.0)
+     *
+     * @global array<non-empty-string, non-negative-int> $wp_actions
+     * @return string|false
      */
     public function current_filter()
     {
     }
     /**
      * @since UT (3.7.0)
+     *
+     * @template T
+     * @param T $arg
+     * @return T
      */
     public function action($arg)
     {
     }
     /**
      * @since UT (3.7.0)
+     *
+     * @template T
+     * @param T $arg
+     * @return T
      */
     public function action2($arg)
     {
     }
     /**
      * @since UT (3.7.0)
+     *
+     * @template T
+     * @param T $arg
+     * @return T
      */
     public function filter($arg)
     {
     }
     /**
      * @since UT (3.7.0)
+     *
+     * @template T
+     * @param T $arg
+     * @return T
      */
     public function filter2($arg)
     {
     }
     /**
      * @since UT (3.7.0)
+     *
+     * @no-named-arguments
+     * @param string $arg
+     * @return non-empty-string
      */
-    public function filter_append($arg)
+    public function filter_append($arg): string
     {
     }
     /**
      * Does not return the result, so it's safe to use with the 'all' filter.
      *
      * @since UT (3.7.0)
+     *
+     * @no-named-arguments
+     * @param string $hook_name
+     * @param mixed ...$args
      */
-    public function filterall($hook_name, ...$args)
+    public function filterall(string $hook_name, ...$args): void
     {
     }
     /**
      * Returns a list of all the actions, hook names and args.
      *
      * @since UT (3.7.0)
+     *
+     * @return list<Hook_Event>
      */
-    public function get_events()
+    public function get_events(): array
     {
     }
     /**
      * Returns a count of the number of times the action was called since the last reset.
      *
      * @since UT (3.7.0)
+     *
+     * @param string $hook_name Hook name.
+     * @return non-negative-int
      */
-    public function get_call_count($hook_name = '')
+    public function get_call_count($hook_name = ''): int
     {
     }
     /**
      * Returns an array of the hook names that triggered calls to this action.
      *
      * @since 6.1.0
+     *
+     * @return list<string|false>
      */
-    public function get_hook_names()
+    public function get_hook_names(): array
     {
     }
     /**
@@ -3014,16 +3068,20 @@ class MockAction
      *
      * @since UT (3.7.0)
      * @since 6.1.0 Turned into an alias for ::get_hook_names().
+     *
+     * @return list<string|false>
      */
-    public function get_tags()
+    public function get_tags(): array
     {
     }
     /**
      * Returns an array of args passed in calls to this action.
      *
      * @since UT (3.7.0)
+     *
+     * @return list<list<mixed>>
      */
-    public function get_args()
+    public function get_args(): array
     {
     }
 }
@@ -3483,7 +3541,7 @@ function wp_tests_options($value)
  *         style="margin-top:50px;margin-bottom:50px;"
  *
  *
- * @see https://github.com/WordPress/wordpress-develop/blob/trunk/tests/phpunit/data/html5lib-tests/tree-construction/README.md
+ * @see https://github.com/web-platform-tests/wpt/blob/master/html/syntax/parsing/resources/README.md
  *
  * @since 6.9.0
  *
@@ -3686,6 +3744,15 @@ function _unhook_block_registration()
  * @since 6.5.0
  */
 function _unhook_font_registration()
+{
+}
+/**
+ * After the init action has been run once, trying to re-register icon collections and icons
+ * can cause errors. To avoid this, unhook the icon registration functions.
+ *
+ * @since 7.1.0
+ */
+function _unhook_icon_registration()
 {
 }
 /**
